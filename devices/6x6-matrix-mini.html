@@ -363,7 +363,7 @@
   <main class="wrap">
     <div class="topbar">
       <a class="back" href="../index.html">← Back to LumiCon</a>
-      <div class="tag">Hosted installer page • 6x6 Matrix Mini</div>
+      <div class="tag">6x6 Matrix Mini installer</div>
     </div>
 
     <section class="hero">
@@ -372,68 +372,53 @@
       </div>
       <div>
         <div class="eyebrow">LumiCon • 6x6 Matrix Mini</div>
-        <h1>Flash your 6x6 Matrix Mini</h1>
+        <h1>6x6 Matrix Mini installer</h1>
         <p class="lede">
-          Choose a firmware version, then install it directly from your browser. <strong>Recent</strong> is the default recommended option and currently points to version 1.0.2. Older versions remain available for rollback or testing.
+          Choose a firmware version, connect the device by USB, then start the browser installer. <strong>Recent</strong> is the default recommended build.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#installer">Jump to installer</a>
-          <a class="button secondary" href="#before-you-flash">Before you flash</a>
+          <a class="button secondary" href="#before-you-flash">Flashing steps</a>
         </div>
       </div>
     </section>
 
     <section class="grid">
       <div class="panel" id="installer">
-        <h2>Firmware installer</h2>
-        <p>Choose a version below. The install button updates to match your selection.</p>
-        <label for="version-select">Select firmware channel</label>
+        <h2>Installer</h2>
+        <p>Select a version. The install button updates to match your selection.</p>
+        <label for="version-select">Firmware version</label>
         <select id="version-select" aria-label="Firmware version selector"></select>
         <p class="small" id="version-help">Recent is the default recommended build and currently points to version 1.0.2.</p>
-
-        <div class="info-row">
-          <div class="stat">
-            <strong>Default channel</strong>
-            <span>Recent always points to the currently recommended firmware.</span>
-          </div>
-          <div class="stat">
-            <strong>Version history</strong>
-            <span>The dropdown includes the previous three releases beneath the default option.</span>
-          </div>
-          <div class="stat">
-            <strong>Browser install</strong>
-            <span>Use desktop Chrome or Edge with a proper data USB cable.</span>
-          </div>
-        </div>
 
         <div id="installer-zone" aria-live="polite"></div>
         <div id="status-box" class="status-box"></div>
       </div>
 
       <aside class="panel" id="before-you-flash">
-        <h2>Before you flash</h2>
+        <h2>Before and during flashing</h2>
         <ol>
-          <li>Use a USB data cable, not a charge-only cable.</li>
-          <li>Close Arduino Serial Monitor and anything else that may be using the serial port.</li>
-          <li>When the browser asks for a serial device, choose the LumiCon port.</li>
-          <li>If you are recovering a board, use <strong>Recent</strong> unless you specifically need an older build.</li>
+          <li>Use a USB data cable.</li>
+          <li>Close Arduino Serial Monitor and any app using the serial port.</li>
+          <li>Click the install button below and choose the LumiCon serial device when the browser prompts you.</li>
+          <li>If your board does not enter flashing mode automatically, hold the <strong>FLASH</strong> or <strong>BOOT</strong> button while connecting USB or while starting the install, then release it once flashing begins.</li>
+          <li>If the install fails, unplug the board, reconnect it, and try again.</li>
+          <li>Use <strong>Recent</strong> unless you specifically need an older version.</li>
         </ol>
 
         <div class="channel-list" aria-label="Available firmware channels">
           <div class="channel">
             <strong>Recent</strong>
-            <span>Recommended build. This should always point to the firmware meant for most users.</span>
+            <span>Recommended build for normal installs.</span>
           </div>
           <div class="channel">
             <strong>0.4.2, 0.4.1, 0.4.0</strong>
-            <span>Older builds kept available for rollback, testing, and compatibility checks.</span>
+            <span>Older versions kept available for rollback or testing.</span>
           </div>
         </div>
 
         <p class="note">
-          Folder logic in this site:<br>
-          <code>firmware/recent/</code> contains the default install option.<br>
-          <code>firmware/versions/</code> stores version-specific archive folders.
+          Browser install requires desktop Chrome or Edge and an HTTPS page.
         </p>
       </aside>
     </section>
@@ -446,28 +431,28 @@
         label: 'Recent (default)',
         manifest: '../firmware/recent/manifest.json',
         available: true,
-        description: 'Recommended build. The recent folder is the default option and currently contains version 1.0.2.'
+        description: 'Recommended build. The recent folder currently points to version 1.0.2.'
       },
       {
         value: '0_4_2',
         label: '0.4.2',
         manifest: '../firmware/versions/0_4_2/manifest.json',
         available: true,
-        description: 'Previous release for the 6x6 Matrix Mini.'
+        description: 'Older version available for rollback or testing.'
       },
       {
         value: '0_4_1',
         label: '0.4.1',
         manifest: '../firmware/versions/0_4_1/manifest.json',
         available: true,
-        description: 'Older archived release for the 6x6 Matrix Mini.'
+        description: 'Older version available for rollback or testing.'
       },
       {
         value: '0_4_0',
         label: '0.4.0',
         manifest: '../firmware/versions/0_4_0/manifest.json',
         available: true,
-        description: 'Earlier archived release kept available for rollback and compatibility testing.'
+        description: 'Older version available for rollback or testing.'
       }
     ];
 
@@ -495,11 +480,10 @@
       if (!item.available) {
         installerZone.innerHTML = `
           <div class="hint">
-            <strong>${item.label}</strong> is not enabled on this hosted site yet.<br>
-            Add its real <code>manifest.json</code> and firmware <code>.bin</code> into the matching version folder to make it live.
+            <strong>${item.label}</strong> is not enabled on this site yet.
           </div>
         `;
-        setStatus('This version is listed in the dropdown, but its firmware package has not been added yet.', 'warn');
+        setStatus('This version is listed but not enabled.', 'warn');
         return;
       }
 
@@ -512,7 +496,7 @@
         </esp-web-install-button>
       `;
       installerZone.appendChild(wrap);
-      setStatus(`Selected ${item.label}. Ready to flash from the browser.`, 'good');
+      setStatus(`Selected ${item.label}. Ready to flash.`, 'good');
     }
 
     versions.forEach(item => select.appendChild(makeOption(item)));
