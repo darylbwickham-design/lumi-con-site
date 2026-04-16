@@ -1,0 +1,16 @@
+{
+  "name": "LumiCon 6x6 Matrix Mini",
+  "version": "0.4.1",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP8266",
+      "parts": [
+        {
+          "path": "lumicon-0_4_1.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

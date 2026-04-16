@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LumiCon 6x6 Matrix Mini Installer</title>
+  <meta name="description" content="Flash LumiCon 6x6 Matrix Mini firmware from the browser. Choose Recent or one of the previous three versions.">
+  <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #05070d;
+      --panel: rgba(11, 18, 32, 0.88);
+      --panel-soft: rgba(14, 22, 38, 0.72);
+      --line: rgba(141, 161, 255, 0.18);
+      --line-strong: rgba(77, 232, 255, 0.22);
+      --text: #edf4ff;
+      --muted: #aab8d4;
+      --dim: #8795b4;
+      --cyan: #4de8ff;
+      --violet: #bf76ff;
+      --green: #b4ff66;
+      --red: #ff8080;
+      --shadow: 0 28px 64px rgba(0,0,0,0.42);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(77,232,255,0.12), transparent 0 26%),
+        radial-gradient(circle at 100% 0%, rgba(191,118,255,0.14), transparent 0 24%),
+        linear-gradient(180deg, #05070d 0%, #060a12 46%, #04060b 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, transparent 1px, transparent 4px);
+      opacity: 0.15;
+    }
+
+    .wrap {
+      width: min(1140px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 20px 0 44px;
+      position: relative;
+      z-index: 1;
+    }
+
+    a { color: var(--cyan); }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(7, 11, 20, 0.74);
+      backdrop-filter: blur(14px);
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .tag {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(280px, 380px) 1fr;
+      gap: 22px;
+      align-items: center;
+      background:
+        radial-gradient(circle at 15% 14%, rgba(77,232,255,0.09), transparent 0 32%),
+        radial-gradient(circle at 85% 10%, rgba(191,118,255,0.10), transparent 0 32%),
+        linear-gradient(180deg, rgba(11, 18, 32, 0.88), rgba(11, 18, 32, 0.72));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero img {
+      width: 100%;
+      max-width: 330px;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 18px rgba(77,232,255,0.16));
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.2rem, 4vw, 3.7rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .lede {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.68;
+      max-width: 64ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      border-radius: 14px;
+      padding: 13px 18px;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .button.primary {
+      color: white;
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      box-shadow: 0 10px 28px rgba(77, 232, 255, 0.18);
+    }
+
+    .button.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 1.18fr) minmax(290px, 0.82fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(12,19,34,0.92), rgba(10,15,26,0.92));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 16px 38px rgba(0,0,0,0.28);
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 1.4rem;
+    }
+
+    .panel p { color: var(--muted); line-height: 1.62; }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    select {
+      width: 100%;
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 14px 16px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .small {
+      margin: 8px 0 0;
+      color: #90a0c3;
+      line-height: 1.5;
+      font-size: 0.94rem;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.45;
+    }
+
+    #installer-zone {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      min-height: 126px;
+    }
+
+    .install-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .install-button {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 15px 22px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      box-shadow: 0 10px 28px rgba(77, 232, 255, 0.18);
+    }
+
+    .hint {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .status-box {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      line-height: 1.55;
+      font-size: 0.95rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+    }
+
+    .status-box.good {
+      border-color: rgba(180,255,102,0.20);
+      background: rgba(180,255,102,0.05);
+      color: #d8ffba;
+    }
+
+    .status-box.warn {
+      border-color: rgba(255,128,128,0.22);
+      background: rgba(255,128,128,0.06);
+      color: #ffd1d1;
+    }
+
+    .channel-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .channel {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .channel strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .channel span {
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    ol {
+      margin: 10px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    li + li { margin-top: 6px; }
+
+    code {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 2px 6px;
+      color: var(--text);
+    }
+
+    .note {
+      margin-top: 14px;
+      color: var(--dim);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 960px) {
+      .hero, .grid { grid-template-columns: 1fr; }
+      .info-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 18px, 1140px); }
+      .topbar { flex-direction: column; align-items: stretch; }
+      .hero-actions { flex-direction: column; }
+      .button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="back" href="../index.html">← Back to LumiCon</a>
+      <div class="tag">Hosted installer page • 6x6 Matrix Mini</div>
+    </div>
+
+    <section class="hero">
+      <div>
+        <img src="../assets/6x6-matrix-mini-logo.png" alt="6x6 Matrix Mini logo">
+      </div>
+      <div>
+        <div class="eyebrow">LumiCon • 6x6 Matrix Mini</div>
+        <h1>Flash your 6x6 Matrix Mini</h1>
+        <p class="lede">
+          Choose a firmware channel, then install directly from your browser. <strong>Recent</strong> is the default recommended option and now points to version 1.0.2, while the dropdown shows the previous three versions for rollback, testing, or controlled chaos.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#installer">Jump to installer</a>
+          <a class="button secondary" href="#before-you-flash">Before you flash</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel" id="installer">
+        <h2>Firmware installer</h2>
+        <p>Pick a version below. The install button updates to match the selected channel.</p>
+        <label for="version-select">Select firmware channel</label>
+        <select id="version-select" aria-label="Firmware version selector"></select>
+        <p class="small" id="version-help">Recent is the default recommended build.</p>
+
+        <div class="info-row">
+          <div class="stat">
+            <strong>Default channel</strong>
+            <span>Recent always maps to the currently recommended firmware.</span>
+          </div>
+          <div class="stat">
+            <strong>Version history</strong>
+            <span>The dropdown shows the previous three releases beneath the default option.</span>
+          </div>
+          <div class="stat">
+            <strong>Browser install</strong>
+            <span>Use desktop Chrome or Edge and a proper data USB cable.</span>
+          </div>
+        </div>
+
+        <div id="installer-zone" aria-live="polite"></div>
+        <div id="status-box" class="status-box"></div>
+      </div>
+
+      <aside class="panel" id="before-you-flash">
+        <h2>Before you flash</h2>
+        <ol>
+          <li>Use a USB data cable, not a charge-only cable.</li>
+          <li>Close Arduino Serial Monitor and anything else that may be holding the serial port hostage.</li>
+          <li>When the browser asks for a serial device, choose the LumiCon port.</li>
+          <li>If you are recovering a board, use <strong>Recent</strong> unless you specifically need an older build.</li>
+        </ol>
+
+        <div class="channel-list" aria-label="Available firmware channels">
+          <div class="channel">
+            <strong>Recent</strong>
+            <span>Recommended build. This should always point to the firmware currently meant for most users.</span>
+          </div>
+          <div class="channel">
+            <strong>0.4.2, 0.4.1, 0.4.0</strong>
+            <span>Archived builds kept live for rollback, testing, and compatibility troubleshooting.</span>
+          </div>
+        </div>
+
+        <p class="note">
+          Folder logic in this site:<br>
+          <code>firmware/recent/</code> contains the default install option.<br>
+          <code>firmware/versions/</code> stores version-specific archive folders.
+        </p>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const versions = [
+      {
+        value: 'recent',
+        label: 'Recent (default)',
+        manifest: '../firmware/recent/manifest.json',
+        available: true,
+        description: 'Recommended build. The recent folder is the default option and currently contains version 1.0.2.'
+      },
+      {
+        value: '0_4_2',
+        label: '0.4.2',
+        manifest: '../firmware/versions/0_4_2/manifest.json',
+        available: true,
+        description: 'Previous release for the 6x6 Matrix Mini.'
+      },
+      {
+        value: '0_4_1',
+        label: '0.4.1',
+        manifest: '../firmware/versions/0_4_1/manifest.json',
+        available: true,
+        description: 'Older archived release for the 6x6 Matrix Mini.'
+      },
+      {
+        value: '0_4_0',
+        label: '0.4.0',
+        manifest: '../firmware/versions/0_4_0/manifest.json',
+        available: true,
+        description: 'Earlier archived release kept available for rollback and compatibility testing.'
+      }
+    ];
+
+    const select = document.getElementById('version-select');
+    const help = document.getElementById('version-help');
+    const installerZone = document.getElementById('installer-zone');
+    const statusBox = document.getElementById('status-box');
+
+    function makeOption(item) {
+      const option = document.createElement('option');
+      option.value = item.value;
+      option.textContent = item.label + (item.available ? '' : ' (coming later)');
+      return option;
+    }
+
+    function setStatus(message, kind) {
+      statusBox.textContent = message;
+      statusBox.className = 'status-box ' + (kind || '');
+    }
+
+    function renderInstaller(item) {
+      help.textContent = item.description;
+      installerZone.innerHTML = '';
+
+      if (!item.available) {
+        installerZone.innerHTML = `
+          <div class="hint">
+            <strong>${item.label}</strong> is not enabled on this hosted site yet.<br>
+            Add its real <code>manifest.json</code> and firmware <code>.bin</code> into the matching version folder to make it live.
+          </div>
+        `;
+        setStatus('This version slot is visible in the dropdown, but the real firmware package has not been added yet.', 'warn');
+        return;
+      }
+
+      const wrap = document.createElement('div');
+      wrap.className = 'install-wrap';
+      wrap.innerHTML = `
+        <esp-web-install-button manifest="${item.manifest}">
+          <button class="install-button" slot="activate">Install ${item.label}</button>
+          <span slot="unsupported" class="hint">Use desktop Chrome or Edge. This page needs HTTPS or localhost.</span>
+        </esp-web-install-button>
+      `;
+      installerZone.appendChild(wrap);
+      setStatus(`Selected ${item.label}. Ready to flash through the browser.`, 'good');
+    }
+
+    versions.forEach(item => select.appendChild(makeOption(item)));
+    select.value = 'recent';
+    renderInstaller(versions[0]);
+
+    select.addEventListener('change', () => {
+      const selected = versions.find(v => v.value === select.value) || versions[0];
+      renderInstaller(selected);
+    });
+  </script>
+</body>
+</html>
