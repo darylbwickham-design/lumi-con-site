@@ -374,7 +374,7 @@
         <div class="eyebrow">LumiCon • 6x6 Matrix Mini</div>
         <h1>Flash your 6x6 Matrix Mini</h1>
         <p class="lede">
-          Choose a firmware channel, then install directly from your browser. <strong>Recent</strong> is the default recommended option and now points to version 1.0.2, while the dropdown shows the previous three versions for rollback, testing, or controlled chaos.
+          Choose a firmware version, then install it directly from your browser. <strong>Recent</strong> is the default recommended option and currently points to version 1.0.2. Older versions remain available for rollback or testing.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#installer">Jump to installer</a>
@@ -386,23 +386,23 @@
     <section class="grid">
       <div class="panel" id="installer">
         <h2>Firmware installer</h2>
-        <p>Pick a version below. The install button updates to match the selected channel.</p>
+        <p>Choose a version below. The install button updates to match your selection.</p>
         <label for="version-select">Select firmware channel</label>
         <select id="version-select" aria-label="Firmware version selector"></select>
-        <p class="small" id="version-help">Recent is the default recommended build.</p>
+        <p class="small" id="version-help">Recent is the default recommended build and currently points to version 1.0.2.</p>
 
         <div class="info-row">
           <div class="stat">
             <strong>Default channel</strong>
-            <span>Recent always maps to the currently recommended firmware.</span>
+            <span>Recent always points to the currently recommended firmware.</span>
           </div>
           <div class="stat">
             <strong>Version history</strong>
-            <span>The dropdown shows the previous three releases beneath the default option.</span>
+            <span>The dropdown includes the previous three releases beneath the default option.</span>
           </div>
           <div class="stat">
             <strong>Browser install</strong>
-            <span>Use desktop Chrome or Edge and a proper data USB cable.</span>
+            <span>Use desktop Chrome or Edge with a proper data USB cable.</span>
           </div>
         </div>
 
@@ -414,7 +414,7 @@
         <h2>Before you flash</h2>
         <ol>
           <li>Use a USB data cable, not a charge-only cable.</li>
-          <li>Close Arduino Serial Monitor and anything else that may be holding the serial port hostage.</li>
+          <li>Close Arduino Serial Monitor and anything else that may be using the serial port.</li>
           <li>When the browser asks for a serial device, choose the LumiCon port.</li>
           <li>If you are recovering a board, use <strong>Recent</strong> unless you specifically need an older build.</li>
         </ol>
@@ -422,11 +422,11 @@
         <div class="channel-list" aria-label="Available firmware channels">
           <div class="channel">
             <strong>Recent</strong>
-            <span>Recommended build. This should always point to the firmware currently meant for most users.</span>
+            <span>Recommended build. This should always point to the firmware meant for most users.</span>
           </div>
           <div class="channel">
             <strong>0.4.2, 0.4.1, 0.4.0</strong>
-            <span>Archived builds kept live for rollback, testing, and compatibility troubleshooting.</span>
+            <span>Older builds kept available for rollback, testing, and compatibility checks.</span>
           </div>
         </div>
 
@@ -499,7 +499,7 @@
             Add its real <code>manifest.json</code> and firmware <code>.bin</code> into the matching version folder to make it live.
           </div>
         `;
-        setStatus('This version slot is visible in the dropdown, but the real firmware package has not been added yet.', 'warn');
+        setStatus('This version is listed in the dropdown, but its firmware package has not been added yet.', 'warn');
         return;
       }
 
@@ -512,7 +512,7 @@
         </esp-web-install-button>
       `;
       installerZone.appendChild(wrap);
-      setStatus(`Selected ${item.label}. Ready to flash through the browser.`, 'good');
+      setStatus(`Selected ${item.label}. Ready to flash from the browser.`, 'good');
     }
 
     versions.forEach(item => select.appendChild(makeOption(item)));
