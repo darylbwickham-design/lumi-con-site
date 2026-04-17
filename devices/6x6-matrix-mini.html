@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>LumiCon 6x6 Matrix Mini Installer</title>
-  <meta name="description" content="Flash LumiCon 6x6 Matrix Mini firmware from the browser. Choose Recent or one of the previous three versions.">
+  <meta name="description" content="Flash LumiCon 6x6 Matrix Mini firmware from the browser. Choose Latest, an earlier version, or Experimental.">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <style>
     :root {
@@ -374,7 +374,7 @@
         <div class="eyebrow">LumiCon • 6x6 Matrix Mini</div>
         <h1>6x6 Matrix Mini installer</h1>
         <p class="lede">
-          Choose a firmware version, connect the device by USB, then start the browser installer. <strong>Recent</strong> is the default recommended build.
+          Choose a firmware version, connect the device by USB, then start the browser installer. <strong>Latest</strong> is the default recommended build.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#installer">Jump to installer</a>
@@ -389,7 +389,7 @@
         <p>Select a version. The install button updates to match your selection.</p>
         <label for="version-select">Firmware version</label>
         <select id="version-select" aria-label="Firmware version selector"></select>
-        <p class="small" id="version-help">Recent is the default recommended build and currently points to version 1.0.2.</p>
+        <p class="small" id="version-help">Latest is the default recommended build and currently points to version 1.0.3.</p>
 
         <div id="installer-zone" aria-live="polite"></div>
         <div id="status-box" class="status-box"></div>
@@ -403,22 +403,26 @@
           <li>Click the install button below and choose the LumiCon serial device when the browser prompts you.</li>
           <li>If your board does not enter flashing mode automatically, hold the <strong>FLASH</strong> or <strong>BOOT</strong> button while connecting USB or while starting the install, then release it once flashing begins.</li>
           <li>If the install fails, unplug the board, reconnect it, and try again.</li>
-          <li>Use <strong>Recent</strong> unless you specifically need an older version.</li>
+          <li>Use <strong>Latest</strong> unless you specifically need an older version or Experimental.</li>
         </ol>
 
         <div class="channel-list" aria-label="Available firmware channels">
           <div class="channel">
-            <strong>Recent</strong>
+            <strong>Latest</strong>
             <span>Recommended build for normal installs.</span>
           </div>
           <div class="channel">
-            <strong>0.4.2, 0.4.1, 0.4.0</strong>
-            <span>Older versions kept available for rollback or testing.</span>
+            <strong>1.0.2, 1.0.1, 1.0.0</strong>
+            <span>Previous versions kept available for rollback or testing.</span>
+          </div>
+          <div class="channel">
+            <strong>Experimental</strong>
+            <span>Optional test build. Use only if you want to try the experimental UI.</span>
           </div>
         </div>
 
         <p class="note">
-          Browser install requires desktop Chrome or Edge and an HTTPS page.
+          Browser install requires desktop Chrome or Edge and an HTTPS page. If your board does not auto-enter flashing mode, hold FLASH or BOOT when starting the install.
         </p>
       </aside>
     </section>
@@ -427,32 +431,39 @@
   <script>
     const versions = [
       {
-        value: 'recent',
-        label: 'Recent (default)',
-        manifest: '../firmware/recent/manifest.json',
+        value: 'latest',
+        label: 'Latest (default)',
+        manifest: '../firmware/latest/manifest.json',
         available: true,
-        description: 'Recommended build. The recent folder currently points to version 1.0.2.'
+        description: 'Recommended build. Latest currently points to version 1.0.3.'
       },
       {
-        value: '0_4_2',
-        label: '0.4.2',
-        manifest: '../firmware/versions/0_4_2/manifest.json',
+        value: '1_0_2',
+        label: '1.0.2',
+        manifest: '../firmware/versions/1_0_2/manifest.json',
         available: true,
-        description: 'Older version available for rollback or testing.'
+        description: 'Previous version available for rollback or testing.'
       },
       {
-        value: '0_4_1',
-        label: '0.4.1',
-        manifest: '../firmware/versions/0_4_1/manifest.json',
+        value: '1_0_1',
+        label: '1.0.1',
+        manifest: '../firmware/versions/1_0_1/manifest.json',
         available: true,
-        description: 'Older version available for rollback or testing.'
+        description: 'Previous version available for rollback or testing.'
       },
       {
-        value: '0_4_0',
-        label: '0.4.0',
-        manifest: '../firmware/versions/0_4_0/manifest.json',
+        value: '1_0_0',
+        label: '1.0.0',
+        manifest: '../firmware/versions/1_0_0/manifest.json',
         available: true,
-        description: 'Older version available for rollback or testing.'
+        description: 'Previous version available for rollback or testing.'
+      },
+      {
+        value: 'experimental',
+        label: 'Experimental',
+        manifest: '../firmware/versions/experimental/manifest.json',
+        available: true,
+        description: 'Experimental build with rich UI changes. Use only if you want to test it.'
       }
     ];
 
@@ -500,7 +511,7 @@
     }
 
     versions.forEach(item => select.appendChild(makeOption(item)));
-    select.value = 'recent';
+    select.value = 'latest';
     renderInstaller(versions[0]);
 
     select.addEventListener('change', () => {

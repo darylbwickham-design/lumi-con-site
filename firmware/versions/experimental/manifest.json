@@ -1,0 +1,16 @@
+{
+  "name": "LumiCon 6x6 Matrix Mini",
+  "version": "Experimental",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP8266",
+      "parts": [
+        {
+          "path": "lumicon-experimental-rich-ui.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
