@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>LumiCon 6x6 Matrix Mini</title>
-  <meta name="description" content="LumiCon 6x6 Matrix Mini setup, controller firmware, keypad firmware, and flashing guide.">
+  <meta name="description" content="LumiCon 6x6 Matrix Mini firmware updater, flashing steps, and keypad Pico firmware.">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <style>
     :root {
@@ -117,77 +117,106 @@
       letter-spacing: -0.04em;
     }
     .lede {
-      margin: 0 0 16px;
+      margin: 0;
       color: var(--muted);
       line-height: 1.68;
       max-width: 64ch;
     }
-    .hero-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .button, .download-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      border-radius: 14px;
-      padding: 13px 18px;
-      font-weight: 700;
-      border: 1px solid rgba(255,255,255,0.10);
-      transition: transform 140ms ease;
-      cursor: pointer;
-    }
-    .button:hover, .download-button:hover { transform: translateY(-2px); }
-    .button.primary, .download-button.primary {
-      color: white;
-      background: linear-gradient(135deg, var(--violet), var(--cyan));
-      box-shadow: 0 10px 28px rgba(77, 232, 255, 0.18);
-    }
-    .button.secondary {
-      color: var(--text);
-      background: rgba(255,255,255,0.04);
-    }
+
     .preflight {
       margin-top: 18px;
-      padding: 18px 20px;
+      padding: 16px 18px;
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,0.08);
       background: linear-gradient(180deg, rgba(12,19,34,0.92), rgba(10,15,26,0.92));
       box-shadow: 0 16px 38px rgba(0,0,0,0.28);
     }
+    .preflight-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
     .preflight h2 {
-      margin: 0 0 10px;
-      font-size: 1.25rem;
+      margin: 0;
+      font-size: 1.18rem;
+    }
+    .preflight p {
+      margin: 0;
+      color: var(--dim);
+      font-size: 0.92rem;
     }
     .preflight-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 12px;
+      gap: 10px;
     }
     .pre-item {
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 14px;
+      border-radius: 16px;
+      padding: 12px 13px;
       background: rgba(255,255,255,0.03);
     }
-    .pre-item strong { display: block; margin-bottom: 5px; }
-    .pre-item span { color: var(--muted); line-height: 1.5; font-size: 0.93rem; }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 18px;
+    .pre-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
     }
+    .pre-item span {
+      color: var(--muted);
+      line-height: 1.4;
+      font-size: 0.88rem;
+    }
+
+    .attention-panel {
+      margin-top: 18px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 217, 125, 0.26);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,217,125,0.12), transparent 0 34%),
+        radial-gradient(circle at 100% 0%, rgba(77,232,255,0.08), transparent 0 28%),
+        linear-gradient(180deg, rgba(33,25,12,0.74), rgba(16,18,28,0.96));
+      box-shadow: 0 18px 42px rgba(0,0,0,0.30);
+    }
+    .attention-panel h2 {
+      margin: 0 0 8px;
+      font-size: 1.42rem;
+    }
+    .attention-intro {
+      margin: 0 0 12px;
+      color: #f6eac1;
+      line-height: 1.58;
+      max-width: 72ch;
+    }
+    .steps {
+      margin: 0;
+      padding-left: 22px;
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+    .steps li + li { margin-top: 6px; }
+    .steps strong { color: #ffffff; }
+    .attention-note {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #fff6d6;
+      line-height: 1.55;
+    }
+
     .panel {
       background: linear-gradient(180deg, rgba(12,19,34,0.92), rgba(10,15,26,0.92));
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 24px;
       padding: 22px;
       box-shadow: 0 16px 38px rgba(0,0,0,0.28);
+      margin-top: 18px;
     }
     .panel h2 { margin: 0 0 10px; font-size: 1.42rem; }
     .panel p { color: var(--muted); line-height: 1.62; }
@@ -232,6 +261,7 @@
       line-height: 1.6;
     }
     .callout li + li { margin-top: 6px; }
+
     #installer-zone {
       margin-top: 18px;
       padding: 18px;
@@ -246,7 +276,7 @@
       align-items: center;
       gap: 14px;
     }
-    .install-button {
+    .install-button, .download-button {
       appearance: none;
       border: 0;
       border-radius: 14px;
@@ -257,6 +287,10 @@
       color: white;
       background: linear-gradient(135deg, var(--violet), var(--cyan));
       box-shadow: 0 10px 28px rgba(77, 232, 255, 0.18);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .hint {
       color: var(--muted);
@@ -283,13 +317,53 @@
       background: rgba(255,157,157,0.06);
       color: #ffd1d1;
     }
-    .steps {
-      margin: 12px 0 0;
-      padding-left: 20px;
-      color: var(--muted);
-      line-height: 1.68;
+
+    .keypad-wrap {
+      margin-top: 20px;
+      opacity: 0.98;
     }
-    .steps li + li { margin-top: 6px; }
+    details.keypad-details {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(11,18,32,0.86), rgba(9,14,24,0.90));
+      box-shadow: 0 14px 34px rgba(0,0,0,0.24);
+      overflow: hidden;
+    }
+    details.keypad-details summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    details.keypad-details summary::-webkit-details-marker { display: none; }
+    .summary-copy strong {
+      display: block;
+      font-size: 1.18rem;
+      margin-bottom: 4px;
+    }
+    .summary-copy span {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.94rem;
+    }
+    .summary-pill {
+      color: var(--dim);
+      font-size: 0.9rem;
+      padding: 8px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      white-space: nowrap;
+    }
+    .keypad-body {
+      padding: 0 22px 22px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
     .mini-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -304,20 +378,6 @@
     }
     .mini-card strong { display: block; margin-bottom: 5px; }
     .mini-card span { color: var(--muted); line-height: 1.55; font-size: 0.94rem; }
-    .hub {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .hub-card {
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-    }
-    .hub-card strong { display: block; margin-bottom: 8px; }
-    .hub-card p { margin: 0; color: var(--muted); line-height: 1.62; font-size: 0.95rem; }
     code {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
@@ -325,15 +385,16 @@
       padding: 2px 6px;
       color: var(--text);
     }
+
     @media (max-width: 980px) {
-      .hero, .grid, .hub, .preflight-grid { grid-template-columns: 1fr; }
+      .hero, .preflight-grid, .keypad-body { grid-template-columns: 1fr; }
       .mini-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .wrap { width: min(100% - 18px, 1140px); }
       .topbar { flex-direction: column; align-items: stretch; }
-      .hero-links { flex-direction: column; }
-      .button, .download-button { width: 100%; }
+      .install-button, .download-button { width: 100%; }
+      details.keypad-details summary { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
@@ -352,116 +413,109 @@
         <div class="eyebrow">LumiCon • 6x6 Matrix Mini</div>
         <h1>6x6 Matrix Mini</h1>
         <p class="lede">
-          Set up the main controller firmware, install the keypad firmware for the Pico, and use the flashing guide below if you need a clean install or recovery.
+          Install the main firmware for the controller, then come back for keypad Pico firmware only if you need it. Most users only need the main updater below.
         </p>
-        <div class="hero-links">
-          <a class="button primary" href="#controller-firmware">Controller firmware</a>
-          <a class="button secondary" href="#keypad-firmware">Keypad firmware</a>
-          <a class="button secondary" href="#flashing-guide">Flashing guide</a>
-        </div>
       </div>
     </section>
 
-    <section class="preflight" id="flashing-guide">
-      <h2>Before you flash</h2>
+    <section class="preflight" aria-label="Before you start">
+      <div class="preflight-head">
+        <h2>Before you start</h2>
+        <p>Quick checks before you plug in and flash.</p>
+      </div>
       <div class="preflight-grid">
         <div class="pre-item">
-          <strong>Use Chrome or Edge</strong>
-          <span>The browser installer for the main controller works in desktop Chrome or Edge.</span>
+          <strong>Chrome or Edge</strong>
+          <span>Use desktop Chrome or Edge for the browser installer.</span>
         </div>
         <div class="pre-item">
-          <strong>Use a data cable</strong>
-          <span>A charge-only cable will not expose the device to the browser.</span>
+          <strong>Data cable</strong>
+          <span>A charge-only cable will not show the device to the browser.</span>
         </div>
         <div class="pre-item">
-          <strong>Close serial tools</strong>
-          <span>Close Arduino Serial Monitor and anything else using the serial port before flashing.</span>
+          <strong>Close tools</strong>
+          <span>Shut Arduino Serial Monitor and anything else using the serial port.</span>
         </div>
         <div class="pre-item">
-          <strong>Know the boot buttons</strong>
-          <span>If flashing does not start automatically, use <strong>FLASH</strong>, <strong>BOOT</strong>, or <strong>BOOTSEL</strong> as described below.</span>
+          <strong>Know your button</strong>
+          <span>If auto-flash fails, use <strong>FLASH</strong>, <strong>BOOT</strong>, or <strong>BOOTSEL</strong>.</span>
         </div>
       </div>
     </section>
 
-    <section class="grid">
-      <div class="panel" id="controller-firmware">
-        <h2>Main controller firmware</h2>
-        <p>Use this for the ESP-based main controller board.</p>
-        <label for="version-select">Firmware version</label>
-        <select id="version-select" aria-label="Firmware version selector"></select>
-        <p class="small" id="version-help">Latest is the default recommended build and currently points to version 1.0.3.</p>
-
-        <div class="callout warning">
-          <strong>About “Erase device”</strong>
-          <ul>
-            <li>Checked: performs a clean install and clears saved Wi-Fi settings and pet data.</li>
-            <li>Unchecked: keeps existing Wi-Fi settings and pet data where possible.</li>
-            <li>Use erase if you want a clean reset, are recovering a board, or are fixing odd behaviour after updating.</li>
-          </ul>
-        </div>
-
-        <div id="installer-zone" aria-live="polite"></div>
-        <div id="status-box" class="status-box"></div>
-      </div>
-
-      <div class="panel" id="keypad-firmware">
-        <h2>Keypad firmware</h2>
-        <p>Use this for the keypad Pico / RP2040 board.</p>
-        <a class="download-button primary" href="../firmware/keypad/latest/6x6-keypad-latest.uf2" download>Download keypad UF2</a>
-
-        <div class="callout">
-          <strong>How to flash the keypad Pico</strong>
-          <ol class="steps">
-            <li>Unplug the keypad board.</li>
-            <li>Hold the <strong>BOOTSEL</strong> button while connecting USB.</li>
-            <li>The board should appear as a removable drive, usually named <code>RPI-RP2</code>.</li>
-            <li>Drag the downloaded <code>.uf2</code> file onto that drive.</li>
-            <li>The board will copy the file, reboot, and disconnect the temporary drive automatically.</li>
-          </ol>
-        </div>
-
-        <div class="mini-grid">
-          <div class="mini-card">
-            <strong>Current keypad build</strong>
-            <span>Latest keypad UF2 included on this site.</span>
-          </div>
-          <div class="mini-card">
-            <strong>If the drive does not appear</strong>
-            <span>Unplug the board, hold BOOTSEL again, reconnect USB, and try once more.</span>
-          </div>
-        </div>
-      </div>
+    <section class="attention-panel" aria-label="Main controller flashing steps">
+      <h2>Main controller flashing steps</h2>
+      <p class="attention-intro">This is the important bit most people will actually use. Read these steps once, then use the updater directly underneath.</p>
+      <ol class="steps">
+        <li>Connect the main controller by USB.</li>
+        <li>Click the install button in the updater below and choose the LumiCon serial device when the browser prompts you.</li>
+        <li>If the board does not enter flashing mode automatically, hold the <strong>FLASH</strong> or <strong>BOOT</strong> button while connecting USB or while starting the install.</li>
+        <li>Release the button once flashing begins.</li>
+        <li>If flashing fails, unplug the board, reconnect it, and try again.</li>
+      </ol>
+      <div class="attention-note"><strong>Clean install option:</strong> checking <strong>Erase device</strong> clears saved Wi-Fi settings and pet data. Leave it unchecked if you want to keep them where possible.</div>
     </section>
 
-    <section class="grid">
-      <div class="panel">
-        <h2>Main controller flashing steps</h2>
-        <ol class="steps">
-          <li>Connect the main controller by USB.</li>
-          <li>Click the install button and select the LumiCon serial device when the browser prompts you.</li>
-          <li>If the board does not enter flashing mode automatically, hold the <strong>FLASH</strong> or <strong>BOOT</strong> button while connecting USB or while starting the install.</li>
-          <li>Release the button once flashing begins.</li>
-          <li>If flashing fails, unplug the board, reconnect it, and try again.</li>
-        </ol>
+    <section class="panel" id="controller-firmware">
+      <h2>Firmware updater</h2>
+      <p>Use this for the ESP-based main controller board. For most people, this is the only section you need.</p>
+      <label for="version-select">Firmware version</label>
+      <select id="version-select" aria-label="Firmware version selector"></select>
+      <p class="small" id="version-help">Latest is the default recommended build and currently points to version 1.0.3.</p>
+
+      <div class="callout warning">
+        <strong>Clean install option</strong>
+        <ul>
+          <li><strong>Checked:</strong> performs a clean install and clears saved Wi-Fi settings and pet data.</li>
+          <li><strong>Unchecked:</strong> keeps existing Wi-Fi settings and pet data where possible.</li>
+          <li>Use erase for recovery, a clean reset, or if the device is behaving oddly after an update.</li>
+        </ul>
       </div>
-      <div class="panel">
-        <h2>Project hub</h2>
-        <div class="hub">
-          <div class="hub-card">
-            <strong>Latest and rollback builds</strong>
-            <p>Latest is 1.0.3. Previous stable versions 1.0.2, 1.0.1, and 1.0.0 stay available for rollback and testing.</p>
+
+      <div id="installer-zone" aria-live="polite"></div>
+      <div id="status-box" class="status-box"></div>
+    </section>
+
+    <section class="keypad-wrap" id="keypad-firmware">
+      <details class="keypad-details">
+        <summary>
+          <div class="summary-copy">
+            <strong>Keypad firmware</strong>
+            <span>Secondary setup for the keypad Pico / RP2040 board. Most users can ignore this until the main controller is already sorted.</span>
           </div>
-          <div class="hub-card">
-            <strong>Experimental firmware</strong>
-            <p>An experimental branch is available from the main controller version list for testing newer ideas separately from stable releases.</p>
+          <span class="summary-pill">Open keypad section</span>
+        </summary>
+        <div class="keypad-body">
+          <div class="panel" style="margin-top:0; padding:0; border:none; background:transparent; box-shadow:none;">
+            <h2 style="margin-top:0;">Keypad firmware</h2>
+            <p>Use this for the keypad Pico / RP2040 board.</p>
+            <a class="download-button" href="../firmware/keypad/latest/6x6-keypad-latest.uf2" download>Download keypad UF2</a>
+
+            <div class="callout" style="margin-top:16px;">
+              <strong>How to flash the keypad Pico</strong>
+              <ol class="steps" style="margin-top:10px;">
+                <li>Unplug the keypad board.</li>
+                <li>Hold the <strong>BOOTSEL</strong> button while connecting USB.</li>
+                <li>The board should appear as a removable drive, usually named <code>RPI-RP2</code>.</li>
+                <li>Drag the downloaded <code>.uf2</code> file onto that drive.</li>
+                <li>The board will copy the file, reboot, and disconnect the temporary drive automatically.</li>
+              </ol>
+            </div>
           </div>
-          <div class="hub-card">
-            <strong>Open source platform</strong>
-            <p>LumiCon is designed to work as a polished controller on the desk while still leaving room for deeper hardware and firmware tinkering.</p>
+          <div>
+            <div class="mini-grid" style="margin-top:0;">
+              <div class="mini-card">
+                <strong>Current keypad build</strong>
+                <span>Latest keypad UF2 included on this site.</span>
+              </div>
+              <div class="mini-card">
+                <strong>If the drive does not appear</strong>
+                <span>Unplug the board, hold BOOTSEL again, reconnect USB, and try once more.</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </details>
     </section>
   </main>
 
