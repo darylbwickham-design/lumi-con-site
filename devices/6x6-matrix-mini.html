@@ -437,8 +437,8 @@
           <span>Shut Arduino Serial Monitor and anything else using the serial port.</span>
         </div>
         <div class="pre-item">
-          <strong>Know your button</strong>
-          <span>If auto-flash fails, use <strong>FLASH</strong>, <strong>BOOT</strong>, or <strong>BOOTSEL</strong>.</span>
+          <strong>Firmware button</strong>
+          <span>For main controller flashing, hold the red-and-black <strong>Firmware</strong> button to prevent Pico-to-ESP serial errors.</span>
         </div>
       </div>
     </section>
@@ -448,10 +448,11 @@
       <p class="attention-intro">This is the important bit most people will actually use. Read these steps once, then use the updater directly underneath.</p>
       <ol class="steps">
         <li>Connect the main controller by USB.</li>
-        <li>Click the install button in the updater below and choose the LumiCon serial device when the browser prompts you.</li>
-        <li>If the board does not enter flashing mode automatically, hold the <strong>FLASH</strong> or <strong>BOOT</strong> button while connecting USB or while starting the install.</li>
-        <li>Release the button once flashing begins.</li>
-        <li>If flashing fails, unplug the board, reconnect it, and try again.</li>
+        <li>Find the small red-and-black <strong>Firmware</strong> button on the inline switch between the Pico <strong>TX</strong> line and the ESP <strong>RX</strong> line. If it is tucked inside the case, feed it out through the gap in the casing so you can hold it.</li>
+        <li>Hold the <strong>Firmware</strong> button, then click the install button in the updater below and choose the LumiCon serial device when the browser prompts you.</li>
+        <li>If the board does not enter flashing mode automatically, keep holding <strong>Firmware</strong> and also hold <strong>FLASH</strong> or <strong>BOOT</strong> while connecting USB or while starting the install.</li>
+        <li>Keep the <strong>Firmware</strong> button held for the flash, then release it once flashing is complete.</li>
+        <li>If flashing fails, unplug the board, reconnect it, hold <strong>Firmware</strong> again, and retry.</li>
       </ol>
       <div class="attention-note"><strong>Clean install option:</strong> checking <strong>Erase device</strong> clears saved Wi-Fi settings and pet data. Leave it unchecked if you want to keep them where possible.</div>
     </section>
