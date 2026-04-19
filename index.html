@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LumiCon | Open Source Stream Controller</title>
-  <meta name="description" content="LumiCon is an open source stream controller platform designed for Lumia Stream, combining a polished device experience with room to tinker.">
+  <title>LumiCon | DIY Stream Controller Platform</title>
+  <meta name="description" content="LumiCon is a DIY stream controller platform built around Lumia Stream, with a polished device feel and room for open source tinkering.">
   <style>
     :root {
       color-scheme: dark;
@@ -19,7 +19,6 @@
       --dim: #8592af;
       --cyan: #4de8ff;
       --violet: #ba74ff;
-      --pink: #ff5cd7;
       --radius-xl: 28px;
       --radius-lg: 22px;
       --radius-md: 16px;
@@ -77,7 +76,7 @@
       gap: 12px;
       min-width: 0;
     }
-    .brand-badge {
+    .brand-link {
       width: 42px;
       height: 42px;
       border-radius: 12px;
@@ -87,8 +86,9 @@
       display: grid;
       place-items: center;
       flex: 0 0 auto;
+      text-decoration: none;
     }
-    .brand-badge img {
+    .brand-link img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -170,26 +170,27 @@
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.08);
       background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-      min-height: 244px;
+      min-height: 256px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
     .feature-image {
-      height: 176px;
+      height: 190px;
       display: grid;
       place-items: center;
-      padding: 18px;
+      padding: 0;
       background:
         radial-gradient(circle at 50% 25%, rgba(77,232,255,0.12), transparent 0 40%),
         linear-gradient(180deg, rgba(9,13,22,0.92), rgba(7,10,18,0.88));
+      overflow: hidden;
     }
     .feature-image img {
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
       display: block;
-      object-fit: contain;
-      filter: drop-shadow(0 0 16px rgba(77,232,255,0.14));
+      object-fit: cover;
+      object-position: center 35%;
     }
     .placeholder-mark {
       width: 72px;
@@ -263,17 +264,18 @@
       height: 176px;
       display: grid;
       place-items: center;
-      padding: 18px;
+      padding: 0;
       background:
         radial-gradient(circle at 50% 18%, rgba(77,232,255,0.10), transparent 0 36%),
         linear-gradient(180deg, rgba(9,13,22,0.94), rgba(7,10,18,0.90));
+      overflow: hidden;
     }
     .setup-thumb img {
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
       display: block;
-      object-fit: contain;
-      filter: drop-shadow(0 0 16px rgba(77,232,255,0.14));
+      object-fit: cover;
+      object-position: center 35%;
     }
     .setup-body {
       padding: 16px;
@@ -289,28 +291,6 @@
       font-size: 0.92rem;
       line-height: 1.45;
     }
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .why-card {
-      padding: 18px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-    .why-card strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 1rem;
-    }
-    .why-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 0.95rem;
-    }
     footer {
       margin-top: 18px;
       padding: 18px 22px;
@@ -325,12 +305,12 @@
       font-size: 0.94rem;
     }
     @media (max-width: 980px) {
-      .hero-strip, .setup-grid, .why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-strip, .setup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 700px) {
       .wrap { width: min(100% - 18px, 1180px); }
       .topbar-inner { flex-direction: column; align-items: stretch; }
-      .hero-strip, .setup-grid, .why-grid { grid-template-columns: 1fr; }
+      .hero-strip, .setup-grid { grid-template-columns: 1fr; }
       h1 { max-width: none; }
     }
   </style>
@@ -340,16 +320,15 @@
     <div class="topbar">
       <div class="topbar-inner">
         <div class="brand">
-          <div class="brand-badge"><img src="assets/lumicon-logo.png" alt="LumiCon logo"></div>
+          <a class="brand-link" href="devices/6x6-matrix-mini.html" aria-label="Open 6x6 Matrix Mini firmware page"><img src="assets/lumicon-logo.png" alt="LumiCon logo"></a>
           <div>
             <strong>LumiCon</strong>
-            <span>Open source stream controller</span>
+            <span>DIY stream controller platform</span>
           </div>
         </div>
         <nav class="nav" aria-label="Main navigation">
           <a href="#about">About</a>
           <a href="#setup">Setup</a>
-          <a href="#why-lumicon">Why LumiCon</a>
         </nav>
       </div>
     </div>
@@ -358,12 +337,12 @@
       <div class="eyebrow">Lumia Stream ready • Open source platform</div>
       <h1>LumiCon</h1>
       <p class="lede">
-        A polished stream controller platform built to work with Lumia Stream, with room underneath for custom hardware, firmware, and open source tinkering.
+        A DIY stream controller platform linked to Lumia Stream. If Lumia can connect to it, LumiCon can control it. Designed for streamers and tinkerers alike.
       </p>
 
       <div class="hero-strip">
         <article class="feature-card">
-          <div class="feature-image"><img src="assets/6x6-matrix-mini-logo.png" alt="6x6 Matrix Mini"></div>
+          <div class="feature-image"><img src="assets/6x6-matrix-mini-photo.png" alt="LumiCon 6x6 Matrix Mini"></div>
           <div class="feature-body">
             <strong>6x6 Matrix Mini</strong>
             <span>Available now</span>
@@ -372,22 +351,22 @@
         <article class="feature-card">
           <div class="feature-image"><div class="placeholder-mark">+</div></div>
           <div class="feature-body">
-            <strong>Full size controller</strong>
-            <span>Coming soon</span>
+            <strong>Coming soon</strong>
+            <span>More LumiCon hardware is on the way.</span>
           </div>
         </article>
         <article class="feature-card">
           <div class="feature-image"><div class="placeholder-mark">+</div></div>
           <div class="feature-body">
-            <strong>Standalone modules</strong>
-            <span>Coming soon</span>
+            <strong>Coming soon</strong>
+            <span>More LumiCon hardware is on the way.</span>
           </div>
         </article>
         <article class="feature-card">
           <div class="feature-image"><div class="placeholder-mark">+</div></div>
           <div class="feature-body">
-            <strong>Accessories</strong>
-            <span>Coming soon</span>
+            <strong>Coming soon</strong>
+            <span>More LumiCon hardware is on the way.</span>
           </div>
         </article>
       </div>
@@ -397,7 +376,10 @@
       <div class="section-head">
         <h2>About LumiCon</h2>
         <p>
-          LumiCon is an open source stream controller designed to connect to Lumia Stream. It is built to feel like a polished device on the desk, while still giving makers a platform they can customise, extend, and experiment with over time.
+          LumiCon is a modular open source stream controller platform built to stay flexible, easy to set up, and affordable. The Matrix Mini combines a compact 6x6 keypad with a smart LCD and pet module, giving you a polished controller on the desk now and a platform that can grow with future LumiCon hardware later.
+        </p>
+        <p>
+          It is designed for both free and premium Lumia Stream users. Short and long key actions, custom messages back to the unit, and room for deeper integrations all sit underneath a simple setup path.
         </p>
       </div>
     </section>
@@ -409,7 +391,7 @@
       </div>
       <div class="setup-grid">
         <a class="setup-card active" href="devices/6x6-matrix-mini.html">
-          <div class="setup-thumb"><img src="assets/6x6-matrix-mini-logo.png" alt="6x6 Matrix Mini"></div>
+          <div class="setup-thumb"><img src="assets/6x6-matrix-mini-photo.png" alt="6x6 Matrix Mini"></div>
           <div class="setup-body">
             <strong>6x6 Matrix Mini</strong>
             <span>Firmware, keypad firmware, and setup.</span>
@@ -418,53 +400,30 @@
         <div class="setup-card coming-soon" aria-disabled="true">
           <div class="setup-thumb"><div class="placeholder-mark">+</div></div>
           <div class="setup-body">
-            <strong>Full size controller</strong>
-            <span>Coming soon</span>
+            <strong>Coming soon</strong>
+            <span>More LumiCon hardware is on the way.</span>
           </div>
         </div>
         <div class="setup-card coming-soon" aria-disabled="true">
           <div class="setup-thumb"><div class="placeholder-mark">+</div></div>
           <div class="setup-body">
-            <strong>Standalone modules</strong>
-            <span>Coming soon</span>
+            <strong>Coming soon</strong>
+            <span>More LumiCon hardware is on the way.</span>
           </div>
         </div>
         <div class="setup-card coming-soon" aria-disabled="true">
           <div class="setup-thumb"><div class="placeholder-mark">+</div></div>
           <div class="setup-body">
-            <strong>Accessories</strong>
-            <span>Coming soon</span>
+            <strong>Coming soon</strong>
+            <span>More LumiCon hardware is on the way.</span>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="panel" id="why-lumicon">
-      <div class="section-head">
-        <h2>Polished by default. Open by design.</h2>
-        <p>
-          LumiCon is designed to be easy to pick up, while still leaving space for a deeper maker experience once you want to explore the project further.
-        </p>
-      </div>
-      <div class="why-grid">
-        <article class="why-card">
-          <strong>Built for creators</strong>
-          <p>A clear setup path, purpose-built hardware, and a device-first experience for streaming desks.</p>
-        </article>
-        <article class="why-card">
-          <strong>Open source platform</strong>
-          <p>Firmware and hardware can grow over time, making LumiCon as useful to tinkerers as it is to everyday users.</p>
-        </article>
-        <article class="why-card">
-          <strong>Designed around Lumia Stream</strong>
-          <p>Focused on a practical workflow for Lumia Stream users, with room for custom ideas and new modules later on.</p>
-        </article>
       </div>
     </section>
 
     <footer>
-      <span>LumiCon • Open source stream controller platform</span>
-      <span>Setup and firmware are available from the device pages.</span>
+      <span>LumiCon • DIY stream controller platform for Lumia Stream</span>
+      <span>Open source, modular, and built to grow.</span>
     </footer>
   </main>
 </body>
