@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LumiCon 6x6 Matrix Mini Installer</title>
-  <meta name="description" content="Flash LumiCon 6x6 Matrix Mini firmware from the browser. Choose Latest, an earlier version, or Experimental.">
+  <title>LumiCon 6x6 Matrix Mini</title>
+  <meta name="description" content="LumiCon 6x6 Matrix Mini setup, controller firmware, keypad firmware, and flashing guide.">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <style>
     :root {
       color-scheme: dark;
       --bg: #05070d;
-      --panel: rgba(11, 18, 32, 0.88);
-      --panel-soft: rgba(14, 22, 38, 0.72);
+      --panel: rgba(11, 18, 32, 0.90);
+      --panel-soft: rgba(14, 22, 38, 0.74);
       --line: rgba(141, 161, 255, 0.18);
       --line-strong: rgba(77, 232, 255, 0.22);
       --text: #edf4ff;
@@ -20,33 +20,31 @@
       --cyan: #4de8ff;
       --violet: #bf76ff;
       --green: #b4ff66;
-      --red: #ff8080;
-      --shadow: 0 28px 64px rgba(0,0,0,0.42);
+      --amber: #ffd97d;
+      --red: #ff9d9d;
+      --shadow: 0 28px 64px rgba(0,0,0,0.40);
     }
-
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 20% 0%, rgba(77,232,255,0.12), transparent 0 26%),
+        radial-gradient(circle at 18% 0%, rgba(77,232,255,0.12), transparent 0 24%),
         radial-gradient(circle at 100% 0%, rgba(191,118,255,0.14), transparent 0 24%),
-        linear-gradient(180deg, #05070d 0%, #060a12 46%, #04060b 100%);
+        linear-gradient(180deg, #05070d 0%, #060a12 48%, #04060b 100%);
     }
-
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
       background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, transparent 1px, transparent 4px);
-      opacity: 0.15;
+      opacity: 0.14;
     }
-
+    a { color: inherit; }
     .wrap {
       width: min(1140px, calc(100% - 28px));
       margin: 0 auto;
@@ -54,9 +52,6 @@
       position: relative;
       z-index: 1;
     }
-
-    a { color: var(--cyan); }
-
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -66,10 +61,9 @@
       padding: 12px 14px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(7, 11, 20, 0.74);
+      background: rgba(7, 11, 20, 0.76);
       backdrop-filter: blur(14px);
     }
-
     .back {
       display: inline-flex;
       align-items: center;
@@ -81,36 +75,29 @@
       border: 1px solid rgba(255,255,255,0.07);
       background: rgba(255,255,255,0.03);
     }
-
-    .tag {
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
+    .tag { color: var(--muted); font-size: 0.92rem; }
     .hero {
       display: grid;
-      grid-template-columns: minmax(280px, 380px) 1fr;
+      grid-template-columns: minmax(280px, 360px) 1fr;
       gap: 22px;
       align-items: center;
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
       background:
         radial-gradient(circle at 15% 14%, rgba(77,232,255,0.09), transparent 0 32%),
         radial-gradient(circle at 85% 10%, rgba(191,118,255,0.10), transparent 0 32%),
-        linear-gradient(180deg, rgba(11, 18, 32, 0.88), rgba(11, 18, 32, 0.72));
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 24px;
+        linear-gradient(180deg, rgba(11,18,32,0.88), rgba(11,18,32,0.74));
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
     }
-
     .hero img {
       width: 100%;
-      max-width: 330px;
+      max-width: 320px;
       display: block;
       margin: 0 auto;
       filter: drop-shadow(0 0 18px rgba(77,232,255,0.16));
     }
-
     .eyebrow {
       display: inline-block;
       padding: 8px 12px;
@@ -123,28 +110,24 @@
       text-transform: uppercase;
       margin-bottom: 12px;
     }
-
     h1 {
       margin: 0 0 12px;
       font-size: clamp(2.2rem, 4vw, 3.7rem);
       line-height: 0.98;
       letter-spacing: -0.04em;
     }
-
     .lede {
       margin: 0 0 16px;
       color: var(--muted);
       line-height: 1.68;
       max-width: 64ch;
     }
-
-    .hero-actions {
+    .hero-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
-
-    .button {
+    .button, .download-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -154,26 +137,51 @@
       padding: 13px 18px;
       font-weight: 700;
       border: 1px solid rgba(255,255,255,0.10);
+      transition: transform 140ms ease;
+      cursor: pointer;
     }
-
-    .button.primary {
+    .button:hover, .download-button:hover { transform: translateY(-2px); }
+    .button.primary, .download-button.primary {
       color: white;
       background: linear-gradient(135deg, var(--violet), var(--cyan));
       box-shadow: 0 10px 28px rgba(77, 232, 255, 0.18);
     }
-
     .button.secondary {
       color: var(--text);
       background: rgba(255,255,255,0.04);
     }
-
+    .preflight {
+      margin-top: 18px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(12,19,34,0.92), rgba(10,15,26,0.92));
+      box-shadow: 0 16px 38px rgba(0,0,0,0.28);
+    }
+    .preflight h2 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+    }
+    .preflight-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .pre-item {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+    .pre-item strong { display: block; margin-bottom: 5px; }
+    .pre-item span { color: var(--muted); line-height: 1.5; font-size: 0.93rem; }
     .grid {
       display: grid;
-      grid-template-columns: minmax(320px, 1.18fr) minmax(290px, 0.82fr);
+      grid-template-columns: 1fr 1fr;
       gap: 18px;
       margin-top: 18px;
     }
-
     .panel {
       background: linear-gradient(180deg, rgba(12,19,34,0.92), rgba(10,15,26,0.92));
       border: 1px solid rgba(255,255,255,0.08);
@@ -181,20 +189,9 @@
       padding: 22px;
       box-shadow: 0 16px 38px rgba(0,0,0,0.28);
     }
-
-    .panel h2 {
-      margin: 0 0 14px;
-      font-size: 1.4rem;
-    }
-
+    .panel h2 { margin: 0 0 10px; font-size: 1.42rem; }
     .panel p { color: var(--muted); line-height: 1.62; }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-
+    label { display: block; margin-bottom: 8px; font-weight: 700; }
     select {
       width: 100%;
       appearance: none;
@@ -206,40 +203,35 @@
       font-size: 1rem;
       outline: none;
     }
-
     .small {
       margin: 8px 0 0;
       color: #90a0c3;
       line-height: 1.5;
       font-size: 0.94rem;
     }
-
-    .info-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .stat {
-      border: 1px solid rgba(255,255,255,0.08);
+    .callout {
+      margin: 16px 0 0;
+      padding: 16px 18px;
       border-radius: 18px;
-      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.03);
     }
-
-    .stat strong {
+    .callout.warning {
+      border-color: rgba(255, 217, 125, 0.24);
+      background: rgba(255, 217, 125, 0.06);
+    }
+    .callout strong {
       display: block;
-      font-size: 1rem;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      color: var(--text);
     }
-
-    .stat span {
+    .callout ul {
+      margin: 0;
+      padding-left: 18px;
       color: var(--muted);
-      font-size: 0.93rem;
-      line-height: 1.45;
+      line-height: 1.6;
     }
-
+    .callout li + li { margin-top: 6px; }
     #installer-zone {
       margin-top: 18px;
       padding: 18px;
@@ -248,14 +240,12 @@
       background: rgba(255,255,255,0.03);
       min-height: 126px;
     }
-
     .install-wrap {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 14px;
     }
-
     .install-button {
       appearance: none;
       border: 0;
@@ -268,13 +258,11 @@
       background: linear-gradient(135deg, var(--violet), var(--cyan));
       box-shadow: 0 10px 28px rgba(77, 232, 255, 0.18);
     }
-
     .hint {
       color: var(--muted);
       line-height: 1.55;
       font-size: 0.95rem;
     }
-
     .status-box {
       margin-top: 14px;
       padding: 14px 16px;
@@ -285,52 +273,51 @@
       background: rgba(255,255,255,0.03);
       color: var(--muted);
     }
-
     .status-box.good {
       border-color: rgba(180,255,102,0.20);
       background: rgba(180,255,102,0.05);
       color: #d8ffba;
     }
-
     .status-box.warn {
-      border-color: rgba(255,128,128,0.22);
-      background: rgba(255,128,128,0.06);
+      border-color: rgba(255,157,157,0.22);
+      background: rgba(255,157,157,0.06);
       color: #ffd1d1;
     }
-
-    .channel-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .channel {
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .channel strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .channel span {
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.55;
-    }
-
-    ol {
-      margin: 10px 0 0;
+    .steps {
+      margin: 12px 0 0;
       padding-left: 20px;
       color: var(--muted);
-      line-height: 1.65;
+      line-height: 1.68;
     }
-
-    li + li { margin-top: 6px; }
-
+    .steps li + li { margin-top: 6px; }
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .mini-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+    .mini-card strong { display: block; margin-bottom: 5px; }
+    .mini-card span { color: var(--muted); line-height: 1.55; font-size: 0.94rem; }
+    .hub {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .hub-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    }
+    .hub-card strong { display: block; margin-bottom: 8px; }
+    .hub-card p { margin: 0; color: var(--muted); line-height: 1.62; font-size: 0.95rem; }
     code {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
@@ -338,24 +325,15 @@
       padding: 2px 6px;
       color: var(--text);
     }
-
-    .note {
-      margin-top: 14px;
-      color: var(--dim);
-      line-height: 1.55;
-      font-size: 0.94rem;
+    @media (max-width: 980px) {
+      .hero, .grid, .hub, .preflight-grid { grid-template-columns: 1fr; }
+      .mini-grid { grid-template-columns: 1fr; }
     }
-
-    @media (max-width: 960px) {
-      .hero, .grid { grid-template-columns: 1fr; }
-      .info-row { grid-template-columns: 1fr; }
-    }
-
     @media (max-width: 640px) {
       .wrap { width: min(100% - 18px, 1140px); }
       .topbar { flex-direction: column; align-items: stretch; }
-      .hero-actions { flex-direction: column; }
-      .button { width: 100%; }
+      .hero-links { flex-direction: column; }
+      .button, .download-button { width: 100%; }
     }
   </style>
 </head>
@@ -363,7 +341,7 @@
   <main class="wrap">
     <div class="topbar">
       <a class="back" href="../index.html">← Back to LumiCon</a>
-      <div class="tag">6x6 Matrix Mini installer</div>
+      <div class="tag">6x6 Matrix Mini setup</div>
     </div>
 
     <section class="hero">
@@ -372,59 +350,118 @@
       </div>
       <div>
         <div class="eyebrow">LumiCon • 6x6 Matrix Mini</div>
-        <h1>6x6 Matrix Mini installer</h1>
+        <h1>6x6 Matrix Mini</h1>
         <p class="lede">
-          Choose a firmware version, connect the device by USB, then start the browser installer. <strong>Latest</strong> is the default recommended build.
+          Set up the main controller firmware, install the keypad firmware for the Pico, and use the flashing guide below if you need a clean install or recovery.
         </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#installer">Jump to installer</a>
-          <a class="button secondary" href="#before-you-flash">Flashing steps</a>
+        <div class="hero-links">
+          <a class="button primary" href="#controller-firmware">Controller firmware</a>
+          <a class="button secondary" href="#keypad-firmware">Keypad firmware</a>
+          <a class="button secondary" href="#flashing-guide">Flashing guide</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="preflight" id="flashing-guide">
+      <h2>Before you flash</h2>
+      <div class="preflight-grid">
+        <div class="pre-item">
+          <strong>Use Chrome or Edge</strong>
+          <span>The browser installer for the main controller works in desktop Chrome or Edge.</span>
+        </div>
+        <div class="pre-item">
+          <strong>Use a data cable</strong>
+          <span>A charge-only cable will not expose the device to the browser.</span>
+        </div>
+        <div class="pre-item">
+          <strong>Close serial tools</strong>
+          <span>Close Arduino Serial Monitor and anything else using the serial port before flashing.</span>
+        </div>
+        <div class="pre-item">
+          <strong>Know the boot buttons</strong>
+          <span>If flashing does not start automatically, use <strong>FLASH</strong>, <strong>BOOT</strong>, or <strong>BOOTSEL</strong> as described below.</span>
         </div>
       </div>
     </section>
 
     <section class="grid">
-      <div class="panel" id="installer">
-        <h2>Installer</h2>
-        <p>Select a version. The install button updates to match your selection.</p>
+      <div class="panel" id="controller-firmware">
+        <h2>Main controller firmware</h2>
+        <p>Use this for the ESP-based main controller board.</p>
         <label for="version-select">Firmware version</label>
         <select id="version-select" aria-label="Firmware version selector"></select>
         <p class="small" id="version-help">Latest is the default recommended build and currently points to version 1.0.3.</p>
+
+        <div class="callout warning">
+          <strong>About “Erase device”</strong>
+          <ul>
+            <li>Checked: performs a clean install and clears saved Wi-Fi settings and pet data.</li>
+            <li>Unchecked: keeps existing Wi-Fi settings and pet data where possible.</li>
+            <li>Use erase if you want a clean reset, are recovering a board, or are fixing odd behaviour after updating.</li>
+          </ul>
+        </div>
 
         <div id="installer-zone" aria-live="polite"></div>
         <div id="status-box" class="status-box"></div>
       </div>
 
-      <aside class="panel" id="before-you-flash">
-        <h2>Before and during flashing</h2>
-        <ol>
-          <li>Use a USB data cable.</li>
-          <li>Close Arduino Serial Monitor and any app using the serial port.</li>
-          <li>Click the install button below and choose the LumiCon serial device when the browser prompts you.</li>
-          <li>For the install to be successfull the <strong>RED</strong> flash button must be pressed and held during the procedure, then release it once the device logo shows.</li>
-          <li>If the install fails, unplug the board, reconnect it, and try again.</li>
-          <li>Use <strong>Latest</strong> unless you specifically need an older version or Experimental.</li>
-        </ol>
+      <div class="panel" id="keypad-firmware">
+        <h2>Keypad firmware</h2>
+        <p>Use this for the keypad Pico / RP2040 board.</p>
+        <a class="download-button primary" href="../firmware/keypad/latest/6x6-keypad-latest.uf2" download>Download keypad UF2</a>
 
-        <div class="channel-list" aria-label="Available firmware channels">
-          <div class="channel">
-            <strong>Latest</strong>
-            <span>Recommended build for normal installs.</span>
-          </div>
-          <div class="channel">
-            <strong>1.0.2, 1.0.1, 1.0.0</strong>
-            <span>Previous versions kept available for rollback or testing.</span>
-          </div>
-          <div class="channel">
-            <strong>Experimental</strong>
-            <span>Optional test build. Use only if you want to try the experimental UI.</span>
-          </div>
+        <div class="callout">
+          <strong>How to flash the keypad Pico</strong>
+          <ol class="steps">
+            <li>Unplug the keypad board.</li>
+            <li>Hold the <strong>BOOTSEL</strong> button while connecting USB.</li>
+            <li>The board should appear as a removable drive, usually named <code>RPI-RP2</code>.</li>
+            <li>Drag the downloaded <code>.uf2</code> file onto that drive.</li>
+            <li>The board will copy the file, reboot, and disconnect the temporary drive automatically.</li>
+          </ol>
         </div>
 
-        <p class="note">
-          Browser install requires desktop Chrome or Edge and an HTTPS page. If your board does not auto-enter flashing mode, hold FLASH or BOOT when starting the install.
-        </p>
-      </aside>
+        <div class="mini-grid">
+          <div class="mini-card">
+            <strong>Current keypad build</strong>
+            <span>Latest keypad UF2 included on this site.</span>
+          </div>
+          <div class="mini-card">
+            <strong>If the drive does not appear</strong>
+            <span>Unplug the board, hold BOOTSEL again, reconnect USB, and try once more.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Main controller flashing steps</h2>
+        <ol class="steps">
+          <li>Connect the main controller by USB.</li>
+          <li>Click the install button and select the LumiCon serial device when the browser prompts you.</li>
+          <li>If the board does not enter flashing mode automatically, hold the <strong>FLASH</strong> or <strong>BOOT</strong> button while connecting USB or while starting the install.</li>
+          <li>Release the button once flashing begins.</li>
+          <li>If flashing fails, unplug the board, reconnect it, and try again.</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h2>Project hub</h2>
+        <div class="hub">
+          <div class="hub-card">
+            <strong>Latest and rollback builds</strong>
+            <p>Latest is 1.0.3. Previous stable versions 1.0.2, 1.0.1, and 1.0.0 stay available for rollback and testing.</p>
+          </div>
+          <div class="hub-card">
+            <strong>Experimental firmware</strong>
+            <p>An experimental branch is available from the main controller version list for testing newer ideas separately from stable releases.</p>
+          </div>
+          <div class="hub-card">
+            <strong>Open source platform</strong>
+            <p>LumiCon is designed to work as a polished controller on the desk while still leaving room for deeper hardware and firmware tinkering.</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -432,7 +469,7 @@
     const versions = [
       {
         value: 'latest',
-        label: 'Latest (default)',
+        label: 'Latest',
         manifest: '../firmware/latest/manifest.json',
         available: true,
         description: 'Recommended build. Latest currently points to version 1.0.3.'
@@ -463,7 +500,7 @@
         label: 'Experimental',
         manifest: '../firmware/versions/experimental/manifest.json',
         available: true,
-        description: 'Experimental build with rich UI changes. Use only if you want to test it.'
+        description: 'Experimental build for testing newer UI and behaviour changes.'
       }
     ];
 
@@ -507,7 +544,7 @@
         </esp-web-install-button>
       `;
       installerZone.appendChild(wrap);
-      setStatus(`Selected ${item.label}. Ready to flash.`, 'good');
+      setStatus(`Selected ${item.label}. Ready to flash the main controller.`, 'good');
     }
 
     versions.forEach(item => select.appendChild(makeOption(item)));
