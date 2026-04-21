@@ -1,0 +1,64 @@
+## 🎉 New Features
+- **1.1.3**
+  - Added device status confirmation before marking the device as disconnected
+  - Introduced silent health checks using the device status endpoint
+- **1.1.2**
+  - Added groundwork for improved device status confirmation
+- **1.1.1**
+  - Added refinements to pet integration
+- **1.1.0**
+  - Added virtual pet support
+  - Added pet actions, pet alerts, and pet variables
+- **1.0.1**
+  - Added more device status variables
+- **1.0.0**
+  - Initial public release of the plugin
+  - Added support for 36 programmable keys with short and long press actions
+  - Added integrated LCD support for alerts and messages
+
+## 🐛 Bug Fixes
+- **1.1.3**
+  - Fixed false disconnection toasts
+  - Resolved incorrect offline reporting when the device was still reachable
+- **1.1.2**
+  - Fixed reliability issues around device connection state updates
+- **1.1.1**
+  - Fixed pet-related behavior and stability issues
+- **1.1.0**
+  - Fixed compatibility issues while expanding plugin functionality
+- **1.0.1**
+  - Fixed early plugin behavior issues from the initial release
+
+## 🔧 Improvements
+- **1.1.3**
+  - Improved reliability of connection state handling
+  - Enhanced offline detection behavior to better reflect real device status
+- **1.1.2**
+  - Improved connection monitoring logic
+  - Enhanced device status reporting inside Lumia
+- **1.1.1**
+  - Improved variable handling and general plugin reliability
+  - Enhanced consistency across pet actions and alerts
+- **1.1.0**
+  - Expanded alert and variable support across the plugin
+  - Improved feature coverage for device and display interactions
+- **1.0.1**
+  - Improved plugin structure and setup flow
+  - Enhanced reliability of device status tracking
+
+## ⚠️ Breaking Changes
+- None
+
+
+
+
+
+
+
+
+Build your own open-source stream controller deck for Lumia Stream Premium, with a version for free users coming soon.
+With 36 programmable keys, support for both short and long presses, an integrated LCD for alerts and messages, and a built-in virtual pet, it blends practical control with a bit of personality.
+
+Build files are available on GitHub, with setup instructions on YouTube, and more resources coming soon.
+
+This is an independent DIY project and is not affiliated with Lumia Stream. For support, please contact AKADAZ in the Plugins section on Discord.

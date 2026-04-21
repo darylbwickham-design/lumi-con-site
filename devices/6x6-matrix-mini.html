@@ -462,7 +462,7 @@
       <p>This is the Main updater for 6X6 MATRIX MINI, use this to apply firmware updates. For DIY builders, this is the esp8266 firmware, the Pico PI firmware is below.</p>
       <label for="version-select">Firmware version</label>
       <select id="version-select" aria-label="Firmware version selector"></select>
-      <p class="small" id="version-help">Latest is the default recommended build and currently points to version 1.0.3.</p>
+      <p class="small" id="version-help">Latest is the default recommended build and currently points to version 1.0.4.</p>
 
       <div class="callout warning">
         <strong>Clean install option</strong>
@@ -527,7 +527,14 @@
         label: 'Latest',
         manifest: '../firmware/latest/manifest.json',
         available: true,
-        description: 'Recommended build. Latest currently points to version 1.0.3.'
+        description: 'Recommended build. Latest currently points to version 1.0.4.'
+      },
+      {
+        value: '1_0_3',
+        label: '1.0.3',
+        manifest: '../firmware/versions/1_0_3/manifest.json',
+        available: true,
+        description: 'Previous version available for rollback or testing.'
       },
       {
         value: '1_0_2',
@@ -540,13 +547,6 @@
         value: '1_0_1',
         label: '1.0.1',
         manifest: '../firmware/versions/1_0_1/manifest.json',
-        available: true,
-        description: 'Previous version available for rollback or testing.'
-      },
-      {
-        value: '1_0_0',
-        label: '1.0.0',
-        manifest: '../firmware/versions/1_0_0/manifest.json',
         available: true,
         description: 'Previous version available for rollback or testing.'
       },
