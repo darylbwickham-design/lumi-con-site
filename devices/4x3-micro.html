@@ -3,331 +3,160 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LumiCon 4x3 Micro</title>
-  <meta name="description" content="LumiCon 4x3 Micro firmware updater, flashing steps, and keypad Pico firmware.">
+  <title>LumiCon 4x3 Micro setup</title>
+  <meta name="description" content="Install LumiCon 4x3 Micro ESP8266 firmware, download keypad Pico firmware, and follow the flashing steps.">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #05070d;
-      --panel: rgba(11, 18, 32, 0.90);
-      --panel-soft: rgba(14, 22, 38, 0.74);
-      --line: rgba(141, 161, 255, 0.18);
-      --line-strong: rgba(77, 232, 255, 0.22);
-      --text: #edf4ff;
-      --muted: #aab8d4;
-      --dim: #8795b4;
-      --cyan: #4de8ff;
-      --violet: #bf76ff;
-      --green: #b4ff66;
-      --amber: #ffd97d;
-      --red: #ff9d9d;
-      --shadow: 0 28px 64px rgba(0,0,0,0.40);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 18% 0%, rgba(77,232,255,0.12), transparent 0 24%),
-        radial-gradient(circle at 100% 0%, rgba(191,118,255,0.14), transparent 0 24%),
-        linear-gradient(180deg, #05070d 0%, #060a12 48%, #04060b 100%);
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, transparent 1px, transparent 4px);
-      opacity: 0.14;
-    }
-    a { color: inherit; }
-    .wrap {
-      width: min(1140px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 20px 0 44px;
-      position: relative;
-      z-index: 1;
-    }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(7, 11, 20, 0.76);
-      backdrop-filter: blur(14px);
-    }
-    .back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--muted);
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(255,255,255,0.03);
-    }
-    .tag { color: var(--muted); font-size: 0.92rem; }
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(280px, 360px) 1fr;
-      gap: 22px;
-      align-items: center;
-      padding: 24px;
-      border-radius: 28px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 15% 14%, rgba(77,232,255,0.09), transparent 0 32%),
-        radial-gradient(circle at 85% 10%, rgba(191,118,255,0.10), transparent 0 32%),
-        linear-gradient(180deg, rgba(11,18,32,0.88), rgba(11,18,32,0.74));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-    .hero img {
-      width: 100%;
-      max-width: 320px;
-      display: block;
-      margin: 0 auto;
-      filter: drop-shadow(0 0 18px rgba(77,232,255,0.16));
-    }
-    .eyebrow {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      font-size: 0.78rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2.2rem, 4vw, 3.7rem);
-      line-height: 0.98;
-      letter-spacing: -0.04em;
-    }
-    .lede {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.68;
-      max-width: 64ch;
-    }
-    .preflight {
-      margin-top: 18px;
-      padding: 16px 18px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(12,19,34,0.92), rgba(10,15,26,0.92));
-      box-shadow: 0 16px 38px rgba(0,0,0,0.28);
-    }
-    .preflight-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: baseline;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-    .preflight h2 { margin: 0; font-size: 1.18rem; }
-    .preflight p { margin: 0; color: var(--dim); font-size: 0.92rem; }
-    .preflight-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-    .pre-item { border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 12px 13px; background: rgba(255,255,255,0.03); }
-    .pre-item strong { display: block; margin-bottom: 4px; font-size: 0.98rem; }
-    .pre-item span { color: var(--muted); line-height: 1.4; font-size: 0.88rem; }
-    .attention-panel {
-      margin-top: 18px;
-      padding: 20px 22px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 217, 125, 0.26);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(255,217,125,0.12), transparent 0 34%),
-        radial-gradient(circle at 100% 0%, rgba(77,232,255,0.08), transparent 0 28%),
-        linear-gradient(180deg, rgba(33,25,12,0.74), rgba(16,18,28,0.96));
-      box-shadow: 0 18px 42px rgba(0,0,0,0.30);
-    }
-    .attention-panel h2 { margin: 0 0 8px; font-size: 1.42rem; }
-    .attention-intro { margin: 0 0 12px; color: #f6eac1; line-height: 1.58; max-width: 72ch; }
-    .steps { margin: 0; padding-left: 22px; color: var(--text); line-height: 1.7; font-size: 1rem; }
-    .steps li + li { margin-top: 6px; }
-    .steps strong { color: #ffffff; }
-    .attention-note { margin-top: 12px; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: #fff6d6; line-height: 1.55; }
-    .panel { background: linear-gradient(180deg, rgba(12,19,34,0.92), rgba(10,15,26,0.92)); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 22px; box-shadow: 0 16px 38px rgba(0,0,0,0.28); margin-top: 18px; }
-    .panel h2 { margin: 0 0 10px; font-size: 1.42rem; }
-    .panel p { color: var(--muted); line-height: 1.62; }
-    label { display: block; margin-bottom: 8px; font-weight: 700; }
-    select { width: 100%; appearance: none; border: 1px solid rgba(255,255,255,0.10); border-radius: 14px; background: rgba(255,255,255,0.04); color: var(--text); padding: 14px 16px; font-size: 1rem; outline: none; }
-    .small { margin: 8px 0 0; color: #90a0c3; line-height: 1.5; font-size: 0.94rem; }
-    .callout { margin: 16px 0 0; padding: 16px 18px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
-    .callout.warning { border-color: rgba(255, 217, 125, 0.24); background: rgba(255, 217, 125, 0.06); }
-    .callout strong { display: block; margin-bottom: 6px; color: var(--text); }
-    .callout ul { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.6; }
-    .callout li + li { margin-top: 6px; }
-    #installer-zone { margin-top: 18px; padding: 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); min-height: 126px; }
-    .install-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-    .install-button, .download-button { appearance: none; border: 0; border-radius: 14px; padding: 15px 22px; font-size: 1rem; font-weight: 700; cursor: pointer; color: white; background: linear-gradient(135deg, var(--violet), var(--cyan)); box-shadow: 0 10px 28px rgba(77, 232, 255, 0.18); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
-    .hint { color: var(--muted); line-height: 1.55; font-size: 0.95rem; }
-    .status-box { margin-top: 14px; padding: 14px 16px; border-radius: 16px; line-height: 1.55; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--muted); }
-    .status-box.good { border-color: rgba(180,255,102,0.20); background: rgba(180,255,102,0.05); color: #d8ffba; }
-    .status-box.warn { border-color: rgba(255,157,157,0.22); background: rgba(255,157,157,0.06); color: #ffd1d1; }
-    .keypad-wrap { margin-top: 20px; opacity: 0.98; }
-    details.keypad-details { border: 1px solid rgba(255,255,255,0.08); border-radius: 22px; background: linear-gradient(180deg, rgba(11,18,32,0.86), rgba(9,14,24,0.90)); box-shadow: 0 14px 34px rgba(0,0,0,0.24); overflow: hidden; }
-    details.keypad-details summary { list-style: none; cursor: pointer; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-    details.keypad-details summary::-webkit-details-marker { display: none; }
-    .summary-copy strong { display: block; font-size: 1.18rem; margin-bottom: 4px; }
-    .summary-copy span { color: var(--muted); line-height: 1.5; font-size: 0.94rem; }
-    .summary-pill { color: var(--dim); font-size: 0.9rem; padding: 8px 11px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); white-space: nowrap; }
-    .keypad-body { padding: 0 22px 22px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; }
-    .mini-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
-    .mini-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 14px; background: rgba(255,255,255,0.03); }
-    .mini-card strong { display: block; margin-bottom: 5px; }
-    .mini-card span { color: var(--muted); line-height: 1.55; font-size: 0.94rem; }
-    code { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 2px 6px; color: var(--text); }
-    @media (max-width: 980px) { .hero, .preflight-grid, .keypad-body { grid-template-columns: 1fr; } .mini-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 640px) { .wrap { width: min(100% - 18px, 1140px); } .topbar { flex-direction: column; align-items: stretch; } .install-button, .download-button { width: 100%; } details.keypad-details summary { align-items: flex-start; flex-direction: column; } }
-  </style>
+  <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-  <main class="wrap">
-    <div class="topbar">
-      <a class="back" href="../index.html">← Back to LumiCon</a>
-      <div class="tag">4x3 Micro setup</div>
-    </div>
-    <section class="hero">
-      <div>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="LumiCon home">
+      <img src="../assets/lumicon-logo.png" alt="">
+      <span>
+        <strong>LumiCon</strong>
+        <small>4x3 Micro</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Page navigation">
+      <a href="../index.html">Home</a>
+      <a href="#checks">Checks</a>
+      <a href="#controller-firmware">Firmware</a>
+      <a href="#keypad-firmware">Keypad</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero device-hero">
+      <div class="hero-media">
         <img src="../assets/4x3-Micro-logo.png" alt="4x3 Micro logo">
       </div>
-      <div>
-        <div class="eyebrow">LumiCon • 4x3 Micro</div>
+      <div class="hero-copy">
+        <p class="eyebrow">LumiCon controller setup</p>
         <h1>4x3 Micro</h1>
-        <p class="lede">Main firmware updater for Lumi-Con 4X3 MICRO, Pico firmware located at the bottom for DIY builders.</p>
+        <p class="lede">
+          A smaller LumiCon controller for essential Lumia Stream actions, with the same browser installer flow and Pico keypad update path.
+        </p>
+        <div class="quick-nav" aria-label="Quick setup links">
+          <a href="#controller-firmware">Main firmware</a>
+          <a href="#keypad-firmware">Keypad UF2</a>
+          <a href="#flash-steps">Flashing steps</a>
+        </div>
       </div>
     </section>
-    <section class="preflight" aria-label="Before you start">
-      <div class="preflight-head">
-        <h2>Before you start</h2>
-        <p>Quick checks before you plug in and flash.</p>
+
+    <section class="section" id="checks">
+      <div class="section-head">
+        <p class="kicker">Before you start</p>
+        <h2>Check the browser, cable, and serial port first.</h2>
       </div>
-      <div class="preflight-grid">
-        <div class="pre-item"><strong>Chrome or Edge</strong><span>Use desktop Chrome or Edge for the browser installer.</span></div>
-        <div class="pre-item"><strong>Data cable</strong><span>A charge-only cable will not show the device to the browser.</span></div>
-        <div class="pre-item"><strong>Close tools</strong><span>Shut Arduino Serial Monitor and anything else using the serial port.</span></div>
-        <div class="pre-item"><strong>Firmware button</strong><span>For main controller flashing, hold the red-and-black <strong>Firmware</strong> button to prevent Pico-to-ESP serial errors.</span></div>
+      <div class="check-grid">
+        <article class="check-card">
+          <strong>Use Chrome or Edge</strong>
+          <span>The browser installer needs Web Serial, HTTPS, or localhost.</span>
+        </article>
+        <article class="check-card">
+          <strong>Use a data cable</strong>
+          <span>Charge-only USB cables will power the board but will not expose the serial port.</span>
+        </article>
+        <article class="check-card">
+          <strong>Close serial tools</strong>
+          <span>Shut Arduino Serial Monitor and anything else that may already be using the port.</span>
+        </article>
+        <article class="check-card">
+          <strong>Hold Firmware</strong>
+          <span>Hold the inline Firmware button while flashing the main controller.</span>
+        </article>
       </div>
     </section>
-    <section class="attention-panel" aria-label="Main controller flashing steps">
-      <h2>Main controller flashing steps</h2>
-      <p class="attention-intro">Read through these steps once, then use the updater directly underneath.</p>
-      <ol class="steps">
+
+    <section class="section attention" id="flash-steps">
+      <p class="kicker">Main controller</p>
+      <h2>Flash the ESP8266 with the Firmware button held down.</h2>
+      <ol class="ordered-steps">
         <li>Connect the main controller by USB.</li>
-        <li>Find the small red-and-black <strong>Firmware</strong> button on the inline switch between the Pico <strong>TX</strong> line and the ESP <strong>RX</strong> line. If it is tucked inside the case, feed it out through the gap in the casing so you can hold it.</li>
-        <li>Hold the <strong>Firmware</strong> button, then click the install button in the updater below and choose the LumiCon serial device when the browser prompts you.</li>
-        <li>Keep holding the <strong>Firmware</strong> button during the install.</li>
-        <li>Release it once flashing is complete.</li>
-        <li>If flashing fails, unplug the 4x3 keypad and try again.</li>
+        <li>Find the red-and-black inline <strong>Firmware</strong> button between the Pico TX line and the ESP RX line.</li>
+        <li>Hold the <strong>Firmware</strong> button, choose a firmware build below, then select the LumiCon serial device when your browser asks.</li>
+        <li>Keep holding the <strong>Firmware</strong> button until the install has finished.</li>
+        <li>Release the button and let the controller reboot.</li>
+        <li>If flashing fails, unplug the 4x3 keypad and try the install again.</li>
       </ol>
-      <div class="attention-note"><strong>Clean install option:</strong> checking <strong>Erase device</strong> clears saved Wi-Fi settings and pet data. Leave it unchecked if you want to keep them where possible.</div>
+      <div class="note"><strong>Erase device:</strong> use this for recovery or a clean reset. It can clear saved Wi-Fi settings and pet data.</div>
     </section>
-    <section class="panel" id="controller-firmware">
-      <h2>Firmware updater</h2>
-      <p>This is the Main updater for 4X3 MICRO, use this to apply firmware updates. For DIY builders, this is the ESP8266 firmware, the Pico firmware is below.</p>
-      <label for="version-select">Firmware version</label>
-      <select id="version-select" aria-label="Firmware version selector"></select>
-      <p class="small" id="version-help">Latest is the default recommended build and currently points to version 1.0.3.</p>
-      <div class="callout warning">
-        <strong>Clean install option</strong>
-        <ul>
-          <li><strong>Checked:</strong> performs a clean install and clears saved Wi-Fi settings and pet data.</li>
-          <li><strong>Unchecked:</strong> keeps existing Wi-Fi settings and pet data where possible.</li>
-          <li>Use erase for recovery, a clean reset, or if the device is behaving oddly after an update.</li>
-        </ul>
+
+    <section class="section" id="controller-firmware">
+      <div class="section-head">
+        <p class="kicker">Firmware installer</p>
+        <h2>Main firmware discovered from the 4x3 folders.</h2>
+        <p class="firmware-copy">
+          The dropdown is built from committed <code>.bin</code> files in <code>firmware/4x3/latest</code> and <code>firmware/4x3/versions</code>. New builds added there will appear automatically after the site is published.
+        </p>
       </div>
-      <div id="installer-zone" aria-live="polite"></div>
-      <div id="status-box" class="status-box"></div>
+
+      <div class="firmware-layout">
+        <div class="panel">
+          <label for="version-select">Firmware build</label>
+          <select id="version-select" aria-label="Firmware build selector"></select>
+          <p class="microcopy" id="version-help">Looking for available firmware builds...</p>
+          <div id="installer-zone" class="installer-zone" aria-live="polite"></div>
+          <div id="status-box" class="status-box" aria-live="polite"></div>
+        </div>
+        <div class="panel">
+          <h3>Detected builds</h3>
+          <p class="microcopy">Use the newest build for normal updates. Older builds stay visible for rollback and testing.</p>
+          <div id="controller-file-list" class="file-list"></div>
+        </div>
+      </div>
     </section>
-    <section class="keypad-wrap" id="keypad-firmware">
-      <details class="keypad-details">
-        <summary>
-          <div class="summary-copy">
-            <strong>Keypad firmware</strong>
-            <span>Secondary setup for the keypad Pico / RP2040 board. Most users can ignore this section. Aimed at DIY users.</span>
-          </div>
-          <span class="summary-pill">Open keypad section</span>
+
+    <section class="section" id="keypad-firmware">
+      <details class="keypad-details" open>
+        <summary class="summary-row">
+          <span>
+            <span class="kicker">Keypad firmware</span>
+            <h2>Download the Pico UF2 when the keypad board needs updating.</h2>
+          </span>
+          <span class="summary-pill">Show or hide</span>
         </summary>
         <div class="keypad-body">
-          <div class="panel" style="margin-top:0; padding:0; border:none; background:transparent; box-shadow:none;">
-            <h2 style="margin-top:0;">Keypad firmware</h2>
-            <p>Use this for the keypad Pico / RP2040 board.</p>
-            <a class="download-button" href="../firmware/4x3/keypad/latest/4x3_pico_key_scanner_1_0_0.uf2" download>Download keypad UF2</a>
-            <div class="callout" style="margin-top:16px;">
-              <strong>How to flash the keypad Pico</strong>
-              <ol class="steps" style="margin-top:10px;">
-                <li>Unplug the keypad board.</li>
-                <li>Hold the <strong>BOOTSEL</strong> button while connecting USB.</li>
-                <li>The board should appear as a removable drive, usually named <code>RPI-RP2</code>.</li>
-                <li>Drag the downloaded <code>.uf2</code> file onto that drive.</li>
-                <li>The board will copy the file, reboot, and disconnect the temporary drive automatically.</li>
-              </ol>
-            </div>
+          <div class="panel">
+            <h3>Latest keypad file</h3>
+            <p class="microcopy">The page detects <code>.uf2</code> files in <code>firmware/4x3/keypad/latest</code>.</p>
+            <div id="keypad-download-zone" class="installer-zone"></div>
           </div>
-          <div>
-            <div class="mini-grid" style="margin-top:0;">
-              <div class="mini-card"><strong>Current keypad build</strong><span>Latest keypad UF2 included on this site.</span></div>
-              <div class="mini-card"><strong>If the drive does not appear</strong><span>Unplug the board, hold BOOTSEL again, reconnect USB, and try once more.</span></div>
-            </div>
+          <div class="panel">
+            <h3>How to flash the Pico</h3>
+            <ol class="ordered-steps">
+              <li>Unplug the keypad board.</li>
+              <li>Hold <strong>BOOTSEL</strong> while connecting USB.</li>
+              <li>Open the temporary drive named <code>RPI-RP2</code>.</li>
+              <li>Copy the downloaded <code>.uf2</code> file onto that drive.</li>
+              <li>The Pico copies the file, reboots, and disconnects automatically.</li>
+            </ol>
           </div>
         </div>
       </details>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <span><a class="back-link" href="../index.html">Back to LumiCon</a></span>
+    <span>4x3 Micro setup</span>
+  </footer>
+
   <script>
-    const versions = [
-      { value: 'latest', label: 'Latest', manifest: '../firmware/4x3/latest/manifest.json', available: true, description: 'Recommended build. Latest currently points to version 1.0.3.' }
-    ];
-    const select = document.getElementById('version-select');
-    const help = document.getElementById('version-help');
-    const installerZone = document.getElementById('installer-zone');
-    const statusBox = document.getElementById('status-box');
-    function makeOption(item) {
-      const option = document.createElement('option');
-      option.value = item.value;
-      option.textContent = item.label + (item.available ? '' : ' (coming later)');
-      return option;
-    }
-    function setStatus(message, kind) {
-      statusBox.textContent = message;
-      statusBox.className = 'status-box ' + (kind || '');
-    }
-    function renderInstaller(item) {
-      help.textContent = item.description;
-      installerZone.innerHTML = '';
-      if (!item.available) {
-        installerZone.innerHTML = `<div class="hint"><strong>${item.label}</strong> is not enabled on this site yet.</div>`;
-        setStatus('This version is listed but not enabled.', 'warn');
-        return;
-      }
-      const wrap = document.createElement('div');
-      wrap.className = 'install-wrap';
-      wrap.innerHTML = `<esp-web-install-button manifest="${item.manifest}"><button class="install-button" slot="activate">Install ${item.label}</button><span slot="unsupported" class="hint">Use desktop Chrome or Edge. This page needs HTTPS or localhost.</span></esp-web-install-button>`;
-      installerZone.appendChild(wrap);
-      setStatus(`Selected ${item.label}. Ready to flash the main controller.`, 'good');
-    }
-    versions.forEach(item => select.appendChild(makeOption(item)));
-    select.value = 'latest';
-    renderInstaller(versions[0]);
-    select.addEventListener('change', () => {
-      const selected = versions.find(v => v.value === select.value) || versions[0];
-      renderInstaller(selected);
-    });
+    window.LUMICON_FIRMWARE = {
+      repo: 'darylbwickham-design/lumi-con-site',
+      branch: 'main',
+      deviceName: 'LumiCon 4x3 Micro',
+      chipFamily: 'ESP8266',
+      controllerPrefixes: ['firmware/4x3/latest/', 'firmware/4x3/versions/'],
+      keypadPrefixes: ['firmware/4x3/keypad/latest/'],
+      fallbackFiles: [
+        'firmware/4x3/latest/4x3_micro_esp_integrated_1_0_3.bin',
+        'firmware/4x3/keypad/latest/4x3_pico_key_scanner_1_0_0.uf2'
+      ]
+    };
   </script>
+  <script src="../assets/firmware-loader.js"></script>
 </body>
 </html>

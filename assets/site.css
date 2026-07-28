@@ -1,0 +1,694 @@
+:root {
+  color-scheme: dark;
+  --bg: #090b0f;
+  --surface: #11161d;
+  --surface-2: #171d26;
+  --surface-3: #1d2530;
+  --line: #303a47;
+  --line-strong: #52606f;
+  --text: #f4f7fb;
+  --muted: #aab5c3;
+  --dim: #7f8b9a;
+  --cyan: #43dce8;
+  --green: #9ce56d;
+  --coral: #ff8b73;
+  --amber: #ffd06a;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+  --radius: 8px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(135deg, #080a0d 0%, #111720 52%, #0b0d12 100%);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(67, 220, 232, 0.08), transparent 34%),
+    linear-gradient(110deg, transparent 0 56%, rgba(255, 139, 115, 0.08) 56% 72%, transparent 72%);
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+code {
+  padding: 0.08rem 0.34rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 0.95em;
+}
+
+.site-header,
+main,
+.site-footer {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.site-header {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius);
+  background: rgba(9, 11, 15, 0.82);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(16px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 190px;
+  text-decoration: none;
+}
+
+.brand img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #050607;
+}
+
+.brand strong,
+.brand small {
+  display: block;
+}
+
+.brand strong {
+  line-height: 1;
+}
+
+.brand small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.site-nav a,
+.back-link {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 650;
+  font-size: 0.92rem;
+}
+
+.site-nav a:hover,
+.back-link:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+main {
+  padding: 18px 0 46px;
+}
+
+.hero,
+.section {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(23, 29, 38, 0.92), rgba(14, 18, 24, 0.94));
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  min-height: 520px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
+  align-items: center;
+  gap: 28px;
+  padding: clamp(24px, 5vw, 58px);
+  overflow: hidden;
+}
+
+.hero-home {
+  position: relative;
+}
+
+.hero-home::after,
+.device-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 auto;
+  width: 42%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--coral));
+}
+
+.hero-copy {
+  max-width: 680px;
+}
+
+.eyebrow,
+.kicker,
+.status,
+.chip {
+  margin: 0 0 12px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+h1,
+h2,
+h3,
+p {
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  margin: 0 0 16px;
+  max-width: 12ch;
+  font-size: clamp(3.2rem, 8vw, 7.6rem);
+  line-height: 0.9;
+}
+
+h2 {
+  margin: 0;
+  max-width: 20ch;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 0.98;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.18rem;
+}
+
+.lede {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: clamp(1.04rem, 2vw, 1.24rem);
+  line-height: 1.66;
+}
+
+.hero-actions,
+.firmware-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.button,
+.download-button,
+.install-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button.primary,
+.install-button {
+  background: var(--cyan);
+  color: #041114;
+}
+
+.button.secondary,
+.download-button {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.button:hover,
+.download-button:hover,
+.install-button:hover {
+  transform: translateY(-1px);
+}
+
+.hero-media {
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(160deg, rgba(67, 220, 232, 0.09), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+}
+
+.hero-media img {
+  width: min(100%, 480px);
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.4));
+}
+
+.section {
+  margin-top: 16px;
+  padding: clamp(22px, 4vw, 42px);
+}
+
+.section-head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.section-head p:last-child,
+.split p,
+.device-card p,
+.steps-grid p,
+.panel p,
+.firmware-copy,
+.microcopy,
+.status-box,
+.empty-state {
+  color: var(--muted);
+  line-height: 1.62;
+}
+
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.device-card,
+.steps-grid article,
+.panel,
+.file-card,
+.check-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.device-card {
+  min-height: 360px;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.device-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--cyan);
+  background: rgba(67, 220, 232, 0.055);
+}
+
+.device-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: #0a0d12;
+}
+
+.device-card p {
+  margin: 0;
+}
+
+.text-link {
+  color: var(--green);
+  font-weight: 800;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 28px;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.steps-grid article {
+  padding: 16px;
+}
+
+.steps-grid span {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: var(--radius);
+  background: var(--green);
+  color: #081107;
+  font-weight: 900;
+}
+
+.firmware-section {
+  background:
+    linear-gradient(90deg, rgba(67, 220, 232, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(23, 29, 38, 0.94), rgba(14, 18, 24, 0.94));
+}
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 0 0 28px;
+  color: var(--dim);
+  font-size: 0.92rem;
+}
+
+.device-hero {
+  position: relative;
+  grid-template-columns: minmax(240px, 360px) 1fr;
+  min-height: 430px;
+}
+
+.device-hero .hero-media {
+  min-height: 270px;
+}
+
+.device-hero h1 {
+  max-width: 14ch;
+  font-size: clamp(2.6rem, 6vw, 5.6rem);
+}
+
+.quick-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.quick-nav a {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 9px 11px;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 750;
+}
+
+.quick-nav a:hover {
+  color: var(--text);
+  border-color: var(--cyan);
+}
+
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.check-card {
+  padding: 14px;
+}
+
+.check-card strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.check-card span {
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.48;
+}
+
+.attention {
+  border-color: rgba(255, 208, 106, 0.34);
+  background:
+    linear-gradient(110deg, rgba(255, 208, 106, 0.12), transparent 50%),
+    linear-gradient(180deg, rgba(34, 31, 24, 0.94), rgba(17, 21, 27, 0.96));
+}
+
+.ordered-steps {
+  margin: 16px 0 0;
+  padding-left: 1.45rem;
+  line-height: 1.72;
+}
+
+.ordered-steps li + li {
+  margin-top: 6px;
+}
+
+.note {
+  margin-top: 16px;
+  border: 1px solid rgba(255, 208, 106, 0.32);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: rgba(255, 208, 106, 0.07);
+  color: #fff2ca;
+  line-height: 1.58;
+}
+
+.firmware-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  padding: 18px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 850;
+}
+
+select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  appearance: none;
+  background: #0d1117;
+  color: var(--text);
+  font: inherit;
+}
+
+.microcopy {
+  margin: 10px 0 0;
+  font-size: 0.94rem;
+}
+
+.installer-zone {
+  min-height: 144px;
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.install-wrap {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.status-box {
+  min-height: 48px;
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.status-box.good {
+  border-color: rgba(156, 229, 109, 0.4);
+  color: #d7ffc2;
+}
+
+.status-box.warn {
+  border-color: rgba(255, 139, 115, 0.45);
+  color: #ffd5cd;
+}
+
+.file-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.file-card {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+}
+
+.file-card strong {
+  font-size: 0.98rem;
+}
+
+.file-card span,
+.file-card small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.file-card small {
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  word-break: break-all;
+}
+
+.empty-state {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+details.keypad-details {
+  margin-top: 16px;
+}
+
+details.keypad-details summary {
+  cursor: pointer;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  list-style: none;
+}
+
+.summary-row::-webkit-details-marker {
+  display: none;
+}
+
+.summary-pill {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.keypad-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .device-hero,
+  .split,
+  .firmware-layout,
+  .keypad-body {
+    grid-template-columns: 1fr;
+  }
+
+  .check-grid,
+  .steps-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    position: static;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .site-nav {
+    justify-content: flex-start;
+  }
+
+  .site-nav a {
+    flex: 1 1 auto;
+  }
+
+  .hero,
+  .section {
+    padding: 20px;
+  }
+
+  .hero {
+    min-height: auto;
+  }
+
+  .device-grid,
+  .check-grid,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button,
+  .download-button,
+  .install-button {
+    width: 100%;
+  }
+
+  .summary-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
