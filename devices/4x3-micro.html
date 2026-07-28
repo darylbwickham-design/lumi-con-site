@@ -3,97 +3,134 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LumiCon 4x3 Micro setup</title>
-  <meta name="description" content="Install LumiCon 4x3 Micro ESP8266 firmware, download keypad Pico firmware, and follow the flashing steps.">
+  <title>LumiCon 4x3 Micro | Setup and firmware</title>
+  <meta name="description" content="Set up the LumiCon 4x3 Micro and install its ESP8266 and Pico firmware from the maintained firmware folders.">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="../index.html" aria-label="LumiCon home">
-      <img src="../assets/lumicon-logo.png" alt="">
+      <img src="../assets/lumicon-logo-square.png" alt="">
       <span>
         <strong>LumiCon</strong>
         <small>4x3 Micro</small>
       </span>
     </a>
     <nav class="site-nav" aria-label="Page navigation">
-      <a href="../index.html">Home</a>
-      <a href="#checks">Checks</a>
+      <a href="../index.html">Overview</a>
+      <a href="#setup">Setup</a>
       <a href="#controller-firmware">Firmware</a>
       <a href="#keypad-firmware">Keypad</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero device-hero">
-      <div class="hero-media">
-        <img src="../assets/4x3-Micro-logo.png" alt="4x3 Micro logo">
-      </div>
+    <section class="hero device-hero compact-device-hero">
       <div class="hero-copy">
-        <p class="eyebrow">LumiCon controller setup</p>
+        <p class="eyebrow">Compact LumiCon controller</p>
         <h1>4x3 Micro</h1>
-        <p class="lede">
-          A smaller LumiCon controller for essential Lumia Stream actions, with the same browser installer flow and Pico keypad update path.
-        </p>
-        <div class="quick-nav" aria-label="Quick setup links">
-          <a href="#controller-firmware">Main firmware</a>
-          <a href="#keypad-firmware">Keypad UF2</a>
-          <a href="#flash-steps">Flashing steps</a>
+        <p class="lede">A smaller controller for essential stream actions, with a dedicated firmware path and the same clear install flow.</p>
+        <div class="hero-actions" aria-label="Device actions">
+          <a class="button primary" href="#controller-firmware">Flash firmware</a>
+          <a class="button secondary" href="#setup">Read setup steps</a>
         </div>
+        <div class="device-tags" aria-label="Device highlights">
+          <span>Compact format</span>
+          <span>ESP8266</span>
+          <span>Pico keypad</span>
+          <span>Browser installer</span>
+        </div>
+      </div>
+      <figure class="hero-media compact-hero-media">
+        <img src="../assets/4x3-micro-logo.png" alt="4x3 Micro logo">
+        <figcaption>4x3 Micro / compact controller</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="setup">
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Setup flow</p>
+          <h2>Flash, connect, then configure Lumia.</h2>
+        </div>
+        <p>Use a computer for the USB firmware install. Use a mobile phone for the controller's first Wi-Fi connection, then finish the Lumia pairing on the local network.</p>
+      </div>
+      <div class="setup-rail three-step-rail">
+        <article class="setup-card setup-card-computer">
+          <span class="setup-label">Computer</span>
+          <h3>1. Flash the controller</h3>
+          <p>Use Chrome or Edge, a USB data cable, and the inline Firmware button while installing the ESP8266 build.</p>
+        </article>
+        <article class="setup-card setup-card-phone">
+          <span class="setup-label">Mobile phone</span>
+          <h3>2. Join setup Wi-Fi</h3>
+          <p>Connect your phone to <code>Lumi-Con-Setup</code>, tap the sign-in notification, or visit <code>http://192.168.4.1</code> in the phone's browser.</p>
+        </article>
+        <article class="setup-card setup-card-network">
+          <span class="setup-label">Same network</span>
+          <h3>3. Pair the plugin</h3>
+          <p>Use the device IP and configure the Lumia plugin on the computer that will receive key events.</p>
+        </article>
       </div>
     </section>
 
     <section class="section" id="checks">
       <div class="section-head">
-        <p class="kicker">Before you start</p>
-        <h2>Check the browser, cable, and serial port first.</h2>
+        <p class="kicker">Before flashing</p>
+        <h2>Check the cable and serial connection.</h2>
       </div>
       <div class="check-grid">
         <article class="check-card">
-          <strong>Use Chrome or Edge</strong>
-          <span>The browser installer needs Web Serial, HTTPS, or localhost.</span>
+          <strong>Desktop Chrome or Edge</strong>
+          <span>The web installer needs Web Serial and a secure page or localhost.</span>
         </article>
         <article class="check-card">
-          <strong>Use a data cable</strong>
-          <span>Charge-only USB cables will power the board but will not expose the serial port.</span>
+          <strong>USB data cable</strong>
+          <span>Charge-only cables will not expose the controller to the installer.</span>
         </article>
         <article class="check-card">
           <strong>Close serial tools</strong>
-          <span>Shut Arduino Serial Monitor and anything else that may already be using the port.</span>
+          <span>Arduino Serial Monitor and other serial tools must release the port.</span>
         </article>
         <article class="check-card">
           <strong>Hold Firmware</strong>
-          <span>Hold the inline Firmware button while flashing the main controller.</span>
+          <span>Keep the inline Firmware button held until the install has finished.</span>
         </article>
       </div>
     </section>
 
     <section class="section attention" id="flash-steps">
-      <p class="kicker">Main controller</p>
-      <h2>Flash the ESP8266 with the Firmware button held down.</h2>
-      <ol class="ordered-steps">
-        <li>Connect the main controller by USB.</li>
-        <li>Find the red-and-black inline <strong>Firmware</strong> button between the Pico TX line and the ESP RX line.</li>
-        <li>Hold the <strong>Firmware</strong> button, choose a firmware build below, then select the LumiCon serial device when your browser asks.</li>
-        <li>Keep holding the <strong>Firmware</strong> button until the install has finished.</li>
-        <li>Release the button and let the controller reboot.</li>
-        <li>If flashing fails, unplug the 4x3 keypad and try the install again.</li>
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Main controller</p>
+          <h2>Install the ESP8266 build.</h2>
+        </div>
+        <p>Choose the current build for a normal update. The folder list keeps older files available where the repository provides them.</p>
+      </div>
+      <ol class="ordered-steps numbered-steps">
+        <li>Connect the controller to the computer by USB.</li>
+        <li>Hold the inline <strong>Firmware</strong> button.</li>
+        <li>Choose a build below and select the serial device when prompted.</li>
+        <li>Keep holding the button until the install completes, then release it.</li>
+        <li>If the install fails, disconnect the keypad and retry.</li>
       </ol>
-      <div class="note"><strong>Erase device:</strong> use this for recovery or a clean reset. It can clear saved Wi-Fi settings and pet data.</div>
     </section>
 
     <section class="section" id="controller-firmware">
-      <div class="section-head">
-        <p class="kicker">Firmware installer</p>
-        <h2>Main firmware discovered from the 4x3 folders.</h2>
-        <p class="firmware-copy">
-          The dropdown is built from committed <code>.bin</code> files in <code>firmware/4x3/latest</code> and <code>firmware/4x3/versions</code>. New builds added there will appear automatically after the site is published.
-        </p>
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Firmware installer</p>
+          <h2>Choose the 4x3 controller build.</h2>
+        </div>
+        <p class="firmware-copy">The page discovers <code>.bin</code> files from <code>firmware/4x3/latest</code> and <code>firmware/4x3/versions</code> in the site repository.</p>
       </div>
-
       <div class="firmware-layout">
-        <div class="panel">
+        <div class="panel installer-panel">
+          <div class="panel-heading">
+            <span class="panel-index">01</span>
+            <h3>Install or download</h3>
+          </div>
           <label for="version-select">Firmware build</label>
           <select id="version-select" aria-label="Firmware build selector"></select>
           <p class="microcopy" id="version-help">Looking for available firmware builds...</p>
@@ -101,8 +138,11 @@
           <div id="status-box" class="status-box" aria-live="polite"></div>
         </div>
         <div class="panel">
-          <h3>Detected builds</h3>
-          <p class="microcopy">Use the newest build for normal updates. Older builds stay visible for rollback and testing.</p>
+          <div class="panel-heading">
+            <span class="panel-index">02</span>
+            <h3>Detected builds</h3>
+          </div>
+          <p class="microcopy">New files added to the configured folders can appear here after the site is published.</p>
           <div id="controller-file-list" class="file-list"></div>
         </div>
       </div>
@@ -113,24 +153,29 @@
         <summary class="summary-row">
           <span>
             <span class="kicker">Keypad firmware</span>
-            <h2>Download the Pico UF2 when the keypad board needs updating.</h2>
+            <h2>Download the Pico UF2 when the keypad needs updating.</h2>
           </span>
-          <span class="summary-pill">Show or hide</span>
+          <span class="summary-pill">Open section</span>
         </summary>
         <div class="keypad-body">
           <div class="panel">
-            <h3>Latest keypad file</h3>
-            <p class="microcopy">The page detects <code>.uf2</code> files in <code>firmware/4x3/keypad/latest</code>.</p>
+            <div class="panel-heading">
+              <span class="panel-index">UF2</span>
+              <h3>Latest keypad file</h3>
+            </div>
+            <p class="microcopy">The page checks <code>firmware/4x3/keypad/latest</code> for the current UF2 file.</p>
             <div id="keypad-download-zone" class="installer-zone"></div>
           </div>
           <div class="panel">
-            <h3>How to flash the Pico</h3>
-            <ol class="ordered-steps">
+            <div class="panel-heading">
+              <span class="panel-index">03</span>
+              <h3>Flash the Pico</h3>
+            </div>
+            <ol class="ordered-steps compact-steps">
               <li>Unplug the keypad board.</li>
               <li>Hold <strong>BOOTSEL</strong> while connecting USB.</li>
-              <li>Open the temporary drive named <code>RPI-RP2</code>.</li>
-              <li>Copy the downloaded <code>.uf2</code> file onto that drive.</li>
-              <li>The Pico copies the file, reboots, and disconnects automatically.</li>
+              <li>Open the <code>RPI-RP2</code> drive.</li>
+              <li>Copy the UF2 file onto it and wait for the automatic reboot.</li>
             </ol>
           </div>
         </div>
@@ -139,8 +184,8 @@
   </main>
 
   <footer class="site-footer">
-    <span><a class="back-link" href="../index.html">Back to LumiCon</a></span>
-    <span>4x3 Micro setup</span>
+    <span><a class="back-link" href="../index.html">Back to LumiCon overview</a></span>
+    <span>4x3 Micro / firmware and setup</span>
   </footer>
 
   <script>

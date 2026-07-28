@@ -3,97 +3,163 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LumiCon 6x6 Matrix Mini setup</title>
-  <meta name="description" content="Install LumiCon 6x6 Matrix Mini ESP8266 firmware, download keypad Pico firmware, and follow the flashing steps.">
+  <title>LumiCon 6x6 Matrix Mini | Setup and firmware</title>
+  <meta name="description" content="Set up the LumiCon 6x6 Matrix Mini, flash ESP8266 firmware, update the Pico keypad, and connect the controller to Lumia Stream.">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="../index.html" aria-label="LumiCon home">
-      <img src="../assets/lumicon-logo.png" alt="">
+      <img src="../assets/lumicon-logo-square.png" alt="">
       <span>
         <strong>LumiCon</strong>
         <small>6x6 Matrix Mini</small>
       </span>
     </a>
     <nav class="site-nav" aria-label="Page navigation">
-      <a href="../index.html">Home</a>
-      <a href="#checks">Checks</a>
+      <a href="../index.html">Overview</a>
+      <a href="#setup">Setup</a>
       <a href="#controller-firmware">Firmware</a>
       <a href="#keypad-firmware">Keypad</a>
+      <a href="#reference">Reference</a>
     </nav>
   </header>
 
   <main>
     <section class="hero device-hero">
-      <div class="hero-media">
-        <img src="../assets/6x6-matrix-mini-logo.png" alt="6x6 Matrix Mini logo">
-      </div>
       <div class="hero-copy">
-        <p class="eyebrow">LumiCon controller setup</p>
+        <p class="eyebrow">Current reference build / firmware 1.1.4</p>
         <h1>6x6 Matrix Mini</h1>
         <p class="lede">
-          Install the main ESP8266 firmware, recover with an older build when needed, or update the Pico keypad firmware for DIY builds.
+          A 36-key open stream controller with an integrated TFT display, phone-first Wi-Fi setup, and a Lumia plugin that carries events and actions across your local network.
         </p>
-        <div class="quick-nav" aria-label="Quick setup links">
-          <a href="#controller-firmware">Main firmware</a>
-          <a href="#keypad-firmware">Keypad UF2</a>
-          <a href="#flash-steps">Flashing steps</a>
+        <div class="hero-actions" aria-label="Device actions">
+          <a class="button primary" href="#controller-firmware">Flash firmware</a>
+          <a class="button secondary" href="#setup">Read the setup steps</a>
         </div>
+        <div class="device-tags" aria-label="Device specifications">
+          <span>36 keys</span>
+          <span>ESP8266 + RP2040</span>
+          <span>ST7735 TFT</span>
+          <span>Lumia plugin</span>
+        </div>
+      </div>
+      <figure class="hero-media hero-product-shot">
+        <img src="../assets/6x6-matrix-mini-photo.png" alt="Assembled LumiCon 6x6 Matrix Mini with coloured keycaps and TFT display">
+        <figcaption>Reference assembly / 6x6 Matrix Mini</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="setup">
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Start here</p>
+          <h2>Keep the phone step and the computer step separate.</h2>
+        </div>
+        <p>The phone is used for the controller's first Wi-Fi connection. Firmware flashing and Lumia pairing happen on the computer once the controller is on the same network.</p>
+      </div>
+      <div class="setup-rail">
+        <article class="setup-card setup-card-computer">
+          <span class="setup-label">Computer</span>
+          <h3>1. Flash the ESP8266</h3>
+          <p>Use Chrome or Edge on a computer, a USB data cable, and the Firmware button on the controller. The installer below writes a complete ESP8266 image at offset zero.</p>
+          <a class="text-link" href="#controller-firmware">Choose a firmware build <span aria-hidden="true">-&gt;</span></a>
+        </article>
+        <article class="setup-card setup-card-phone">
+          <span class="setup-label">Mobile phone</span>
+          <h3>2. Join the setup Wi-Fi</h3>
+          <p>On your phone, connect to <code>Lumi-Con-Setup</code>. Tap the Wi-Fi sign-in notification, or open <code>http://192.168.4.1</code> in the phone's browser.</p>
+          <a class="text-link" href="#phone-setup">See phone setup <span aria-hidden="true">-&gt;</span></a>
+        </article>
+        <article class="setup-card setup-card-network">
+          <span class="setup-label">Same network</span>
+          <h3>3. Register the Lumia host</h3>
+          <p>Install the plugin, set the ESP Base URL, and use <code>/plugin?host=&lt;pc-ip&gt;</code> to tell the controller which computer is running Lumia.</p>
+          <a class="text-link" href="#lumia">Configure Lumia <span aria-hidden="true">-&gt;</span></a>
+        </article>
       </div>
     </section>
 
     <section class="section" id="checks">
       <div class="section-head">
-        <p class="kicker">Before you start</p>
-        <h2>Four quick checks prevent most flashing problems.</h2>
+        <p class="kicker">Before flashing</p>
+        <h2>A few practical checks save a lot of retries.</h2>
       </div>
       <div class="check-grid">
         <article class="check-card">
-          <strong>Use Chrome or Edge</strong>
-          <span>The browser installer needs Web Serial, HTTPS, or localhost.</span>
+          <strong>Use a computer for flashing</strong>
+          <span>The browser installer needs desktop Chrome or Edge, HTTPS or localhost, and Web Serial.</span>
         </article>
         <article class="check-card">
-          <strong>Use a data cable</strong>
-          <span>Charge-only USB cables will power the board but will not expose the serial port.</span>
+          <strong>Use a USB data cable</strong>
+          <span>A charge-only cable can power the board without exposing its serial port.</span>
         </article>
         <article class="check-card">
           <strong>Close serial tools</strong>
-          <span>Shut Arduino Serial Monitor and anything else that may already be using the port.</span>
+          <span>Close Arduino Serial Monitor and any other program already using the controller port.</span>
         </article>
         <article class="check-card">
-          <strong>Hold Firmware</strong>
-          <span>Hold the inline Firmware button while flashing the main controller.</span>
+          <strong>Disconnect the Pico TX line</strong>
+          <span>For a direct ESP8266 upload, disconnect Pico GP0 TX from ESP RX / GPIO3 first.</span>
         </article>
       </div>
     </section>
 
     <section class="section attention" id="flash-steps">
-      <p class="kicker">Main controller</p>
-      <h2>Flash the ESP8266 with the Firmware button held down.</h2>
-      <ol class="ordered-steps">
-        <li>Connect the main controller by USB.</li>
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Main controller</p>
+          <h2>Flash the ESP8266 with the Firmware button held.</h2>
+        </div>
+        <p>The web installer uses the same complete binary builds that are stored in the site's firmware folders. Older builds remain available for rollback and testing.</p>
+      </div>
+      <ol class="ordered-steps numbered-steps">
+        <li>Connect the main controller to the computer by USB.</li>
         <li>Find the red-and-black inline <strong>Firmware</strong> button between the Pico TX line and the ESP RX line.</li>
-        <li>Hold the <strong>Firmware</strong> button, choose a firmware build below, then select the LumiCon serial device when your browser asks.</li>
-        <li>Keep holding the <strong>Firmware</strong> button until the install has finished.</li>
-        <li>Release the button and let the controller reboot.</li>
-        <li>If flashing fails, unplug the 6x6 keypad and try the install again.</li>
+        <li>Hold <strong>Firmware</strong>, choose a build below, and select the LumiCon serial device when prompted.</li>
+        <li>Keep holding the button until the install completes.</li>
+        <li>Release the button and allow the controller to reboot.</li>
+        <li>If flashing fails, unplug the 6x6 keypad and try again.</li>
       </ol>
-      <div class="note"><strong>Erase device:</strong> use this for recovery or a clean reset. It can clear saved Wi-Fi settings and pet data.</div>
+      <div class="note"><strong>Recovery:</strong> the installer may offer to erase the device. Use that for a clean recovery only; it can remove saved Wi-Fi settings and pet data.</div>
+    </section>
+
+    <section class="section phone-section" id="phone-setup">
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Phone-first Wi-Fi setup</p>
+          <h2>Use your mobile phone for the captive portal.</h2>
+        </div>
+        <p>The controller's temporary setup network is designed to be completed from a phone. A desktop browser often stays on the normal network and misses the device portal.</p>
+      </div>
+      <ol class="ordered-steps numbered-steps">
+        <li>Power the controller and wait for the setup prompt.</li>
+        <li>On your phone, open Wi-Fi settings and join <code>Lumi-Con-Setup</code>.</li>
+        <li>Tap the phone's Wi-Fi sign-in notification. If it does not appear, open the phone's browser and visit <code>http://192.168.4.1</code>.</li>
+        <li>Select your normal home or streaming Wi-Fi network and enter its password.</li>
+        <li>Save the settings, then note the controller IP shown on the TFT after it reconnects.</li>
+      </ol>
+      <div class="note phone-note"><strong>Need to start again?</strong> Hold Pico key K0 at boot to clear saved Wi-Fi and reopen phone setup. K0 is the top-left key; K35 is the bottom-right key.</div>
     </section>
 
     <section class="section" id="controller-firmware">
-      <div class="section-head">
-        <p class="kicker">Firmware installer</p>
-        <h2>Main firmware discovered from the repo folders.</h2>
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Firmware installer</p>
+          <h2>Choose the ESP8266 build to install.</h2>
+        </div>
         <p class="firmware-copy">
-          The dropdown is built from committed <code>.bin</code> files in <code>firmware/latest</code>, <code>firmware/recent</code>, and <code>firmware/versions</code>. New builds added there will appear automatically after the site is published.
+          This list is discovered from committed <code>.bin</code> files in <code>firmware/latest</code>, <code>firmware/recent</code>, and <code>firmware/versions</code>. The newest current build is 1.1.4.
         </p>
       </div>
 
       <div class="firmware-layout">
-        <div class="panel">
+        <div class="panel installer-panel">
+          <div class="panel-heading">
+            <span class="panel-index">01</span>
+            <h3>Install or download</h3>
+          </div>
           <label for="version-select">Firmware build</label>
           <select id="version-select" aria-label="Firmware build selector"></select>
           <p class="microcopy" id="version-help">Looking for available firmware builds...</p>
@@ -101,8 +167,11 @@
           <div id="status-box" class="status-box" aria-live="polite"></div>
         </div>
         <div class="panel">
-          <h3>Detected builds</h3>
-          <p class="microcopy">Use the newest build for normal updates. Older builds stay visible for rollback and testing.</p>
+          <div class="panel-heading">
+            <span class="panel-index">02</span>
+            <h3>Detected builds</h3>
+          </div>
+          <p class="microcopy">Use the newest build for a normal update. Older builds stay visible for rollback and testing.</p>
           <div id="controller-file-list" class="file-list"></div>
         </div>
       </div>
@@ -113,34 +182,122 @@
         <summary class="summary-row">
           <span>
             <span class="kicker">Keypad firmware</span>
-            <h2>Download the Pico UF2 when the keypad board needs updating.</h2>
+            <h2>Update the Pico scanner only when it needs it.</h2>
           </span>
-          <span class="summary-pill">Show or hide</span>
+          <span class="summary-pill">Open section</span>
         </summary>
         <div class="keypad-body">
           <div class="panel">
-            <h3>Latest keypad file</h3>
+            <div class="panel-heading">
+              <span class="panel-index">UF2</span>
+              <h3>Latest keypad file</h3>
+            </div>
             <p class="microcopy">The page detects <code>.uf2</code> files in <code>firmware/keypad/latest</code>.</p>
             <div id="keypad-download-zone" class="installer-zone"></div>
           </div>
           <div class="panel">
-            <h3>How to flash the Pico</h3>
-            <ol class="ordered-steps">
+            <div class="panel-heading">
+              <span class="panel-index">03</span>
+              <h3>Flash the Pico</h3>
+            </div>
+            <ol class="ordered-steps compact-steps">
               <li>Unplug the keypad board.</li>
               <li>Hold <strong>BOOTSEL</strong> while connecting USB.</li>
               <li>Open the temporary drive named <code>RPI-RP2</code>.</li>
-              <li>Copy the downloaded <code>.uf2</code> file onto that drive.</li>
+              <li>Copy the downloaded <code>.uf2</code> file to that drive.</li>
               <li>The Pico copies the file, reboots, and disconnects automatically.</li>
             </ol>
           </div>
         </div>
       </details>
     </section>
+
+    <section class="section" id="lumia">
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">Lumia connection</p>
+          <h2>Turn the hardware into stream actions.</h2>
+        </div>
+        <p>Install the current plugin package from the device repository, then configure the host after phone Wi-Fi setup has completed.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <h3>Plugin defaults</h3>
+          <ul class="plain-list">
+            <li><strong>Enable Listener:</strong> on</li>
+            <li><strong>Listen Port:</strong> 8787</li>
+            <li><strong>ESP Base URL:</strong> the IP shown on the TFT</li>
+            <li><strong>Shared Secret:</strong> blank unless you set one in firmware</li>
+          </ul>
+          <a class="source-link" href="https://github.com/darylbwickham-design/lumicon_6x6_mini/tree/main/Plugins/1.3.1">Open current plugin files <span aria-hidden="true">-&gt;</span></a>
+        </article>
+        <article class="feature-card">
+          <h3>Register the PC</h3>
+          <p>From a browser on the same network, open:</p>
+          <code class="code-block">http://&lt;device-ip&gt;/plugin?host=&lt;pc-ip&gt;</code>
+          <p class="microcopy">This stores the computer address used by the controller to send key events to Lumia.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Available actions</h3>
+          <p>Display: Add Line, Display: Set Status, Display: Clear, Display: Celebration, Device: Connect, Device: Screen Mode, and Pet Action.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Useful variables</h3>
+          <p><code>{{event}}</code> <code>{{kind}}</code> <code>{{key_label}}</code> <code>{{device_ip}}</code> <code>{{device_rssi}}</code> <code>{{device_status_text}}</code> and the pet state variables are available to Lumia.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="reference">
+      <div class="section-head">
+        <p class="kicker">Build reference</p>
+        <h2>The useful details, in one place.</h2>
+        <p>The figures below are taken from the LumiCon 6x6 Mini device repository and its current firmware notes.</p>
+      </div>
+      <div class="reference-grid">
+        <details class="reference-card" open>
+          <summary>Architecture and wiring</summary>
+          <div class="reference-body">
+            <p>The Pico scans the 6x6 matrix and sends packets over UART to the ESP8266. The ESP8266 drives the ST7735 TFT, joins Wi-Fi, serves the local API, and posts events to Lumia.</p>
+            <ul class="plain-list">
+              <li>Rows: GP12, GP1-GP5</li>
+              <li>Columns: GP6-GP11</li>
+              <li>Pico TX: GP0 to ESP RX / GPIO3</li>
+              <li>TFT: SCK D5, MOSI D7, CS D2, DC D1</li>
+            </ul>
+          </div>
+        </details>
+        <details class="reference-card" open>
+          <summary>Boot keys and modes</summary>
+          <div class="reference-body">
+            <ul class="plain-list">
+              <li><strong>K0:</strong> clear Wi-Fi and open phone setup</li>
+              <li><strong>K1:</strong> Chat mode</li>
+              <li><strong>K2:</strong> noPet diagnostics</li>
+              <li><strong>K35:</strong> virtual pet mode</li>
+              <li>Runtime modes also include LCD Only Mode.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="reference-card" open>
+          <summary>Local HTTP API</summary>
+          <div class="reference-body">
+            <p>The current firmware exposes <code>/msg</code>, <code>/status</code>, <code>/clear</code>, <code>/ui</code>, <code>/health</code>, <code>/plugin</code>, <code>/celebrate</code>, <code>/mode</code>, and <code>/pet</code>.</p>
+            <p class="microcopy">Use the device IP after Wi-Fi setup. These routes are local network tools for testing, integrations, and the Lumia plugin.</p>
+          </div>
+        </details>
+      </div>
+      <div class="source-links">
+        <a class="source-link" href="https://github.com/darylbwickham-design/lumicon_6x6_mini">Device repository</a>
+        <a class="source-link" href="https://github.com/darylbwickham-design/lumicon_6x6_mini/tree/main/Docs">Documentation and release notes</a>
+        <a class="source-link" href="https://github.com/darylbwickham-design/lumicon_6x6_mini/tree/main/Plugins">Lumia plugin packages</a>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
-    <span><a class="back-link" href="../index.html">Back to LumiCon</a></span>
-    <span>6x6 Matrix Mini setup</span>
+    <span><a class="back-link" href="../index.html">Back to LumiCon overview</a></span>
+    <span>6x6 Matrix Mini / firmware and build reference</span>
   </footer>
 
   <script>

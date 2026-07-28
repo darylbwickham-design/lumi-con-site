@@ -3,111 +3,194 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LumiCon | Stream controller hardware and firmware</title>
-  <meta name="description" content="LumiCon builds compact Lumia Stream controllers with simple browser firmware updates, clear setup steps, and open hardware roots.">
+  <title>LumiCon | Open stream controller hardware</title>
+  <meta name="description" content="LumiCon is open stream controller hardware with a Lumia plugin, integrated TFT display, phone-first Wi-Fi setup, and browser-based firmware updates.">
   <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="LumiCon home">
-      <img src="assets/lumicon-logo.png" alt="">
+      <img src="assets/lumicon-logo-square.png" alt="">
       <span>
         <strong>LumiCon</strong>
-        <small>Stream controller platform</small>
+        <small>Open stream hardware</small>
       </span>
     </a>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="#devices">Devices</a>
-      <a href="#setup">Setup</a>
+      <a href="#workflow">How it works</a>
+      <a href="#capabilities">Capabilities</a>
       <a href="#firmware">Firmware</a>
-      <a href="https://github.com/darylbwickham-design/lumi-con-site">GitHub</a>
+      <a href="https://github.com/darylbwickham-design/lumicon_6x6_mini">Device GitHub</a>
     </nav>
   </header>
 
   <main>
     <section class="hero hero-home">
       <div class="hero-copy">
-        <p class="eyebrow">Lumia Stream ready. Open hardware roots.</p>
-        <h1>LumiCon</h1>
+        <p class="eyebrow">Open hardware for Lumia Stream</p>
+        <h1>Make the desk part of the show.</h1>
         <p class="lede">
-          Compact DIY stream controllers with polished desk presence, browser-based firmware updates, and enough flexibility for both everyday streamers and hardware tinkerers.
+          LumiCon turns physical buttons into reliable stream controls, while its TFT display carries chat, status, alerts, diagnostics, and an optional virtual pet.
         </p>
         <div class="hero-actions" aria-label="Primary actions">
-          <a class="button primary" href="#devices">Choose a device</a>
-          <a class="button secondary" href="devices/6x6-matrix-mini.html">Flash 6x6 Matrix Mini</a>
+          <a class="button primary" href="devices/6x6-matrix-mini.html">Set up the 6x6 Matrix Mini</a>
+          <a class="button secondary" href="#workflow">See the setup flow</a>
+        </div>
+        <div class="hero-specs" aria-label="LumiCon highlights">
+          <span><strong>36</strong> physical keys</span>
+          <span><strong>ST7735</strong> TFT display</span>
+          <span><strong>8787</strong> Lumia listener port</span>
         </div>
       </div>
-      <div class="hero-media">
-        <img src="assets/6x6-matrix-mini-photo.png" alt="LumiCon 6x6 Matrix Mini controller">
+      <figure class="hero-media hero-product-shot">
+        <img src="assets/6x6-matrix-mini-photo.png" alt="Assembled LumiCon 6x6 Matrix Mini with coloured keycaps and TFT display">
+        <figcaption>6x6 Matrix Mini / assembled build</figcaption>
+      </figure>
+    </section>
+
+    <section class="section intro-band">
+      <div class="section-head narrow-head">
+        <p class="kicker">The platform</p>
+        <h2>A controller, a small display, and a useful local API.</h2>
+        <p>
+          The current 6x6 Matrix Mini build combines a Raspberry Pi Pico matrix scanner with an ESP8266 controller. The Pico reports key presses; the ESP8266 manages Wi-Fi, the TFT, HTTP endpoints, and the Lumia connection.
+        </p>
+      </div>
+      <div class="stat-grid">
+        <article class="stat-card">
+          <strong>0-35</strong>
+          <span>short key events sent to Lumia</span>
+        </article>
+        <article class="stat-card">
+          <strong>36-71</strong>
+          <span>long-press events, using the same 36 keys</span>
+        </article>
+        <article class="stat-card">
+          <strong>72-93</strong>
+          <span>optional virtual pet event range</span>
+        </article>
+        <article class="stat-card">
+          <strong>Wi-Fi</strong>
+          <span>phone-first setup, then local network control</span>
+        </article>
       </div>
     </section>
 
     <section class="section" id="devices">
       <div class="section-head">
-        <p class="kicker">Devices</p>
-        <h2>Pick your controller and go straight to the right setup.</h2>
-        <p>Each device page keeps the main ESP firmware, keypad Pico firmware, and flashing notes in one place.</p>
+        <p class="kicker">Choose a device</p>
+        <h2>Start with the build on your desk.</h2>
+        <p>Each device page keeps the matching firmware folders, flashing controls, and setup notes together.</p>
       </div>
       <div class="device-grid">
-        <a class="device-card" href="devices/6x6-matrix-mini.html">
-          <img src="assets/6x6-matrix-mini-logo.png" alt="6x6 Matrix Mini logo">
-          <span class="status">Available now</span>
-          <h3>6x6 Matrix Mini</h3>
-          <p>A compact 36-key Lumia Stream controller with LCD feedback and a separate Pico keypad board.</p>
-          <span class="text-link">Open setup</span>
+        <a class="device-card featured-device" href="devices/6x6-matrix-mini.html">
+          <div class="device-card-media">
+            <img src="assets/6x6-matrix-mini-photo.png" alt="Assembled LumiCon 6x6 Matrix Mini">
+          </div>
+          <div class="device-card-copy">
+            <span class="status">Current reference build</span>
+            <h3>6x6 Matrix Mini</h3>
+            <p>36 keys, an integrated ST7735 TFT, RP2040 matrix scanning, ESP8266 networking, Lumia events, display actions, and optional pet mode.</p>
+            <span class="text-link">Open the 6x6 setup <span aria-hidden="true">-&gt;</span></span>
+          </div>
         </a>
         <a class="device-card" href="devices/4x3-micro.html">
-          <img src="assets/4x3-Micro-logo.png" alt="4x3 Micro logo">
-          <span class="status">Available now</span>
-          <h3>4x3 Micro</h3>
-          <p>A smaller controller for essential actions, quick scenes, and compact desk setups.</p>
-          <span class="text-link">Open setup</span>
+          <div class="device-card-media compact-media">
+            <img src="assets/4x3-micro-logo.png" alt="4x3 Micro logo">
+          </div>
+          <div class="device-card-copy">
+            <span class="status">Firmware available</span>
+            <h3>4x3 Micro</h3>
+            <p>A smaller LumiCon format for essential actions, with the same browser installer pattern and a dedicated firmware folder.</p>
+            <span class="text-link">Open the 4x3 setup <span aria-hidden="true">-&gt;</span></span>
+          </div>
         </a>
       </div>
     </section>
 
-    <section class="section split" id="setup">
-      <div>
-        <p class="kicker">Setup flow</p>
-        <h2>Clear steps before anyone plugs in.</h2>
+    <section class="section" id="workflow">
+      <div class="section-head split-head">
+        <div>
+          <p class="kicker">How it works</p>
+          <h2>Two devices, three setup moments.</h2>
+        </div>
+        <p>The phone is used for the device's first Wi-Fi connection. The computer is used for firmware flashing and Lumia, once the controller is on the same network.</p>
       </div>
-      <div class="steps-grid">
-        <article>
-          <span>1</span>
-          <h3>Select your device</h3>
-          <p>Start from the matching setup page so the installer, keypad file, and notes are correct.</p>
+      <div class="timeline">
+        <article class="timeline-step">
+          <span class="step-number">01</span>
+          <h3>Flash the controller</h3>
+          <p>Use the browser installer on a computer with Chrome or Edge and a USB data cable. Hold the inline Firmware button while the ESP8266 is being flashed.</p>
         </article>
-        <article>
-          <span>2</span>
-          <h3>Flash the main controller</h3>
-          <p>Use desktop Chrome or Edge, a data cable, and the on-page firmware button steps.</p>
+        <article class="timeline-step phone-step">
+          <span class="step-number">02</span>
+          <h3>Connect with your phone</h3>
+          <p>Join <code>Lumi-Con-Setup</code> from your mobile phone. Tap the Wi-Fi sign-in notification, or open <code>http://192.168.4.1</code> in the phone's browser.</p>
         </article>
-        <article>
-          <span>3</span>
-          <h3>Update the keypad if needed</h3>
-          <p>DIY builders can download the latest UF2 and copy it to the Pico in BOOTSEL mode.</p>
+        <article class="timeline-step">
+          <span class="step-number">03</span>
+          <h3>Pair Lumia on the network</h3>
+          <p>After the controller shows its new IP address, install the Lumia plugin and register the PC with <code>/plugin?host=&lt;pc-ip&gt;</code>.</p>
+        </article>
+        <article class="timeline-step">
+          <span class="step-number">04</span>
+          <h3>Map keys and actions</h3>
+          <p>Use short and long key alerts for controls, then send status, display, celebration, and pet actions back to the TFT.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="capabilities">
+      <div class="section-head">
+        <p class="kicker">What the 6x6 build can do</p>
+        <h2>More than a button grid.</h2>
+      </div>
+      <div class="capability-grid">
+        <article class="capability-card">
+          <span class="capability-mark">01</span>
+          <h3>Lumia integration</h3>
+          <p>The plugin exposes short presses, long presses, device health, signal strength, labels, and connection state for alerts and automations.</p>
+        </article>
+        <article class="capability-card">
+          <span class="capability-mark">02</span>
+          <h3>On-device feedback</h3>
+          <p>Send lines, status text, clear commands, and celebrations to the TFT. Chat, diagnostics, pet, and LCD-only modes are available in the current firmware.</p>
+        </article>
+        <article class="capability-card">
+          <span class="capability-mark">03</span>
+          <h3>Virtual pet system</h3>
+          <p>Optional pet state is stored on the device and exposed to Lumia through status variables and actions such as feed, play, clean, sleep, and reset.</p>
+        </article>
+        <article class="capability-card">
+          <span class="capability-mark">04</span>
+          <h3>Open build files</h3>
+          <p>The device repository includes firmware source, plugin packages, wiring notes, PCB files, test material, release notes, and 3D enclosure files.</p>
         </article>
       </div>
     </section>
 
     <section class="section firmware-section" id="firmware">
-      <div class="section-head">
-        <p class="kicker">Firmware</p>
-        <h2>Firmware links now follow the folders.</h2>
-        <p>
-          Device pages discover committed firmware files from the public repo tree and build the installer choices automatically. Add a new <code>.bin</code> or <code>.uf2</code> to the relevant firmware folder, commit it, and the matching page can surface it without editing the page by hand.
-        </p>
-      </div>
-      <div class="firmware-actions">
-        <a class="button primary" href="devices/6x6-matrix-mini.html#controller-firmware">6x6 firmware</a>
-        <a class="button secondary" href="devices/4x3-micro.html#controller-firmware">4x3 firmware</a>
+      <div class="firmware-callout">
+        <div>
+          <p class="kicker">Firmware updates</p>
+          <h2>The update links follow the repository folders.</h2>
+          <p>
+            Device pages read the public site repository tree and collect matching <code>.bin</code> and <code>.uf2</code> files from the configured folders. Add a new build, commit it, and publish the site; the matching page can then surface it without hand-editing a version list.
+          </p>
+        </div>
+        <div class="firmware-callout-actions">
+          <a class="button primary" href="devices/6x6-matrix-mini.html#controller-firmware">Open 6x6 firmware</a>
+          <a class="button secondary" href="devices/4x3-micro.html#controller-firmware">Open 4x3 firmware</a>
+          <a class="source-link" href="https://github.com/darylbwickham-design/lumi-con_6x6_mini">Browse device source on GitHub</a>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <span>LumiCon for Lumia Stream</span>
-    <span>Open source, modular, and built to grow.</span>
+    <span>LumiCon / open hardware for Lumia Stream</span>
+    <span>Firmware, plugin, and build files live on GitHub.</span>
   </footer>
 </body>
 </html>
