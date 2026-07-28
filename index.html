@@ -3,431 +3,111 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LumiCon | DIY Stream Controller Platform</title>
-  <meta name="description" content="LumiCon is a DIY stream controller platform built around Lumia Stream, with a polished device feel and room for open source tinkering.">
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #05070d;
-      --bg2: #090d16;
-      --panel: rgba(11, 18, 32, 0.84);
-      --panel-strong: rgba(10, 16, 28, 0.94);
-      --line: rgba(143, 167, 255, 0.15);
-      --line-strong: rgba(77, 232, 255, 0.24);
-      --text: #eef4ff;
-      --muted: #afbdd8;
-      --dim: #8592af;
-      --cyan: #4de8ff;
-      --violet: #ba74ff;
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --shadow: 0 26px 70px rgba(0,0,0,0.34);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 18% 10%, rgba(77,232,255,0.12), transparent 0 24%),
-        radial-gradient(circle at 82% 8%, rgba(186,116,255,0.13), transparent 0 25%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 48%, #04060b 100%);
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 4px);
-      opacity: 0.14;
-    }
-    a { color: inherit; }
-    .wrap {
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 18px 0 56px;
-      position: relative;
-      z-index: 1;
-    }
-    .topbar {
-      position: sticky;
-      top: 12px;
-      z-index: 20;
-      margin-bottom: 18px;
-    }
-    .topbar-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(7, 11, 20, 0.76);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .brand-link {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: linear-gradient(135deg, rgba(77,232,255,0.14), rgba(186,116,255,0.18));
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      text-decoration: none;
-    }
-    .brand-link img {
-      width: 82%;
-      height: 82%;
-      object-fit: contain;
-      object-position: center;
-      display: block;
-    }
-    .brand strong {
-      display: block;
-      font-size: 1rem;
-    }
-    .brand span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .nav a {
-      text-decoration: none;
-      color: var(--muted);
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-    }
-    .nav a:hover {
-      color: var(--text);
-      background: rgba(255,255,255,0.04);
-    }
-    .hero {
-      padding: 28px;
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 14% 10%, rgba(77,232,255,0.08), transparent 0 28%),
-        radial-gradient(circle at 84% 10%, rgba(186,116,255,0.10), transparent 0 30%),
-        linear-gradient(180deg, rgba(11,18,32,0.88), rgba(10,15,27,0.78));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      overflow: hidden;
-    }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: 0.78rem;
-      margin-bottom: 14px;
-    }
-    h1 {
-      margin: 0 0 14px;
-      max-width: 10ch;
-      font-size: clamp(2.5rem, 4vw, 4.8rem);
-      line-height: 0.95;
-      letter-spacing: -0.05em;
-    }
-    .lede {
-      margin: 0;
-      max-width: 64ch;
-      color: var(--muted);
-      font-size: 1.06rem;
-      line-height: 1.72;
-    }
-    .hero-strip {
-      margin-top: 24px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .feature-card {
-      border-radius: 22px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-      min-height: 256px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .feature-image {
-      height: 190px;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      background:
-        radial-gradient(circle at 50% 25%, rgba(77,232,255,0.12), transparent 0 40%),
-        linear-gradient(180deg, rgba(9,13,22,0.92), rgba(7,10,18,0.88));
-      overflow: hidden;
-    }
-    .feature-image img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: contain;
-      object-position: center center;
-      background: linear-gradient(180deg, rgba(9,13,22,0.96), rgba(7,10,18,0.92));
-    }
-    .placeholder-mark {
-      width: 72px;
-      height: 72px;
-      border-radius: 20px;
-      display: grid;
-      place-items: center;
-      font-size: 1.6rem;
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(135deg, rgba(77,232,255,0.10), rgba(186,116,255,0.12));
-    }
-    .feature-body {
-      padding: 16px;
-    }
-    .feature-body strong {
-      display: block;
-      font-size: 1rem;
-      margin-bottom: 4px;
-    }
-    .feature-body span {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-    section + section { margin-top: 18px; }
-    .panel {
-      padding: 26px;
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(11,18,32,0.90), rgba(10,15,26,0.78));
-      box-shadow: 0 16px 42px rgba(0,0,0,0.26);
-    }
-    .section-head {
-      margin-bottom: 18px;
-      display: grid;
-      gap: 8px;
-    }
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(1.7rem, 2.5vw, 2.4rem);
-      letter-spacing: -0.03em;
-    }
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.72;
-      max-width: 72ch;
-    }
-    .setup-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .setup-card {
-      display: block;
-      text-decoration: none;
-      border-radius: 22px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
-    }
-    .setup-card.active:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      box-shadow: 0 14px 34px rgba(77,232,255,0.12);
-    }
-    .setup-card.coming-soon { opacity: 0.72; cursor: default; }
-    .setup-thumb {
-      height: 176px;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(77,232,255,0.10), transparent 0 36%),
-        linear-gradient(180deg, rgba(9,13,22,0.94), rgba(7,10,18,0.90));
-      overflow: hidden;
-    }
-    .setup-thumb img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: center 35%;
-    }
-    .setup-body {
-      padding: 16px;
-    }
-    .setup-body strong {
-      display: block;
-      font-size: 1rem;
-      margin-bottom: 4px;
-    }
-    .setup-body span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-    footer {
-      margin-top: 18px;
-      padding: 18px 22px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(7,11,20,0.74);
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      font-size: 0.94rem;
-    }
-    @media (max-width: 980px) {
-      .hero-strip, .setup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (max-width: 700px) {
-      .wrap { width: min(100% - 18px, 1180px); }
-      .topbar-inner { flex-direction: column; align-items: stretch; }
-      .hero-strip, .setup-grid { grid-template-columns: 1fr; }
-      h1 { max-width: none; }
-    }
-  </style>
+  <title>LumiCon | Stream controller hardware and firmware</title>
+  <meta name="description" content="LumiCon builds compact Lumia Stream controllers with simple browser firmware updates, clear setup steps, and open hardware roots.">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-  <main class="wrap">
-    <div class="topbar">
-      <div class="topbar-inner">
-        <div class="brand">
-          <a class="brand-link" href="devices/6x6-matrix-mini.html" aria-label="Open 6x6 Matrix Mini firmware page"><img src="assets/lumicon-logo.png" alt="LumiCon logo"></a>
-          <div>
-            <strong>LumiCon</strong>
-            <span>DIY stream controller platform</span>
-          </div>
-        </div>
-        <nav class="nav" aria-label="Main navigation">
-          <a href="https://github.com/darylbwickham-design/lumicon_6x6_mini">GitHub</a>
-          <a href="mailto:name@placeholder.com">Contact</a>
-        </nav>
-      </div>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="LumiCon home">
+      <img src="assets/lumicon-logo.png" alt="">
+      <span>
+        <strong>LumiCon</strong>
+        <small>Stream controller platform</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="#devices">Devices</a>
+      <a href="#setup">Setup</a>
+      <a href="#firmware">Firmware</a>
+      <a href="https://github.com/darylbwickham-design/lumi-con-site">GitHub</a>
+    </nav>
+  </header>
 
-    <section class="hero" aria-label="Featured LumiCon devices">
-      <div class="eyebrow">Lumia Stream ready • Open source platform</div>
-      <h1>LumiCon</h1>
-      <p class="lede">
-        A DIY stream controller platform linked to Lumia Stream. If Lumia can connect to it, LumiCon can control it. Designed for streamers and tinkerers alike.
-      </p>
-
-      <div class="hero-strip">
-        <article class="feature-card">
-          <div class="feature-image"><img src="assets/6x6-matrix-mini-photo.png" alt="LumiCon 6x6 Matrix Mini"></div>
-          <div class="feature-body">
-            <strong>6x6 Matrix Mini</strong>
-            <span>Available now</span>
-          </div>
-        </article>
-        <article class="feature-card">
-          <div class="feature-image"><div class="placeholder-mark">+</div></div>
-          <div class="feature-body">
-            <strong>Coming soon</strong>
-            <span>More LumiCon hardware is on the way.</span>
-          </div>
-        </article>
-        <article class="feature-card">
-          <div class="feature-image"><div class="placeholder-mark">+</div></div>
-          <div class="feature-body">
-            <strong>Coming soon</strong>
-            <span>More LumiCon hardware is on the way.</span>
-          </div>
-        </article>
-        <article class="feature-card">
-          <div class="feature-image"><div class="placeholder-mark">+</div></div>
-          <div class="feature-body">
-            <strong>Coming soon</strong>
-            <span>More LumiCon hardware is on the way.</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" id="about">
-      <div class="section-head">
-        <h2>About LumiCon</h2>
-        <p>
-          LumiCon is a modular open source stream controller platform built to stay flexible, easy to set up, and affordable. The Matrix Mini combines a compact 6x6 keypad with a smart LCD and pet module, giving you a polished controller on the desk now and a platform that can grow with future LumiCon hardware later.
+  <main>
+    <section class="hero hero-home">
+      <div class="hero-copy">
+        <p class="eyebrow">Lumia Stream ready. Open hardware roots.</p>
+        <h1>LumiCon</h1>
+        <p class="lede">
+          Compact DIY stream controllers with polished desk presence, browser-based firmware updates, and enough flexibility for both everyday streamers and hardware tinkerers.
         </p>
+        <div class="hero-actions" aria-label="Primary actions">
+          <a class="button primary" href="#devices">Choose a device</a>
+          <a class="button secondary" href="devices/6x6-matrix-mini.html">Flash 6x6 Matrix Mini</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img src="assets/6x6-matrix-mini-photo.png" alt="LumiCon 6x6 Matrix Mini controller">
+      </div>
+    </section>
+
+    <section class="section" id="devices">
+      <div class="section-head">
+        <p class="kicker">Devices</p>
+        <h2>Pick your controller and go straight to the right setup.</h2>
+        <p>Each device page keeps the main ESP firmware, keypad Pico firmware, and flashing notes in one place.</p>
+      </div>
+      <div class="device-grid">
+        <a class="device-card" href="devices/6x6-matrix-mini.html">
+          <img src="assets/6x6-matrix-mini-logo.png" alt="6x6 Matrix Mini logo">
+          <span class="status">Available now</span>
+          <h3>6x6 Matrix Mini</h3>
+          <p>A compact 36-key Lumia Stream controller with LCD feedback and a separate Pico keypad board.</p>
+          <span class="text-link">Open setup</span>
+        </a>
+        <a class="device-card" href="devices/4x3-micro.html">
+          <img src="assets/4x3-Micro-logo.png" alt="4x3 Micro logo">
+          <span class="status">Available now</span>
+          <h3>4x3 Micro</h3>
+          <p>A smaller controller for essential actions, quick scenes, and compact desk setups.</p>
+          <span class="text-link">Open setup</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section split" id="setup">
+      <div>
+        <p class="kicker">Setup flow</p>
+        <h2>Clear steps before anyone plugs in.</h2>
+      </div>
+      <div class="steps-grid">
+        <article>
+          <span>1</span>
+          <h3>Select your device</h3>
+          <p>Start from the matching setup page so the installer, keypad file, and notes are correct.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h3>Flash the main controller</h3>
+          <p>Use desktop Chrome or Edge, a data cable, and the on-page firmware button steps.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h3>Update the keypad if needed</h3>
+          <p>DIY builders can download the latest UF2 and copy it to the Pico in BOOTSEL mode.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section firmware-section" id="firmware">
+      <div class="section-head">
+        <p class="kicker">Firmware</p>
+        <h2>Firmware links now follow the folders.</h2>
         <p>
-          It is designed for both free and premium Lumia Stream users. Short and long key actions, custom messages back to the unit, and room for deeper integrations all sit underneath a simple setup path.
+          Device pages discover committed firmware files from the public repo tree and build the installer choices automatically. Add a new <code>.bin</code> or <code>.uf2</code> to the relevant firmware folder, commit it, and the matching page can surface it without editing the page by hand.
         </p>
       </div>
-    </section>
-
-    <section class="panel" id="setup">
-      <div class="section-head">
-        <h2>Setup</h2>
-        <p>Choose your device to get started.</p>
-      </div>
-      <div class="setup-grid">
-        <a class="setup-card active" href="devices/6x6-matrix-mini.html">
-          <div class="setup-thumb"><img src="assets/6x6-matrix-mini-logo.png" alt="6x6 Matrix Mini logo"></div>
-          <div class="setup-body">
-            <strong>6x6 Matrix Mini</strong>
-            <span>Firmware, keypad firmware, and setup.</span>
-          </div>
-        </a>
-        <a class="setup-card active" href="devices/4x3-micro.html">
-          <div class="setup-thumb"><img src="assets/4x3-Micro-logo.png" alt="4x3 Micro logo"></div>
-          <div class="setup-body">
-            <strong>4x3 Micro</strong>
-            <span>Firmware, keypad firmware, and setup.</span>
-          </div>
-        </a>
-        <div class="setup-card coming-soon" aria-disabled="true">
-          <div class="setup-thumb"><div class="placeholder-mark">+</div></div>
-          <div class="setup-body">
-            <strong>Coming soon</strong>
-            <span>More LumiCon hardware is on the way.</span>
-          </div>
-        </div>
-        <div class="setup-card coming-soon" aria-disabled="true">
-          <div class="setup-thumb"><div class="placeholder-mark">+</div></div>
-          <div class="setup-body">
-            <strong>Coming soon</strong>
-            <span>More LumiCon hardware is on the way.</span>
-          </div>
-        </div>
+      <div class="firmware-actions">
+        <a class="button primary" href="devices/6x6-matrix-mini.html#controller-firmware">6x6 firmware</a>
+        <a class="button secondary" href="devices/4x3-micro.html#controller-firmware">4x3 firmware</a>
       </div>
     </section>
-
-    <footer>
-      <span>LumiCon • DIY stream controller platform for Lumia Stream</span>
-      <span>Open source, modular, and built to grow.</span>
-    </footer>
   </main>
+
+  <footer class="site-footer">
+    <span>LumiCon for Lumia Stream</span>
+    <span>Open source, modular, and built to grow.</span>
+  </footer>
 </body>
 </html>
