@@ -692,3 +692,68 @@ details.keypad-details summary {
     flex-direction: column;
   }
 }
+
+/* Remote Console */
+.software-promo,
+.source-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  background:
+    linear-gradient(105deg, rgba(67, 220, 232, 0.11), transparent 44%),
+    linear-gradient(180deg, rgba(23, 29, 38, 0.94), rgba(14, 18, 24, 0.94));
+}
+
+.software-promo p:not(.kicker) { max-width: 65ch; color: var(--muted); line-height: 1.62; }
+.software-promo-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; flex: 0 0 auto; }
+.remote-console-hero h1 { max-width: 10ch; font-size: clamp(3rem, 7vw, 6.7rem); }
+
+.console-preview {
+  align-self: stretch;
+  min-height: 360px;
+  overflow: hidden;
+  border: 1px solid #3c3058;
+  border-radius: var(--radius);
+  background: #160b2a;
+  box-shadow: 0 34px 80px rgba(0, 0, 0, .42);
+  transform: perspective(1000px) rotateY(-3deg) rotateX(1deg);
+}
+
+.console-preview-bar { min-height: 44px; display: flex; align-items: center; gap: 7px; padding: 0 14px; border-bottom: 1px solid #493366; background: #24123f; color: #b9a8ca; font-size: .74rem; }
+.console-preview-bar i { width: 8px; height: 8px; border-radius: 50%; background: #ff4f86; }
+.console-preview-bar i:nth-child(2) { background: #ffd06a; }
+.console-preview-bar i:nth-child(3) { background: #9ce56d; }
+.console-preview-bar span { margin-left: 7px; }
+.console-preview-body { min-height: 316px; display: grid; grid-template-columns: 92px 1fr; }
+.console-preview-nav { display: grid; align-content: start; gap: 16px; padding: 26px 14px; border-right: 1px solid #432b60; background: #201139; }
+.console-preview-nav b { height: 9px; border-radius: 999px; background: #59416e; }
+.console-preview-nav b.active { background: #ff3d79; box-shadow: 0 0 16px rgba(255, 61, 121, .45); }
+.console-preview-content { display: grid; align-content: start; gap: 12px; padding: 28px; }
+.console-preview-content small { color: #ff5b8d; font-size: .62rem; letter-spacing: .12em; }
+.console-preview-content strong { margin-bottom: 10px; font-size: 1.25rem; }
+.console-preview-content span { height: 43px; border: 1px solid #563773; border-radius: 7px; background: linear-gradient(90deg, #342050, #291743); }
+
+.download-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.download-card { min-height: 260px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255, 255, 255, .035); }
+.download-card.featured { border-color: rgba(67, 220, 232, .48); background: linear-gradient(145deg, rgba(67, 220, 232, .09), rgba(255, 255, 255, .025)); }
+.download-card p { flex: 1; margin: 0; color: var(--muted); line-height: 1.55; }
+.download-card .button { width: 100%; }
+.platform-badge { display: inline-flex; padding: 6px 9px; border: 1px solid var(--line); border-radius: var(--radius); color: var(--cyan); font-size: .72rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.remote-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.source-strip h2 { font-size: clamp(1.8rem, 3vw, 3rem); }
+.source-strip .button { flex: 0 0 auto; }
+
+@media (max-width: 980px) {
+  .software-promo, .source-strip { align-items: flex-start; flex-direction: column; }
+  .software-promo-actions { justify-content: flex-start; }
+  .download-grid, .remote-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .console-preview { min-height: 300px; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .download-grid, .remote-steps { grid-template-columns: 1fr; }
+  .software-promo-actions, .software-promo-actions .button, .source-strip .button { width: 100%; }
+  .console-preview-body { grid-template-columns: 64px 1fr; }
+  .console-preview-content { padding: 20px 14px; }
+}
