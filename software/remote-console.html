@@ -26,9 +26,9 @@
       <div class="hero-copy">
         <p class="eyebrow">Dual-PC Lumia Stream control</p>
         <h1>Remote Console</h1>
-        <p class="lede">Run a focused Lumia control surface on your game PC while the full Lumia Stream application stays on your stream PC.</p>
+        <p class="lede">Install the Lumia plugin on your stream PC, then use the companion app on your game PC to build commands, control lights, test alerts and run Pulse Weaver.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#downloads">Download standalone</a>
+          <a class="button primary" href="#downloads">View downloads</a>
           <a class="button secondary" href="#setup">View setup</a>
         </div>
       </div>
@@ -47,28 +47,34 @@
 
     <section class="section" id="downloads">
       <div class="section-head">
-        <p class="kicker">Standalone downloads</p>
-        <h2>Choose your game PC.</h2>
-        <p>No installer is required. Download the app, open it, and enter the connection details for the PC running Lumia Stream.</p>
+        <p class="kicker">Plugin + companion</p>
+        <h2>Download both parts.</h2>
+        <p>Install the plugin on the stream PC, then choose the portable companion for the game PC. These are standalone downloads; no installer is included.</p>
       </div>
       <div class="download-grid">
         <article class="download-card featured">
+          <span class="platform-badge">Stream PC</span>
+          <h3>Lumia plugin</h3>
+          <p>The required Lumia Stream plugin. It keeps your Lumia API token on the stream PC and runs saved commands and Pulse Weaver locally.</p>
+          <a class="button primary" href="https://github.com/darylbwickham-design/lumicon_remote_console/releases/latest/download/Lumia-Remote-Console.lumiaplugin">Download Lumia plugin</a>
+        </article>
+        <article class="download-card featured">
           <span class="platform-badge">Windows</span>
           <h3>Windows x64</h3>
-          <p>Portable executable for Windows 10 and 11.</p>
-          <a class="button primary" href="https://github.com/darylbwickham-design/lumicon_remote_console/releases/latest/download/LumiCon-Remote-Console-Windows-x64.exe">Download for Windows</a>
+          <p>Portable companion executable for Windows 10 and 11. Run it directly on the game PC.</p>
+          <a class="button primary" href="https://github.com/darylbwickham-design/lumicon_remote_console/releases/latest/download/Lumia-Remote-Console-Windows-x64.exe">Download for Windows</a>
         </article>
         <article class="download-card">
           <span class="platform-badge">macOS</span>
           <h3>Apple Silicon</h3>
-          <p>For Macs using Apple M-series processors.</p>
-          <a class="button secondary" href="https://github.com/darylbwickham-design/lumicon_remote_console/releases/latest/download/LumiCon-Remote-Console-macOS-Apple-Silicon.zip">Download Apple Silicon</a>
+          <p>Portable companion for Macs using Apple M-series processors.</p>
+          <a class="button secondary" href="https://github.com/darylbwickham-design/lumicon_remote_console/releases/latest/download/Lumia-Remote-Console-macOS-Apple-Silicon.zip">Download Apple Silicon</a>
         </article>
         <article class="download-card">
           <span class="platform-badge">macOS</span>
           <h3>Intel</h3>
-          <p>For Macs using Intel processors.</p>
-          <a class="button secondary" href="https://github.com/darylbwickham-design/lumicon_remote_console/releases/latest/download/LumiCon-Remote-Console-macOS-Intel.zip">Download Intel Mac</a>
+          <p>Portable companion for Macs using Intel processors.</p>
+          <a class="button secondary" href="https://github.com/darylbwickham-design/lumicon_remote_console/releases/latest/download/Lumia-Remote-Console-macOS-Intel.zip">Download Intel Mac</a>
         </article>
       </div>
     </section>
@@ -79,12 +85,12 @@
         <h2>Connect the two PCs.</h2>
       </div>
       <div class="steps-grid remote-steps">
-        <article><span>1</span><h3>Prepare Lumia</h3><p>Enable Lumia's API on the stream PC and copy the API token.</p></article>
-        <article><span>2</span><h3>Open the console</h3><p>Launch the standalone app on the game PC.</p></article>
-        <article><span>3</span><h3>Enter the target</h3><p>Use the stream PC hostname or local IP, Lumia API port, and token.</p></article>
-        <article><span>4</span><h3>Start controlling</h3><p>Save the connection and use the dashboard, alerts, lights, commands, and animations.</p></article>
+        <article><span>1</span><h3>Install the plugin</h3><p>Install the <code>.lumiaplugin</code> file in Lumia Stream on the stream PC.</p></article>
+        <article><span>2</span><h3>Configure Lumia</h3><p>Enable Lumia's local API, then enter its token in the plugin. Choose LAN access and set a Dashboard Password.</p></article>
+        <article><span>3</span><h3>Open the companion</h3><p>Launch the portable app on the game PC and enter the stream PC address, plugin port <code>39242</code>, and Dashboard Password.</p></article>
+        <article><span>4</span><h3>Build and control</h3><p>Use the dashboard, Command Builder, alerts, lights and Pulse Weaver while Lumia handles execution on the stream PC.</p></article>
       </div>
-      <div class="note"><strong>Network:</strong> both computers should be on the same trusted local network. Allow the Lumia API port through the stream PC firewall if the connection is blocked.</div>
+      <div class="note"><strong>Network:</strong> both computers should be on the same trusted local network. Allow the plugin dashboard port through the stream PC firewall for private networks. The Lumia API token stays on the stream PC.</div>
     </section>
 
     <section class="section source-strip">
