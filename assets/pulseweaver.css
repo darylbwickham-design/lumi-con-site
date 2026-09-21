@@ -1,0 +1,34 @@
+.site-nav .pulse-nav { gap: 8px; color: #fff; border: 1px solid #bf78ff; background: #271a3d; }
+.pulse-nav img { object-fit: contain; }
+.pulse-banner { display: flex; align-items: center; gap: 22px; padding: 22px 28px; margin-bottom: 18px; border: 1px solid #be77ff; border-radius: 8px; background: linear-gradient(110deg,#122d3b,#281637); text-decoration: none; }
+.pulse-banner img { flex-shrink: 0; object-fit: contain; }
+.pulse-banner strong { display: block; font-size: clamp(1.4rem,3vw,2rem); margin-bottom: 7px; }
+.pulse-banner span span { color: #ced6e4; line-height: 1.5; }
+.pulse-banner b { margin-left: auto; color: #71efff; }
+.pulse-banner:hover { border-color: #71efff; background: #202640; }
+.pulse-page { --muted: #bdc7d6; }
+.pulse-page .site-header { position: static; }
+.pulse-page h1 { font-size: clamp(2.8rem,6vw,5.4rem); line-height: 1.04; }
+.pulse-page h2 { font-size: clamp(1.7rem,3vw,2.7rem); line-height: 1.15; max-width: 28ch; }
+.pulse-page p { line-height: 1.7; }
+.pulse-page .eyebrow, .pulse-page .kicker { font-size: .875rem; }
+.pulse-hero { grid-template-columns: 1fr 220px; min-height: 400px; border-color: #775597; background: linear-gradient(125deg,#112b3a,#221830); }
+.pulse-mark { width: 220px; height: 220px; object-fit: contain; }
+.pulse-features { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; margin-top: 24px; }
+.pulse-features article { padding: 22px; border-left: 2px solid #b675fc; background: #111a27; }
+.pulse-features p { color: var(--muted); margin-bottom: 0; }
+.pulse-links { display: flex; flex-wrap: wrap; gap: 14px 24px; }
+.pulse-links a, .pulse-page p a, .legal-copy a { color: #71efff; text-underline-offset: 3px; }
+.legal-copy { max-width: 850px; margin: 20px auto; padding: clamp(22px,5vw,50px); background: #111923; border: 1px solid #445167; border-radius: 8px; }
+.legal-copy h1 { font-size: clamp(2rem,5vw,3.3rem); max-width: none; }
+.legal-copy h2 { margin-top: 2.3rem; font-size: 1.45rem; max-width: none; }
+.legal-copy p { color: #d0d9e6; }
+:focus-visible { outline: 3px solid #71efff; outline-offset: 5px; }
+@media(max-width:720px) {
+ .pulse-banner { flex-wrap: wrap; gap: 14px; padding: 18px; }
+ .pulse-banner img { width: 64px; height: 64px; }
+ .pulse-banner > span { flex: 1; min-width: 170px; }
+ .pulse-banner b { margin-left: 0; width: 100%; }
+ .pulse-hero, .pulse-features { grid-template-columns: 1fr; }
+ .pulse-mark { width: 110px; height: 110px; grid-row: 1; }
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pulse Weaver Studio Privacy Policy</title>
+<meta name="description" content="Privacy Policy for Pulse Weaver Studio and its operated connection services.">
+<link rel="canonical" href="https://lumi-con.com/pulse-weaver/privacy/">
+<link rel="icon" href="../../assets/pulseweaver.png" type="image/png">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/pulseweaver.css">
+</head>
+<body class="pulse-page">
+<header class="site-header">
+<a class="brand" href="../"><img src="../../assets/pulseweaver.png" alt=""><span><strong>Pulse Weaver</strong><small>Streaming Studio</small></span></a>
+<nav class="site-nav" aria-label="Main navigation"><a href="../">Product overview</a><a href="../#download">Download</a><a href="../privacy/">Privacy</a><a href="../terms/">Terms</a><a href="../../">LumiCon</a></nav>
+</header>
+<main><article class="legal-copy">
+<h1>Pulse Weaver Studio Privacy Policy</h1>
+<p><strong>Effective: 21 September 2026</strong></p>
+<p>Pulse Weaver is local-first streaming software. This notice explains what stays on your computer, what connected services receive, and the limited information handled by the hosted Kick relay.</p>
+<h2>1. Who is responsible</h2>
+<p>Pulse Weaver Studio is provided by <strong>Daryl Wickham</strong>. For privacy questions or requests, email <strong>darylbwickham@gmail.com</strong>. Do not email passwords, stream keys, access tokens or unredacted configuration backups.</p>
+<h2>2. What the desktop application handles</h2>
+<p>Pulse Weaver processes the information needed for features you choose to use. This can include scenes, sources, transforms, local file paths, recordings, output settings, channel details, chat messages, viewer events and connected-account credentials.</p>
+<p>Application settings, credentials, browser data and recordings are normally stored on your computer. Sensitive connected-account credentials are protected for the current Windows account where the application supports that protection. Pulse Weaver does not operate advertising, behavioural analytics or a user-profile database, and we do not sell personal information.</p>
+<p>Installer backups can contain application configuration and encrypted credentials. They remain on your computer in the Pulse Weaver Backups folder and are not uploaded to us. Protect them, remove copies you no longer need and do not restore a credential after revoking it.</p>
+<h2>3. Connected services and user-selected destinations</h2>
+<p>When you connect or configure a service, Pulse Weaver sends the information needed for that feature to the service you selected. Streaming platforms receive your broadcasts and account/API requests. Browser sources, docks, plugins, webhooks, lighting services and optional AI tools can receive information under their own terms and privacy notices.</p>
+<p>GitHub hosts the project repository, releases and update information. A request to GitHub or another internet service necessarily provides network and device information to that service. Public GitHub issues are visible to other people. Review logs, screenshots and exports before sharing them.</p>
+<h2>4. YouTube and Google API data</h2>
+<p>Pulse Weaver uses YouTube API Services. If you connect YouTube, the application may access your channel identity, live broadcasts and streams, live-chat identifiers and messages, participants, memberships and public subscriber events. It uses that information to create and manage broadcasts, transmit your selected output, display and post live chat, perform moderation you request, and drive your local alerts and automations.</p>
+<p>Google OAuth access and refresh tokens and the connected channel name are stored locally so the application can remain connected. Live-chat and audience-event data is held in bounded working memory while needed for the live session. Pulse Weaver does not use Google user data for advertising, sale, credit decisions or general-purpose AI training, and does not combine data from unrelated channel owners.</p>
+<p>Google's handling of information is described in the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>. You may disconnect inside Pulse Weaver or revoke access from <a href="https://security.google.com/settings/security/permissions">Google's permissions page</a>. Pulse Weaver attempts to revoke the token and immediately removes its live local credentials and transient YouTube session data. Revocation does not delete content held by YouTube, user-created recordings/exports or user-controlled installer backups.</p>
+<h2>5. Hosted Kick relay</h2>
+<p>The <a href="https://pulse-weaver-kick-relay.darylbwickham.chatgpt.site">Pulse Weaver Kick Relay</a> is hosted through ChatGPT Sites on Cloudflare Workers and Cloudflare D1. It exchanges Kick authorisation codes or refresh tokens with Kick and validates a Kick access token when establishing a relay session. The service code does not write those OAuth credentials to its database.</p>
+<p>The relay database can hold a broadcaster ID, a hashed short-lived relay-session token, Kick event identifiers and an event payload such as a chat message or viewer event. Events are accepted only while that broadcaster has an active desktop relay session. They are no longer returned after 15 minutes and are deleted when delivered or during subsequent relay activity. Session hashes expire after one hour. Deleted D1 records may remain in Cloudflare recovery history for up to 30 days, depending on the hosting plan.</p>
+<p>Operational logs can include the request URL and method, IP address, approximate country, user agent, response status and request identifiers. Authorisation and cookie header values are redacted in the log view available to us. Recent logs are used for security and fault diagnosis and may be available to us for up to seven days; infrastructure providers may keep records as described in their own terms.</p>
+<h2>6. Why we process information</h2>
+<p>Where UK data-protection law applies, we process information as necessary to provide features you request and perform our agreement with you; for legitimate interests in securing, diagnosing and supporting Pulse Weaver; and where needed to comply with legal obligations. We ask for consent where applicable law requires it. Platform authorisation is permission to access that platform and is not treated as a universal legal basis for every other use.</p>
+<h2>7. Service providers, transfers and security</h2>
+<p>Relevant recipients can include OpenAI/ChatGPT Sites and Cloudflare for relay hosting, GitHub for source and releases, and the platforms or destinations you choose. These organisations may process information outside the United Kingdom under their own terms and applicable transfer safeguards.</p>
+<p>We use data minimisation, short-lived relay sessions, hashed relay tokens, transport encryption and restricted access. No system is completely secure. Keep Pulse Weaver, Windows and your plugins updated, limit account permissions, and never publish your configuration or backup folders.</p>
+<h2>8. Streamers and other people's information</h2>
+<p>If you decide to display, record or share information about viewers, guests, employees or other people, you may be a separate data controller. You are responsible for a lawful basis, appropriate notices, security, retention and handling people's rights. This includes chat overlays, alerts, recordings and third-party integrations. Your responsibility does not remove ours for a service we operate.</p>
+<h2>9. Your rights and complaints</h2>
+<p>Depending on the circumstances, you may have rights of access, correction, deletion, restriction, objection and portability, and the right to withdraw consent. Contact us using the address above. We cannot directly inspect or delete files held only on your computer or independently by a streamer or platform.</p>
+<p>You can complain to the <a href="https://ico.org.uk/make-a-complaint/">UK Information Commissioner's Office</a>. You do not have to contact us first.</p>
+<h2>10. Changes</h2>
+<p>We will update this notice when Pulse Weaver's data handling materially changes. The effective date above identifies the current version. If a change expands how YouTube API data is used, users will be asked to accept the updated notice before that new use.</p>
+</article></main>
+<footer class="site-footer"><span>Pulse Weaver Studio · Daryl Wickham</span><a href="mailto:darylbwickham@gmail.com">Privacy &amp; support: darylbwickham@gmail.com</a></footer>
+</body>
+</html>
