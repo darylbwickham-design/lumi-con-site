@@ -17,7 +17,7 @@
 </header>
 <main><article class="legal-copy">
 <h1>Pulse Weaver Studio Privacy Policy</h1>
-<p><strong>Effective: 21 September 2026</strong></p>
+<p><strong>Effective: 22 September 2026</strong></p>
 <p>Pulse Weaver is local-first streaming software. This notice explains what stays on your computer, what connected services receive, and the limited information handled by the hosted Kick relay.</p>
 <h2>1. Who is responsible</h2>
 <p>Pulse Weaver Studio is provided by <strong>Daryl Wickham</strong>. For privacy questions or requests, email <strong>darylbwickham@gmail.com</strong>. Do not email passwords, stream keys, access tokens or unredacted configuration backups.</p>
@@ -31,6 +31,14 @@
 <h2>4. YouTube and Google API data</h2>
 <p>Pulse Weaver uses YouTube API Services. If you connect YouTube, the application may access your channel identity, live broadcasts and streams, live-chat identifiers and messages, participants, memberships and public subscriber events. It uses that information to create and manage broadcasts, transmit your selected output, display and post live chat, perform moderation you request, and drive your local alerts and automations.</p>
 <p>Google OAuth access and refresh tokens and the connected channel name are stored locally so the application can remain connected. Live-chat and audience-event data is held in bounded working memory while needed for the live session. Pulse Weaver does not use Google user data for advertising, sale, credit decisions or general-purpose AI training, and does not combine data from unrelated channel owners.</p>
+<h3>Who receives Google user data</h3>
+<p>Pulse Weaver shares, transfers or discloses Google user data only in these limited circumstances:</p>
+<ul>
+<li><strong>Google and YouTube:</strong> the desktop application sends OAuth tokens and the API requests needed to carry out actions you choose, such as creating or ending a broadcast, reading or posting live chat, or applying moderation. Broadcasts, chat messages and other content you choose to publish are then visible according to your YouTube settings.</li>
+<li><strong>Integrations you deliberately configure:</strong> a browser source, plugin, webhook, lighting service or automation tool can receive selected YouTube event or chat information only when you configure that integration to use it. That provider handles the information under its own privacy notice. Google OAuth tokens are not intentionally sent to these integrations.</li>
+<li><strong>Support or legal disclosure:</strong> Daryl Wickham receives Google user data only if you deliberately include it in a support request, or if disclosure is required by law or is necessary to protect users, the service or legal rights. You are not required to provide Google user data for support and should never send access tokens or refresh tokens.</li>
+</ul>
+<p>Pulse Weaver does <strong>not automatically transfer Google user data</strong> to Daryl Wickham, the hosted Kick relay, OpenAI/ChatGPT Sites, Cloudflare, GitHub, advertisers, data brokers, information resellers, lenders, or general-purpose AI or machine-learning systems. We do not sell Google user data or use it for advertising, retargeting, credit decisions or lending. The desktop application exchanges Google credentials directly with Google's OAuth and YouTube API endpoints; the credentials remain on the user's computer apart from those exchanges.</p>
 <p>Google's handling of information is described in the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>. You may disconnect inside Pulse Weaver or revoke access from <a href="https://security.google.com/settings/security/permissions">Google's permissions page</a>. Pulse Weaver attempts to revoke the token and immediately removes its live local credentials and transient YouTube session data. Revocation does not delete content held by YouTube, user-created recordings/exports or user-controlled installer backups.</p>
 <h2>5. Hosted Kick relay</h2>
 <p>The <a href="https://pulse-weaver-kick-relay.darylbwickham.chatgpt.site">Pulse Weaver Kick Relay</a> is hosted through ChatGPT Sites on Cloudflare Workers and Cloudflare D1. It exchanges Kick authorisation codes or refresh tokens with Kick and validates a Kick access token when establishing a relay session. The service code does not write those OAuth credentials to its database.</p>
