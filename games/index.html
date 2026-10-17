@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Games | LumiCon</title>
+  <meta name="description" content="Play Sorna Overland: a first-person browser expedition for one to four players. Drive, build bridges, and winch your crew across Isla Sorna.">
+  <link rel="canonical" href="https://lumi-con.com/games/">
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="../assets/pulseweaver.css">
+  <link rel="stylesheet" href="../assets/games.css">
+  <script src="../assets/games.js" defer></script>
+</head>
+<body class="games-page">
+  <a class="skip-link" href="#games">Skip to game</a>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="LumiCon home">
+      <img src="../assets/lumicon-logo.png" alt="" width="42" height="42">
+      <span><strong>LumiCon</strong><small>Stream controller platform</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a class="pulse-nav" href="../pulse-weaver/"><img src="../assets/pulseweaver.png" alt="" width="32" height="32">Pulse Weaver</a>
+      <a href="../#devices">Devices</a>
+      <a href="../software/remote-console.html">Remote Console</a>
+      <a href="../software/dotwise-studio.html">DotWise Studio</a>
+      <a href="./" aria-current="page">Games</a>
+      <a href="../#setup">Setup</a>
+      <a href="../#firmware">Firmware</a>
+      <a href="https://github.com/darylbwickham-design/lumi-con-site">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="games">
+    <div class="games-heading">
+      <div><p class="eyebrow">LumiCon / Play</p><h1>Games</h1></div>
+      <p>Take the long way home.</p>
+    </div>
+
+    <section class="game-panel" aria-labelledby="game-title">
+      <div class="game-intro">
+        <div>
+          <div class="game-tags"><span>First person</span><span>1–4 player co-op</span><span>Browser game</span></div>
+          <h2 id="game-title">Sorna Overland</h2>
+          <p>One RV. An island that was never ours. Keep your crew together, repair the crossings, and reach the coast.</p>
+        </div>
+        <div class="expedition-stats" aria-label="Expedition details">
+          <span><strong>17 <small>km</small></strong>Winding roads</span>
+          <span><strong>21</strong>Checkpoints</span>
+          <span><strong>12</strong>Bridge crossings</span>
+        </div>
+      </div>
+
+      <div class="game-stage" id="game-stage">
+        <div class="game-cover" id="game-cover">
+          <div class="cover-grid" aria-hidden="true"></div>
+          <div class="cover-content">
+            <p class="cover-eyebrow"><span></span>Expedition / Site B</p>
+            <h3>The road out<br>is a team effort.</h3>
+            <p>Drive. Build. Winch. Survive.</p>
+            <button class="button primary play-button" id="play-game" type="button"><span class="play-icon" aria-hidden="true">▶</span>Play Sorna Overland</button>
+            <span class="cover-note">No download · No account required</span>
+          </div>
+          <span class="cover-coordinate" aria-hidden="true">ISLA SORNA / 03 ROUTES TO THE COAST</span>
+        </div>
+        <iframe id="game-frame" title="Sorna Overland multiplayer game" allow="autoplay; fullscreen; clipboard-write" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+      </div>
+
+      <div class="game-toolbar">
+        <p id="game-status" role="status">Desktop with a keyboard and mouse recommended.</p>
+        <div class="game-tools">
+          <button class="button secondary" id="fullscreen-game" type="button" disabled><span aria-hidden="true">⛶</span>Fullscreen</button>
+          <a class="button secondary external-game" href="#game-stage" target="_blank" rel="noopener noreferrer">Open game in new tab <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <p class="game-help">Click inside the game to look around. Press <kbd>Esc</kbd> to release the mouse or leave fullscreen. If the game cannot connect here, open it in a new tab.</p>
+      <noscript><p class="game-help">Enable JavaScript to load and play the game.</p></noscript>
+    </section>
+
+    <div class="field-notes">
+      <section class="crew-note" aria-labelledby="crew-title">
+        <p class="kicker">Bring your crew</p>
+        <h2 id="crew-title">One drives.<br>Everyone gets you out.</h2>
+        <p>Choose <strong>Start Expedition</strong>, enter your callsign, then <strong>Host Expedition</strong>. Share the six-character room code or copy an invite link. Friends choose <strong>Join Crew</strong>.</p>
+        <p>Scout the next turn, carry timber to a broken bridge, or walk the winch hook from the front bumper to a tree. Hold the cable steady while your driver takes the muddy climb in low gear.</p>
+        <div class="crew-note-footer"><span class="crew-dot"></span>Up to four browsers in the same expedition</div>
+      </section>
+
+      <section class="controls-note" aria-labelledby="controls-title">
+        <p class="kicker">Before you depart</p>
+        <h2 id="controls-title">Know the essentials.</h2>
+        <dl class="controls-list">
+          <div><dt><kbd>W A S D</kbd><kbd>Mouse</kbd></dt><dd>Walk / drive · Look around</dd></div>
+          <div><dt><kbd>Space</kbd></dt><dd>Hold for handbrake while driving · Jump on foot</dd></div>
+          <div><dt><kbd>E</kbd><kbd>Q</kbd></dt><dd>Interact / pick up / build · Put down</dd></div>
+          <div><dt><kbd>B</kbd><kbd>G</kbd></dt><dd>Board / exit RV · Take the driver’s seat</dd></div>
+          <div><dt><kbd>L</kbd><kbd>Hold X</kbd></dt><dd>Low gear · Reel an attached winch</dd></div>
+          <div><dt><kbd>J</kbd><kbd>Esc</kbd></dt><dd>Route map · Menu and field manual</dd></div>
+        </dl>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer"><span>LumiCon</span><span>Built for the journey.</span></footer>
+</body>
+</html>
