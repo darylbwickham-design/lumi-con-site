@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Games | LumiCon</title>
-  <meta name="description" content="Play Sorna Overland: a first-person browser expedition for one to four players. Drive, build bridges, and winch your crew across Isla Sorna.">
+  <meta name="description" content="Play Sorna Overland: a first-person mountain expedition for one to four players. Climb 1,120 metres, cross stacked mountain roads, build bridges and reach the coast together.">
   <link rel="canonical" href="https://lumi-con.com/games/">
   <link rel="stylesheet" href="../assets/site.css">
   <link rel="stylesheet" href="../assets/pulseweaver.css">
@@ -39,14 +39,14 @@
     <section class="game-panel" aria-labelledby="game-title">
       <div class="game-intro">
         <div>
-          <div class="game-tags"><span>First person</span><span>1–4 player co-op</span><span>Browser game</span></div>
+          <div class="game-tags"><span>First person</span><span>1–4 player co-op</span><span>Mountain expedition</span></div>
           <h2 id="game-title">Sorna Overland</h2>
-          <p>One RV. An island that was never ours. Keep your crew together, repair the crossings, and reach the coast.</p>
+          <p>One RV. A mountain between you and the ferry. Climb from the jungle to a 1,120-metre summit, cross roads stacked above the valley, then bring your crew down to the coast.</p>
         </div>
         <div class="expedition-stats" aria-label="Expedition details">
-          <span><strong>17 <small>km</small></strong>Winding roads</span>
-          <span><strong>21</strong>Checkpoints</span>
-          <span><strong>12</strong>Bridge crossings</span>
+          <span><strong>~16 <small>km</small></strong>Mountain road</span>
+          <span><strong>19</strong>Checkpoint camps</span>
+          <span><strong>1,120 <small>m</small></strong>Summit altitude</span>
         </div>
       </div>
 
@@ -54,13 +54,13 @@
         <div class="game-cover" id="game-cover">
           <div class="cover-grid" aria-hidden="true"></div>
           <div class="cover-content">
-            <p class="cover-eyebrow"><span></span>Expedition / Site B</p>
+            <p class="cover-eyebrow"><span></span>Mountain Expedition / Site B</p>
             <h3>The road out<br>is a team effort.</h3>
             <p>Drive. Build. Winch. Survive.</p>
             <button class="button primary play-button" id="play-game" type="button"><span class="play-icon" aria-hidden="true">▶</span>Play Sorna Overland</button>
             <span class="cover-note">No download · No account required</span>
           </div>
-          <span class="cover-coordinate" aria-hidden="true">ISLA SORNA / 03 ROUTES TO THE COAST</span>
+          <span class="cover-coordinate" aria-hidden="true">ISLA SORNA / THE MOUNTAIN ROAD TO THE COAST</span>
         </div>
         <iframe id="game-frame" title="Sorna Overland multiplayer game" allow="autoplay; fullscreen; clipboard-write; gamepad" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
       </div>
@@ -89,8 +89,8 @@
         <h3>Controller essentials</h3>
         <dl class="controls-list">
           <div><dt><kbd>Left stick</kbd><kbd>Right stick</kbd></dt><dd>Move / steer · Look around</dd></div>
-          <div><dt><kbd>RT</kbd><kbd>LT</kbd></dt><dd>Drive forward · Reverse</dd></div>
-          <div><dt><kbd>A</kbd><kbd>B</kbd></dt><dd>Interact / confirm · Board / exit / back</dd></div>
+          <div><dt><kbd>RT</kbd><kbd>LT</kbd></dt><dd>Drive forward / repair on foot · Reverse</dd></div>
+          <div><dt><kbd>A</kbd><kbd>B</kbd></dt><dd>Interact / hold to work · Board / exit / back</dd></div>
           <div><dt><kbd>X</kbd><kbd>Y</kbd></dt><dd>Handbrake / jump · Low gear while driving</dd></div>
           <div><dt><kbd>Hold LB</kbd></dt><dd>Reel an attached winch</dd></div>
         </dl>
@@ -101,8 +101,9 @@
       <section class="crew-note" aria-labelledby="crew-title">
         <p class="kicker">Bring your crew</p>
         <h2 id="crew-title">One drives.<br>Everyone gets you out.</h2>
-        <p>Choose <strong>Start Expedition</strong>, enter your callsign, then <strong>Host Expedition</strong>. Share the six-character room code or copy an invite link. Friends choose <strong>Join Crew</strong>.</p>
-        <p>Scout the next turn, carry timber to a broken bridge, or walk the winch hook from the front bumper to a tree. Hold the cable steady while your driver takes the muddy climb in low gear.</p>
+        <p>Open the game, enter your callsign, then choose <strong>Host Expedition</strong>. Share the six-character room code or copy an invite link. Friends choose <strong>Join Crew</strong>.</p>
+        <p>The mountain road includes <strong>seven stacked overpasses, fourteen expedition obstacles and two shortcuts</strong>. Repair bridges plank by plank, clear fallen trees and rockslides, and restore generators to open the service gates. Eight dinosaur species share the island; keep a lookout and build your field journal.</p>
+        <p>Scout the next turn or rig the winch while your driver eases up the muddy climb in low gear. Share the work to finish faster. At checkpoint camps, save recovery progress, refuel and trade salvage for supplies and upgrades. Watch brake heat, coolant, punctured tires and loose cargo on the long descent.</p>
         <div class="crew-note-footer"><span class="crew-dot"></span>Up to four browsers in the same expedition</div>
       </section>
 
@@ -112,10 +113,11 @@
         <dl class="controls-list">
           <div><dt><kbd>W A S D</kbd><kbd>Mouse</kbd></dt><dd>Walk / drive · Look around</dd></div>
           <div><dt><kbd>Space</kbd></dt><dd>Hold for handbrake while driving · Jump on foot</dd></div>
-          <div><dt><kbd>E</kbd><kbd>Q</kbd></dt><dd>Interact / pick up / build · Put down</dd></div>
+          <div><dt><kbd>E</kbd><kbd>Q</kbd></dt><dd>Interact / hold to build or work · Lay down equipment</dd></div>
           <div><dt><kbd>B</kbd><kbd>G</kbd></dt><dd>Board / exit RV · Take the driver’s seat</dd></div>
           <div><dt><kbd>L</kbd><kbd>Hold X</kbd></dt><dd>Low gear · Reel an attached winch</dd></div>
-          <div><dt><kbd>J</kbd><kbd>Esc</kbd></dt><dd>Route map · Menu and field manual</dd></div>
+          <div><dt><kbd>R</kbd><kbd>P</kbd></dt><dd>Hold to repair · Hold to push the RV</dd></div>
+          <div><dt><kbd>J</kbd><kbd>I</kbd><kbd>Esc</kbd></dt><dd>Route atlas · Equipment · Menu and field manual</dd></div>
         </dl>
       </section>
     </div>
