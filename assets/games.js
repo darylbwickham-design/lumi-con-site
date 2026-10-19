@@ -14,6 +14,9 @@
   const status = document.getElementById('game-status');
 
   document.querySelectorAll('.external-game').forEach(link => { link.href = gameUrl.href; });
+  const consoleUrl = new URL(gameUrl);
+  consoleUrl.searchParams.set('console', '1');
+  document.querySelectorAll('.console-game').forEach(link => { link.href = consoleUrl.href; });
 
   // A real expedition screenshot is optional; the contour cover remains usable
   // if the asset is absent during a source-only deployment.

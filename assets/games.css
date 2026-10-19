@@ -54,17 +54,27 @@
 .controls-list > div { display: grid; grid-template-columns: 134px 1fr; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid #29362f; }
 .controls-list dt { display: flex; gap: 5px; flex-wrap: wrap; }
 .controls-list dd { margin: 0; color: var(--muted); font-size: .79rem; line-height: 1.5; }
+.console-note { display: grid; grid-template-columns: 1.08fr 1fr; gap: 40px; margin-top: 20px; padding: 28px 30px; border: 1px solid #4a6455; border-radius: var(--radius); background: linear-gradient(120deg, #15251e, #10181d 75%); }
+.console-note h2 { margin: 12px 0 18px; font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.15; }
+.console-note .kicker { margin: 0; color: #bddc9e; font-size: .68rem; }
+.console-intro > p:not(.kicker) { color: var(--muted); font-size: .85rem; line-height: 1.75; }
+.console-intro strong { color: #e2eadc; font-weight: 650; }
+.console-intro .console-preview-note { margin-bottom: 0; font-size: .75rem; color: #a5b3a5; }
+.console-game { margin-block: 4px; min-height: 48px; background: #c6db9b !important; color: #142015 !important; }
+.console-controls h3 { margin: 0; color: #e5eddf; font-size: 1.05rem; }
+.console-controls .controls-list { margin-top: 16px; }
 @media (max-width: 980px) {
   .game-intro { align-items: flex-start; flex-direction: column; gap: 22px; }
   .expedition-stats { width: 100%; grid-template-columns: repeat(3, 1fr); }
   .expedition-stats > span { border-left: 1px solid #3e5348; padding-left: 14px; }
   .game-toolbar { align-items: flex-start; flex-direction: column; }
   .field-notes { grid-template-columns: 1fr; }
+  .console-note { grid-template-columns: 1fr; gap: 28px; }
 }
 @media (max-width: 600px) {
   .games-heading { padding-top: 16px; }
   .games-heading > p { display: none; }
-  .game-intro, .field-notes section { padding: 22px 20px; }
+  .game-intro, .field-notes section, .console-note { padding: 22px 20px; }
   .game-stage { min-height: 380px; }
   .cover-content { padding: 28px 24px; width: 100%; }
   .cover-content h3 { font-size: 2.55rem; }
