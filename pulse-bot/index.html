@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pulse the Tiny Bot is an animated stream co-host with local AI, live reactions and Lumia Stream integration.">
+  <link rel="canonical" href="https://lumi-con.com/pulse-bot/">
+  <title>Pulse the Tiny Bot · Stream co-host</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.6 system-ui,sans-serif; background: #11111b; color: #f6f0ff; }
+    body { margin: 0; background: radial-gradient(ellipse at 30% 0%, #372b50, transparent 65%); }
+    main { max-width: 760px; margin: auto; padding: clamp(24px, 7vw, 72px) 24px; }
+    header { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+    header img { width: 96px; height: 96px; }
+    .eyebrow { color: #9cf2da; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; font-size: .82rem; }
+    h1 { font-size: clamp(2rem, 6vw, 4rem); line-height: 1.05; margin: 0; }
+    h2 { font-size: 1.35rem; margin-bottom: .25em; }
+    .intro { font-size: 1.2rem; max-width: 58ch; }
+    .downloads { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0; }
+    .downloads a { display: inline-block; padding: .65em 1em; border-radius: .65em; background: #a5f5dd; color: #14231f; font-weight: 750; text-decoration: none; }
+    .downloads a + a { background: #dbc9ff; color: #261c3a; }
+    a:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+    code { overflow-wrap: anywhere; background: #272337; padding: .1em .25em; border-radius: .25em; }
+    li { margin-block: .45em; }
+    .note, footer { color: #d7cce5; }
+    footer { margin-top: 2.5rem; border-top: 1px solid #4b415d; padding-top: 1rem; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Site navigation"><a href="../" style="color:#a5f5dd">← LumiCon home</a></nav>
+    <header>
+      <img src="icon.svg" alt="" width="96" height="96">
+      <div><p class="eyebrow">Your stream has a co-host</p><h1>Pulse the Tiny Bot</h1></div>
+    </header>
+    <p class="intro">Tiny robot, strong opinions. Say “Hey Pulse” in chat and watch him answer, remember returning viewers, and react to the moments that matter.</p>
+    <div class="downloads" aria-label="Windows downloads">
+      <a href="https://github.com/darylbwickham-design/pulse-bot/releases/download/v1.5.0/pulse-bot-1.5.0.zip">Windows companion 1.5.0</a>
+      <a href="https://github.com/darylbwickham-design/pulse-bot/releases/download/v1.5.0/pulse-bot-1.3.6.lumiaplugin">Lumia plugin 1.3.6</a>
+    </div>
+    <p class="note">Early release for Windows. Download both files. Pulse needs Node.js 22 or newer and Lumia Stream 9 or newer for live integration.</p>
+    <h2>What Pulse does</h2>
+    <ul>
+      <li>Answers viewers who address him through Lumia’s incoming chat feed.</li>
+      <li>Uses local AI for banter, with mood changes and optional viewer memory.</li>
+      <li>Performs an animated facecam with 20 expressions, 17 gestures, and 14 silent performance presets.</li>
+      <li>Speaks through Lumia TTS. An optional mixer connection can drive the mouth and captions from audio activity.</li>
+    </ul>
+    <h2>Get him on stream</h2>
+    <ol>
+      <li>Extract the companion ZIP. Run <strong>Setup Free AI.cmd</strong> if you want the optional local AI model.</li>
+      <li>Run <strong>Start Pulse Bot (Lumia Plugin).cmd</strong> and open <code>http://127.0.0.1:3210/</code> on your stream PC.</li>
+      <li>In Lumia, open <strong>Plugins → Installed → Install Manually</strong>, then import the plugin file.</li>
+      <li>In the plugin settings, enter the bridge key from your Pulse dashboard and your Lumia local API token. The ZIP includes the full guide under <code>lumia-plugin/SETUP.md</code>.</li>
+    </ol>
+    <p class="note">Your settings, viewer memory and sign-in stay on your PC. Twitch posting is optional and requires connecting your own bot account.</p>
+    <footer>Pulse the Tiny Bot · Tango Time · <a style="color:#a5f5dd" href="https://github.com/darylbwickham-design/pulse-bot/releases/tag/v1.5.0">GitHub release and checksums</a></footer>
+  </main>
+</body>
+</html>
