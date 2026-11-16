@@ -103,6 +103,7 @@ input::placeholder { color: var(--muted); }
 .section-title span { color: var(--muted); font-size: 11px; }
 .target-row { display: grid; grid-template-columns: minmax(0, 1fr) 55px 23px; align-items: center; gap: 5px; margin-bottom: 7px; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
 .target-row .target-rate { padding-inline: 5px; }
+#targets:has(.target-row:nth-child(7)) { max-height: 337px; overflow-y: auto; scrollbar-width: thin; padding-inline: 3px; }
 .target-recipe-label { grid-column: 1 / 3; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
 .target-recipe-label select { min-height: 30px; font-size: 12px; padding-block: 3px; }
 .remove-target { min-height: 31px; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--soft); font-size: 20px; }
@@ -110,8 +111,7 @@ input::placeholder { color: var(--muted); }
 .output-actions, .field-pair { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .field-pair { align-items: end; margin-bottom: 8px; }
 .field-pair > * { flex: 1 1 0; }
-.logistics .field-pair > :first-child { flex-grow: .76; }
-.logistics .field-pair > :last-child { flex-grow: 1.24; }
+.logistics .field-pair { flex-direction: column; align-items: stretch; gap: 8px; }
 .add-button, .metric-action { background: transparent; border: 0; border-radius: 4px; padding: 4px 0; color: var(--accent); font-size: 12px; font-weight: 600; }
 .add-button:hover:enabled, .metric-action:hover:enabled { text-decoration: underline; }
 .check-label { display: inline-flex; align-items: center; gap: 6px; min-height: 25px; color: var(--soft); font-size: 12px; }
@@ -139,6 +139,11 @@ summary { cursor: pointer; color: var(--soft); font-weight: 600; }
 #plan-state[data-state=estimated] { color: var(--accent); }
 .plan-head h1 { margin: 3px 0 2px; font-size: clamp(24px, 2.85vw, 37px); line-height: 1.14; letter-spacing: -.025em; overflow-wrap: anywhere; }
 .plan-head p { margin: 5px 0 0; color: var(--soft); font-size: 13px; }
+.preset-run-bar { display: flex; flex-wrap: wrap; align-items: end; gap: 5px 14px; margin-top: 9px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.preset-run-bar label { min-width: min(250px, 100%); font-size: 12px; }
+.preset-run-bar p, .preset-notes p { margin: 0; color: var(--soft); font-size: 12px; }
+.preset-notes { margin-top: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); font-size: 12px; }
+.preset-notes p { margin: 5px 0; }
 .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 13px 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .metric { padding: 7px 11px; min-width: 0; }
 .metric + .metric { border-left: 1px solid var(--line); }
@@ -202,6 +207,7 @@ summary { cursor: pointer; color: var(--soft); font-weight: 600; }
 .step-button strong { display: block; overflow-wrap: anywhere; font-size: 12px; line-height: 1.2; }
 .step-button small { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; line-height: 1.25; }
 .step-button.is-done strong::after { content: ' ✓'; color: var(--teal); }
+.layer-label { margin: 3px 0; padding: 3px 6px; border-bottom: 1px solid var(--line); color: var(--muted); font: 600 11px var(--mono); }
 
 .drawing { min-height: 240px; min-width: 0; overflow: auto; scrollbar-color: #50676a transparent; background: #0e191c; }
 #drawing.footprint-drawing {
@@ -262,6 +268,10 @@ summary { cursor: pointer; color: var(--soft); font-weight: 600; }
 .step-extra { margin-top: 7px; color: var(--soft); font-size: 12px; }
 .recipe-link { margin-top: 6px; min-height: 29px; padding: 4px 7px; font-size: 11px; white-space: normal; text-align: left; }
 .bay-verification output { display: block; color: var(--soft); font-size: 11px; margin-top: 5px; }
+.bay-clock { padding: 6px 13px; border-bottom: 1px solid var(--line); color: var(--soft); font-size: 12px; }
+.bay-clock-inputs { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; margin-top: 6px; }
+.bay-clock p { margin: 5px 0; }
+.route-step { border: 0; padding: 0; color: var(--teal); background: transparent; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
 
 .drawing.campus-drawing { min-height: 250px; max-height: 650px; padding: 12px; }
 .drawing.campus-drawing > svg { display: block; width: 100%; min-width: 650px; height: auto; }
@@ -273,6 +283,7 @@ summary { cursor: pointer; color: var(--soft); font-weight: 600; }
 .route-table .blocked { color: var(--warn); }
 .build-check { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 9px; padding: 10px 13px; border-bottom: 1px solid var(--line); }
 .build-check h4, .build-materials h4 { margin: 0 0 3px; font-size: 13px; }
+.build-layer { margin: 0; padding: 7px 13px; border-bottom: 1px solid var(--line); background: var(--panel); font: 600 12px var(--mono); break-after: avoid; }
 .build-check p, .build-materials p { margin: 3px 0; color: var(--soft); font-size: 12px; }
 .build-check .button { min-height: 29px; padding: 4px 6px; font-size: 11px; }
 .build-materials, .commissioning-note { margin: 0; padding: 9px 13px; color: var(--soft); font-size: 12px; }
@@ -393,7 +404,7 @@ summary { cursor: pointer; color: var(--soft); font-weight: 600; }
 
 @media print {
   :root { color-scheme: light; --base: white; --surface: white; --panel: white; --control: white; --ink: #111; --soft: #333; --line: #aaa; --muted: #444; }
-  :is(.topbar,.config,.tabs,.plan-head-actions,.workspace-footer,.diagnostics,.build-check .button,#reset-progress,#print-plan,[data-build-power],#panel-floor,#panel-campus,#panel-power,#panel-recipes) { display: none !important; }
+  :is(.topbar,.config,.tabs,.plan-head-actions,.workspace-footer,.diagnostics,.preset-run-bar,.preset-notes,.build-check .button,#reset-progress,#print-plan,[data-build-power],#panel-floor,#panel-campus,#panel-power,#panel-recipes) { display: none !important; }
   .workspace, #panel-build { display: block !important; }
   .results { padding: 0; }
   .build-check { break-inside: avoid; }

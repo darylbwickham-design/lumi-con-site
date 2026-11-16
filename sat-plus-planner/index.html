@@ -9,7 +9,7 @@
   <meta name="gridline-catalog-sha256" content="8bf53df15cc0ae86cdc2c933eec643d8b349791b75841e3aa8aa24bf94c38f97">
   <title>Gridline | Satisfactory Plus Planner</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=a62fa6af2c30">
+  <link rel="stylesheet" href="./style.css?v=d855503d5cf0">
 </head>
 <body>
   <a class="skip" href="#results">Skip to the plan</a>
@@ -24,10 +24,10 @@
       <div class="field"><label for="preset">Quick start</label><select id="preset" aria-label="Quick start" disabled><option value="">Loading recipes…</option></select></div>
       <form id="plan-form">
         <div class="setup-section"><div class="section-title"><h3>Output targets</h3><span>Per minute</span></div><div id="targets"></div><div class="output-actions"><button type="button" id="add-target" class="add-button" disabled>＋ Add output</button><label class="check-label exact-toggle" title="Scale every output by the same factor for continuous whole-machine ratios"><input id="exact" type="checkbox"> Perfect ratio</label></div><input id="item-filter" type="search" aria-label="Filter available output items" placeholder="Find an output"></div>
-        <div class="setup-section logistics"><div class="section-title"><h3>Unlocks &amp; transport</h3></div><div class="field-pair">
-          <div class="field"><label for="tier">HUB tier</label><select id="tier"><option value="0">Tier 0</option><option value="1">Tier 1</option><option value="2" selected>Tier 2</option><option value="3">Tier 3</option><option value="4">Tier 4</option><option value="5">Tier 5</option><option value="6">Tier 6</option><option value="7">Tier 7</option><option value="8">Tier 8</option><option value="9">Tier 9</option></select></div>
+        <div class="setup-section logistics"><div class="section-title"><h3>Transport</h3></div><div class="field-pair">
           <div class="field"><label for="belt">Max belt tier</label><select id="belt"></select></div>
-        </div><div class="field"><label for="pipe">Max pipe tier</label><select id="pipe"></select></div></div>
+          <div class="field"><label for="pipe">Max pipe tier</label><select id="pipe"></select></div>
+        </div></div>
         <details id="advanced"><summary>Recipes &amp; supplied materials</summary><div class="advanced-body">
           <label class="check-label"><input type="checkbox" id="alternates"> Allow alternate recipes</label>
           <label class="check-label"><input type="checkbox" id="prefer-favorites" checked> Prefer my favorite recipes</label>
@@ -51,6 +51,11 @@
         <div class="plan-head-actions"><button class="button quiet icon-button" id="setup-toggle" type="button" aria-controls="setup-panel" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16M8 4v4M15 10v4M9 16v4"/></svg><span>Hide setup</span></button></div>
       </header>
       <p class="sr-only" id="status" role="status" aria-live="polite"></p>
+      <div class="preset-run-bar" id="preset-run-control" hidden>
+        <label class="field" for="preset-run">Shared workshop run<select id="preset-run"></select></label>
+        <p>Run one job at a time using stock bins and shared machines.</p>
+      </div>
+      <details class="preset-notes" id="preset-notes" hidden><summary id="preset-notes-title"></summary><div id="preset-notes-content"></div></details>
       <div id="diagnostics" class="diagnostics" hidden></div>
       <div class="metrics" id="metrics" aria-label="Plan totals"><div class="metric"><span>MACHINES</span><strong>—</strong><small>Whole buildings</small></div><div class="metric"><span>INSTALLED POWER</span><strong>—</strong><small>Maximum draw</small></div><div class="metric"><span>FOUNDATIONS</span><strong>—</strong><small>Separate production pads</small></div><div class="metric"><span>WASTE ROUTES</span><strong>—</strong><small>Isolated from production</small></div></div>
       <div class="tabs" role="tablist" aria-label="Plan views"><button id="tab-floor" role="tab" aria-selected="true" aria-controls="panel-floor" type="button" data-view="floor">Floor plans</button><button id="tab-campus" role="tab" aria-selected="false" aria-controls="panel-campus" type="button" data-view="campus" tabindex="-1">Factory layout</button><button id="tab-build" role="tab" aria-selected="false" aria-controls="panel-build" type="button" data-view="build" tabindex="-1">Build checklist</button><button id="tab-power" role="tab" aria-selected="false" aria-controls="panel-power" type="button" data-view="power" tabindex="-1">Power</button><button id="tab-recipes" role="tab" aria-selected="false" aria-controls="panel-recipes" type="button" data-view="recipes" tabindex="-1">Recipes</button></div>
@@ -74,6 +79,7 @@
                 <button class="button quiet export" id="download" type="button" disabled>Export SVG</button>
               </div>
             </header>
+            <details class="bay-clock" id="bay-clock" hidden><summary id="bay-clock-title">Clock speed</summary><div id="bay-clock-content"></div></details>
             <div class="blueprint-workspace">
               <div id="drawing" class="drawing footprint-drawing" tabindex="0" role="region" aria-label="Scrollable foundation blueprint">
                 <div id="blueprint-stage"><span class="loading-mark" aria-hidden="true">＋</span></div>
@@ -130,6 +136,6 @@
     <footer class="library-footer"><button type="button" class="button quiet" id="export-plan">↓ Plan file</button><button type="button" class="button quiet" id="import-plan">Open plan file</button><input id="plan-file" type="file" accept=".json,application/json" hidden><output id="library-status" aria-live="polite"></output></footer>
   </dialog>
   <template id="target-template"><div class="target-row"><select class="target-item" aria-label="Output item" required></select><input class="target-rate" aria-label="Output rate per minute" type="number" min="0.000001" max="1000000" step="any" required><button type="button" class="remove-target" aria-label="Remove output" title="Remove output">×</button><label class="target-recipe-label"><span>Recipe</span><select class="target-recipe" aria-label="Output recipe"><option value="">Automatic</option></select></label></div></template>
-  <script type="module" src="./app.js?v=a62fa6af2c30"></script>
+  <script type="module" src="./app.js?v=d855503d5cf0"></script>
 </body>
 </html>
