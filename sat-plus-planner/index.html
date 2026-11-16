@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Plan Satisfactory Plus factories with scaled foundation diagrams, belt routing and power sizing.">
+  <meta name="theme-color" content="#101619">
+  <meta name="gridline-api" content="https://lumicon-sfplus-api.darylbwickham.workers.dev">
+  <meta name="gridline-catalog-sha256" content="8bf53df15cc0ae86cdc2c933eec643d8b349791b75841e3aa8aa24bf94c38f97">
+  <title>Gridline | Satisfactory Plus Planner</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip" href="#results">Skip to the plan</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Gridline home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 25V12l7 4V9l7 4V6h5v19z" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linejoin="round"/><path d="M9 21h3m3 0h3m3 0h3" stroke="currentColor" stroke-width="1.8"/></svg></span><span>Gridline<small>SATISFACTORY PLUS PLANNER</small></span></a>
+    <div class="header-actions"><span class="catalog-label"><i></i><span id="catalog-version">SF+ catalogue</span></span><button class="button quiet" id="open-library" type="button">Saved plans</button><button class="button quiet icon-button" id="share" type="button" aria-label="Copy plan link" title="Copy plan link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a4 4 0 0 0 6 .4l3-3a4 4 0 0 0-5.7-5.7l-1.7 1.7m2.4 4.6a4 4 0 0 0-6-.4l-3 3a4 4 0 0 0 5.7 5.7l1.7-1.7"/></svg><span>Share plan</span></button></div>
+  </header>
+
+  <main class="workspace" id="main">
+    <aside class="config" aria-label="Plan settings">
+      <div class="config-head"><span class="eyebrow">FACTORY SETUP</span><h1>Plan a build</h1><p>Pick your output. See what to place and how to belt it.</p></div>
+      <div class="field"><label for="preset">Quick start</label><select id="preset" aria-label="Quick start" disabled><option value="">Loading recipes…</option></select></div>
+      <form id="plan-form">
+        <div class="setup-section"><div class="section-title"><h2>Output targets</h2><span>PER MINUTE</span></div><div id="targets"></div><div class="output-actions"><button type="button" id="add-target" class="add-button" disabled>＋ Add output</button><label class="check-label exact-toggle" title="Scale every output by the same factor for continuous whole-machine ratios"><input id="exact" type="checkbox"> Perfect ratio</label></div><input id="item-filter" type="search" aria-label="Filter available output items" placeholder="Filter output items"></div>
+        <div class="setup-section logistics"><div class="section-title"><h2>Unlocks &amp; logistics</h2></div><div class="field-pair">
+          <div class="field"><label for="tier">HUB tier</label><select id="tier"><option value="0">Tier 0</option><option value="1">Tier 1</option><option value="2" selected>Tier 2</option><option value="3">Tier 3</option><option value="4">Tier 4</option><option value="5">Tier 5</option><option value="6">Tier 6</option><option value="7">Tier 7</option><option value="8">Tier 8</option><option value="9">Tier 9</option></select></div>
+          <div class="field"><label for="belt">Max belt tier</label><select id="belt"></select></div>
+        </div><div class="field"><label for="pipe">Max pipe tier</label><select id="pipe"></select></div></div>
+        <details id="advanced"><summary>Recipes &amp; supplied materials</summary><div class="advanced-body">
+          <label class="check-label"><input type="checkbox" id="alternates"> Allow alternate recipes</label>
+          <label class="check-label"><input type="checkbox" id="prefer-favorites" checked> Prefer my favorite recipes</label>
+          <label class="check-label"><input type="checkbox" id="research" checked> Allow eligible MAM recipes</label>
+          <label class="check-label"><input type="checkbox" id="expected-yields"> Estimate random recipe yields</label>
+          <div class="field"><label for="purity">Default node purity</label><select id="purity"><option value="impure">Impure</option><option value="normal" selected>Normal</option><option value="pure">Pure</option></select></div>
+          <div class="field"><label for="imports">Supply from another factory</label><div class="input-add"><select id="imports"></select><button id="add-import" class="button quiet" type="button">Add</button></div><div id="import-list" class="chips"></div></div>
+          <p class="field-note">Change a recipe in its production step. All unwanted coproducts leave the production chain.</p>
+        </div></details>
+        <button class="button primary calculate" type="submit" id="calculate" disabled>Calculate plan <span aria-hidden="true">→</span></button>
+      </form>
+    </aside>
+
+    <section class="results" id="results" aria-label="Factory plan">
+      <header class="plan-head"><div><span class="eyebrow"><i class="orange-dot"></i> PRODUCTION PLAN</span><h2 id="plan-title">Starter Parts Factory</h2><p id="plan-sub">Foundation layouts, belt routes and build order</p></div><div class="plan-head-actions"><button class="button quiet" type="button" id="print-plan" disabled>Print checklist</button></div></header>
+      <p class="sr-only" id="status" role="status" aria-live="polite"></p>
+      <div id="diagnostics" class="diagnostics" hidden></div>
+      <div class="metrics" id="metrics" aria-label="Plan totals"><div class="metric"><span>MACHINES</span><strong>—</strong><small>Whole buildings</small></div><div class="metric"><span>INSTALLED POWER</span><strong>—</strong><small>Maximum draw</small></div><div class="metric"><span>FOUNDATIONS</span><strong>—</strong><small>Separate production pads</small></div><div class="metric"><span>WASTE ROUTES</span><strong>—</strong><small>Isolated from production</small></div></div>
+      <div class="tabs" role="tablist" aria-label="Plan views"><button id="tab-floor" role="tab" aria-selected="true" aria-controls="panel-floor" type="button" data-view="floor">Floor plans</button><button id="tab-campus" role="tab" aria-selected="false" aria-controls="panel-campus" type="button" data-view="campus" tabindex="-1">Factory layout</button><button id="tab-build" role="tab" aria-selected="false" aria-controls="panel-build" type="button" data-view="build" tabindex="-1">Build checklist</button><button id="tab-power" role="tab" aria-selected="false" aria-controls="panel-power" type="button" data-view="power" tabindex="-1">Power</button><button id="tab-recipes" role="tab" aria-selected="false" aria-controls="panel-recipes" type="button" data-view="recipes" tabindex="-1">Recipes</button></div>
+
+      <div id="panel-floor" role="tabpanel" aria-labelledby="tab-floor" tabindex="0">
+        <nav class="step-panel floor-steps" aria-label="Production steps">
+          <header><span class="eyebrow">BUILD ORDER</span><span id="step-count" class="counter">0 STEPS</span></header>
+          <div id="steps" class="steps"></div>
+        </nav>
+        <section class="blueprint" id="footprint" aria-labelledby="step-title">
+          <header class="diagram-head footprint-head">
+            <div><span class="eyebrow" id="step-position">FOUNDATION DIAGRAM</span><h3 id="step-title">Loading catalogue…</h3><p id="step-sub">The planner is preparing your starter build.</p></div>
+            <div class="diagram-actions">
+              <label class="check-label built-toggle"><input id="step-built" type="checkbox" disabled> Built</label>
+              <button class="button quiet export" id="download" type="button" disabled>↓ SVG</button>
+            </div>
+          </header>
+          <div id="drawing" class="drawing footprint-drawing" tabindex="0" role="region" aria-label="Scrollable foundation blueprint">
+            <div id="blueprint-stage"><span class="loading-mark" aria-hidden="true">＋</span></div>
+          </div>
+          <footer class="diagram-foot" id="diagram-key">
+            <div class="routing-key"><span><i class="legend-feed"></i> Feed</span><span><i class="legend-product"></i> Product</span><span><i class="legend-waste"></i> Waste</span><span><i class="legend-pipe"></i> Pipe</span></div>
+            <div class="viewport-actions" aria-label="Diagram zoom">
+              <button class="button quiet" id="zoom-out" type="button" aria-label="Zoom out" title="Zoom out" disabled>−</button>
+              <button class="button quiet" id="zoom" type="button" aria-label="Zoom in" title="Zoom in" disabled>+</button>
+              <button class="button quiet" id="zoom-reset" type="button" aria-label="Fit diagram" disabled>Fit</button>
+              <output class="grid-label" id="zoom-level" aria-label="Current diagram zoom">100%</output>
+            </div>
+          </footer>
+          <dl id="footprint-facts" class="footprint-facts" hidden></dl>
+          <p id="footprint-caveat" class="footprint-caveat" hidden></p>
+        </section>
+        <div class="step-detail" id="step-detail"></div>
+      </div>
+      <div id="panel-campus" role="tabpanel" aria-labelledby="tab-campus" tabindex="0" hidden><section class="content-panel"><header class="diagram-head"><div><span class="eyebrow">SHARED FOUNDATION GRID</span><h3>Lay out the factory</h3><p id="campus-sub">Production bays and the corridors between them.</p></div><button class="button quiet export" type="button" id="download-campus" disabled>↓ SVG</button></header><div id="campus-drawing" class="drawing campus-drawing"></div><div id="campus-routes" class="routes"></div></section></div>
+      <div id="panel-build" role="tabpanel" aria-labelledby="tab-build" tabindex="0" hidden><section class="content-panel build-panel"><header class="diagram-head"><div><span class="eyebrow">BUILD CHECKLIST</span><h3>Build in this order</h3><p>Tick a step when its machines, feed and outlets are ready.</p></div><button class="button quiet" id="reset-progress" type="button">Reset checks</button></header><div id="build-list"></div></section></div>
+      <div id="panel-power" role="tabpanel" aria-labelledby="tab-power" tabindex="0" hidden><section class="content-panel" id="power-planner" aria-label="Power build planner"></section></div>
+      <div id="panel-recipes" role="tabpanel" aria-labelledby="tab-recipes" tabindex="0" hidden>
+        <section class="content-panel">
+          <header class="diagram-head"><div><h3>Choose a recipe</h3><p>Compare inputs, outputs and unlocks. Pin a recipe anywhere in the chain.</p></div></header>
+          <div class="picker-controls">
+            <div class="field"><label for="recipe-filter">Find a production route</label><input id="recipe-filter" type="search" placeholder="Search items or recipes"></div>
+            <div class="field"><label for="recipe-product">Produced item</label><select id="recipe-product"></select></div>
+            <label class="check-label"><input id="show-later-recipes" type="checkbox" checked> Show later unlocks</label>
+            <label class="check-label"><input id="favorites-only" type="checkbox"> Favorites only</label>
+          </div>
+          <div class="recipe-permissions">
+            <label class="check-label"><input id="clock-unlocked" type="checkbox"> Slug Hatching researched</label>
+            <label class="check-label"><input id="boost-unlocked" type="checkbox"> Production Amplifier researched</label>
+            <label class="shard-stock">Power Shards in stock <input id="shard-stock" type="number" min="0" max="100000" step="1" value="0"></label>
+            <label class="shard-stock">Somersloops in stock <input id="sloop-stock" type="number" min="0" max="100000" step="1" placeholder="Optional"></label>
+          </div>
+          <div id="recipe-list" class="recipe-list"></div>
+          <details class="batch-reference"><summary>Space Elevator delivery batches</summary><div id="elevator-batches"></div></details>
+        </section>
+      </div>
+      <footer class="workspace-footer"><span>Plans are stored in this browser. Gridline uses no cookies.</span><span class="footer-links"><a href="../">LumiCon home</a><a id="server-catalog" href="#" target="_blank" rel="noopener" hidden>Server catalogue ↗</a><a href="https://docs.k-mods.com/production-modeler/game-data/" target="_blank" rel="noopener">Catalogue source ↗</a></span></footer>
+    </section>
+  </main>
+  <dialog class="plan-library" id="plan-library" aria-labelledby="library-title">
+    <header class="diagram-head"><div><h3 id="library-title">Saved plans</h3><p>Plans stay in this browser. Download a file to back up or move a build.</p></div><button type="button" class="button quiet" id="close-library" aria-label="Close saved plans">×</button></header>
+    <form id="save-plan" class="library-controls"><div class="field"><label for="save-name">Plan name</label><input id="save-name" type="text" maxlength="80" required></div><button type="submit" class="button primary">Save copy</button></form>
+    <div id="saved-list" class="saved-list"></div>
+    <footer class="library-footer"><button type="button" class="button quiet" id="export-plan">↓ Plan file</button><button type="button" class="button quiet" id="import-plan">Open plan file</button><input id="plan-file" type="file" accept=".json,application/json" hidden><output id="library-status" aria-live="polite"></output></footer>
+  </dialog>
+  <template id="target-template"><div class="target-row"><select class="target-item" aria-label="Output item" required></select><input class="target-rate" aria-label="Output rate per minute" type="number" min="0.000001" max="1000000" step="any" required><button type="button" class="remove-target" aria-label="Remove output" title="Remove output">×</button><label class="target-recipe-label"><span>Recipe</span><select class="target-recipe" aria-label="Output recipe"><option value="">Automatic</option></select></label></div></template>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
