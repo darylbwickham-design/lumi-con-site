@@ -1,8 +1,8 @@
-import {catalog} from './catalog.js?v=d855503d5cf0';
-import {solvePlan} from './solver.js?v=d855503d5cf0';
-import {computeFloor, renderFloor} from './diagrams.js?v=d855503d5cf0';
-import {renderCampus} from './campus.js?v=d855503d5cf0';
-import {renderPowerPlanner} from './power.js?v=d855503d5cf0';
+import {catalog} from './catalog.js?v=e38d93c3fbca';
+import {solvePlan} from './solver.js?v=e38d93c3fbca';
+import {computeFloor, renderFloor} from './diagrams.js?v=e38d93c3fbca';
+import {renderCampus} from './campus.js?v=e38d93c3fbca';
+import {renderPowerPlanner} from './power.js?v=e38d93c3fbca';
 
 const el = id => document.getElementById(id);
 const serverOrigin = document.querySelector('meta[name="gridline-api"]')?.content;
@@ -338,14 +338,14 @@ function calculate({preserveChecks = false} = {}) {
     zoomIndex = fittedZoom;
   }
   campus = null;
-  renderSummary();
+  const summaryStatus = renderSummary();
   renderSteps();
   renderSelected();
   el('print-plan').disabled = !floors.length;
   el('plan-pending').hidden = true;
   renderView();
   save();
-  el('status').textContent = `${plan.machineCount} machines, ${floors.length} build steps, ${plan.status} material plan.`;
+  el('status').textContent = `${plan.machineCount} machines, ${floors.length} build steps. ${summaryStatus || `${plan.status} material plan`}.`;
 }
 
 function applyGuideOutlet(current) {
@@ -394,7 +394,8 @@ function renderPresetNotes() {
   notes.hidden = !(run || preset?.stock);
   if (run) {
     el('preset-notes-title').textContent = 'Part 1 run instructions';
-    el('preset-notes-content').innerHTML = `<p>${escape(run.note)}</p><p>Use one Mk.1 outlet from S1 and a separate Gangue bin for each Crusher. An empty 4,800-item bin holds 192 active minutes at 25 Gangue/min. Stop before it fills. Use hand transfers until splitters unlock.</p><p>The machine list shows each job. Reuse the workshop’s Smelters and Constructors between jobs.</p>`;
+    const node = run.id.startsWith('copper') ? 'C1' : 'S1';
+    el('preset-notes-content').innerHTML = `<p>${escape(run.note)}</p><p>Use one Mk.1 outlet from ${node} and a separate Gangue bin for each Crusher. An empty 4,800-item bin holds 192 active minutes at 25 Gangue/min. Stop before it fills. Use hand transfers until splitters unlock.</p><p>The machine list shows each job. Reuse the workshop’s Smelters and Constructors between jobs.</p>`;
   } else if (preset?.stock) {
     el('preset-notes-title').textContent = 'Handcrafting and later-tier materials';
     el('preset-notes-content').innerHTML = '<p>Stage this construction mall in production layers. Targets are stock left over after internal demand.</p><p>Handcraft Portable Miners in the Equipment Workshop from 2 Iron Plate and 4 Iron Rod each. For one Dimensional Depot collect a Mercer Sphere. Craft 12 SAM Fluctuators at the bench using 120 Reanimated SAM, 3 Bronze Frames and 9 Caterium Heatsinks. The Depot needs 10.</p><p>Some early unlocks still need later materials. Brass Pipes, Steel Bolts and Steel Beams need Tier 3. Crystal Oscillators need Tier 4. Computers, Lead Sheets, Plastic and Asphalt need later production.</p>';
@@ -452,6 +453,7 @@ function renderSummary() {
   status.hidden = !statusText;
   status.dataset.state = plan.status;
   status.textContent = statusText || '';
+  return statusText;
 }
 
 function rowTitle(row) {
