@@ -329,7 +329,7 @@ export function renderFloor(step={}, options={}) {
   const floorW=layout.widthM?layout.widthM*ppm:560;
   const floorH=layout.depthM?layout.depthM*ppm:190;
   const lanePitchPx=(layout.laneSpacingM??2)*ppm;
-  const maximumLaneFont=blueprintOnly?Math.min(22.4,Math.max(12,lanePitchPx*.55)):10.5;
+  const maximumLaneFont=blueprintOnly?16:10.5;
   const codeColumns=Math.max(1,Math.ceil((maximumLaneFont+10)/lanePitchPx));
   const codeCharacters=1+String(Math.max(1,layout.streams.length)).length;
   const codeColumnWidth=Math.ceil(codeCharacters*maximumLaneFont*.62+14)+8;
@@ -342,7 +342,7 @@ export function renderFloor(step={}, options={}) {
   const top=headerH+alertH+(blueprintOnly?56:44);
   const estimatedFit=Math.min(positive(options.viewportWidth,920)/width,positive(options.viewportHeight,620)/(top+floorH+16));
   const labelScale=blueprintOnly?Math.min(1.4,Math.max(1,.85/estimatedFit)):1;
-  const laneFont=blueprintOnly?Math.min(16*labelScale,Math.max(12,(layout.laneSpacingM??4)*ppm*.55)):10.5;
+  const laneFont=blueprintOnly?16:10.5;
   const counts={feed:0,product:0,waste:0};
   const codeOf=new Map(layout.streams.map(s=>[s.id,`${s.kind==='feed'?'F':s.kind==='waste'?'W':'P'}${++counts[s.kind]}`]));
   const laneOrder=new Map([...layout.lanes].sort((a,b)=>a.from.y-b.from.y).map((lane,index)=>[lane.id,index]));
@@ -384,7 +384,7 @@ export function renderFloor(step={}, options={}) {
   svg.setAttribute('style',`display:block;max-width:100%;height:auto;background:${p.bg}`);
   el('title',{id:`${id}-title`},svg,`${layout.title}: ${layout.count} ${layout.machineName}, ${layout.across} across by ${layout.rowCount} rows`);
   el('desc',{id:`${id}-desc`},svg,layout.footprint?
-    `True-scale clearance plan on an 8 metre foundation grid. ${pretty(layout.widthM)} by ${pretty(layout.depthM)} metres. F means feed, P means product, W means waste. ${blueprintOnly?'The accompanying material-lane table names every lane and its flow.':`Lane labels show busy row demand at ${pretty(layout.clockPercent??100)}% configured clock over capacity; the key also shows planned average bay flow.`} Solid belts and dashed pipes have directional arrows. Port positions are schematic. ${layout.warnings.join(' ')}`:
+    `True-scale clearance plan on an 8 metre foundation grid. ${pretty(layout.widthM)} by ${pretty(layout.depthM)} metres. F means feed, P means product, W means waste. ${blueprintOnly?'The accompanying material-lane table names every lane and its flow.':`Lane codes refer to the material key, which shows busy row demand at ${pretty(layout.clockPercent??100)}% configured clock over capacity and planned average bay flow.`} Solid belts and dashed pipes have directional arrows. Port positions are schematic. ${layout.warnings.join(' ')}`:
     'Verified footprint unavailable; no floor area or foundation count has been fabricated.');
   el('metadata',{},svg,JSON.stringify({schema:'foundry-floor-presentation-v2',unit:'metres',foundationM:8,
     source:layout.source,portsVerified:false,clockPercent:layout.clockPercent??100,dutyPercent:layout.dutyPercent,

@@ -1,9 +1,9 @@
-import {catalog} from './catalog.js?v=b08d61425826';
-import {solvePlan} from './solver.js?v=b08d61425826';
-import {computeFloor, renderFloor} from './diagrams.js?v=b08d61425826';
-import {planTransportRuns, renderCampus} from './campus.js?v=b08d61425826';
-import {renderPowerPlanner} from './power.js?v=b08d61425826';
-import {starterRuns} from './starter-runs.js?v=b08d61425826';
+import {catalog} from './catalog.js?v=bc98eb015740';
+import {solvePlan} from './solver.js?v=bc98eb015740';
+import {computeFloor, renderFloor} from './diagrams.js?v=bc98eb015740';
+import {planTransportRuns, renderCampus} from './campus.js?v=bc98eb015740';
+import {renderPowerPlanner} from './power.js?v=bc98eb015740';
+import {starterRuns} from './starter-runs.js?v=bc98eb015740';
 
 const el = id => document.getElementById(id);
 const serverOrigin = document.querySelector('meta[name="gridline-api"]')?.content;
@@ -78,7 +78,7 @@ const libraryKey = 'sfplus-foundry-library-v1';
 const favoriteKey = 'gridline-favorite-recipes-v1';
 let favorites = readFavorites();
 let state = restore();
-let plan, floors, runs, selected, campus, view = 'floor';
+let plan, requestedPlan, requestedBay, ratioNotice, floors, runs, selected, campus, view = 'floor';
 const zoomLevels = [.6,.8,1,1.25,1.6,2.1,2.8,3.7,5];
 const fittedZoom = zoomLevels.indexOf(1);
 let zoomIndex = fittedZoom;
@@ -263,8 +263,6 @@ function keepOneTarget() {
 }
 
 function markCustom() {
-  state.preset = '';
-  state.presetRun = '';
   el('preset').value = '';
   el('preset-run-control').hidden = true;
   el('plan-pending').hidden = false;
@@ -277,6 +275,7 @@ function renderImports() {
 }
 
 function syncForm() {
+  requestedBay = null;
   el('preset').value = state.preset;
   const preset = activePreset();
   const runs = preset?.runs || [];
@@ -300,6 +299,8 @@ function syncForm() {
 }
 
 function takeForm() {
+  state.preset = el('preset').value;
+  state.presetRun = state.preset ? el('preset-run').value : '';
   state.targets = [...el('targets').children].map(row => ({itemId:row.querySelector('.target-item').value,rate:row.querySelector('.target-rate').valueAsNumber}));
   state.imports = [...el('import-list').querySelectorAll('[data-import]')].map(input => ({itemId:input.dataset.import,rate:input.valueAsNumber}));
   state.tier = activePreset()?.tier ?? 9;
@@ -330,8 +331,68 @@ function calculate({preserveChecks = false} = {}) {
   takeForm();
   updateTargetRecipes();
   if (!preserveChecks && previous !== JSON.stringify(state.targets)) state.checked = [];
-  plan = solvePlan(plannerCatalog(),{...solverSettings(),targets:state.targets,imports:state.imports,exactScale:state.exact,exactScaleCap:1000});
-  if (activeRun() && !activePreset()?.stock) applyGuideOutlet(plan);
+  const data = plannerCatalog();
+  const config = {...solverSettings(),imports:state.imports,exactScaleCap:1000};
+  const solve = targets => {
+    const result = solvePlan(data,{...config,targets});
+    if (activeRun() && !activePreset()?.stock) applyGuideOutlet(result);
+    return result;
+  };
+  requestedPlan = solve(state.targets);
+  ratioNotice = null;
+  plan = state.exact ? previewRatio(solve) : requestedPlan;
+  el('plan-pending').hidden = true;
+  renderPlan();
+  save();
+}
+
+function restoreRequestedBay() {
+  if (!requestedBay) return;
+  ({selected,zoomIndex} = requestedBay);
+  requestedBay = null;
+}
+
+function ratioBlocker(result) {
+  return result.diagnostics.find(d => d.severity==='error' &&
+    !(d.code==='unresolved-overflow' && result.overflow.some(out=>
+      out.from===d.rowId && out.itemId===d.itemId && guideWasteBuffer(out,result))));
+}
+
+function previewRatio(solve) {
+  const defer = (message,status='unavailable') => {
+    state.exact = false;
+    ratioNotice = {status,message};
+    restoreRequestedBay();
+    return requestedPlan;
+  };
+  const blocker = ratioBlocker(requestedPlan);
+  if (blocker) return defer(`Resolve this plan check first. ${blocker.message}`);
+  const {possible,factor,cap:scaleCap,exceeds,reason} = requestedPlan.exactScale;
+  if (!possible) {
+    const suggestion = activePreset()?.runs ? ' Pick a smaller build above.' : ' Try fewer outputs at a time.';
+    return defer(exceeds ? `This set of outputs would need more than a ${fmt(scaleCap)}× increase.${suggestion}` : reason);
+  }
+  const scaled = factor===1 ? requestedPlan : solve(state.targets.map(t=>({...t,rate:t.rate*factor})));
+  const limit = ratioBlocker(scaled);
+  if (limit) return defer(`A matched plan needs ${fmt(factor)}× your targets. ${limit.message}`);
+  if (scaled.exactScale.factor!==1 || scaled.rows.some(row=>row.machineCount && row.dutyCycle < 1-1e-7)) {
+    return defer('The current sources or machine allocations leave some bays with spare capacity. Adjust those settings to match every bay.');
+  }
+  if (factor===1) return defer('These rates already match whole machines.', 'matched');
+  requestedBay ||= {selected,zoomIndex};
+  ratioNotice = {status:'preview',factor,message:`Previewing ${fmt(factor)}× your requested outputs. Untick to go back, or use these rates to build this version.`};
+  return scaled;
+}
+
+function renderRatio() {
+  const control = el('ratio-control');
+  control.dataset.state = ratioNotice?.status || '';
+  el('exact').checked = state.exact;
+  el('ratio-message').textContent = ratioNotice?.message || 'Compare a plan that scales every output to use whole machines.';
+  el('apply-ratio').hidden = !state.exact || state.targets.some(t=>t.rate*ratioNotice.factor > 1000000);
+}
+
+function renderPlan() {
   floors = buildOrder(plan).map(({row,layer}) => {
     // Keep giant plans calculable without constructing one element per machine.
     const floor = row.machineCount > 0 && row.machineCount <= 1200 ? computeFloor(row, floorOptions(row)) : null;
@@ -347,13 +408,13 @@ function calculate({preserveChecks = false} = {}) {
     zoomIndex = fittedZoom;
   }
   campus = null;
+  renderRatio();
   const summaryStatus = renderSummary();
   renderSteps();
   renderSelected();
   el('print-plan').disabled = !floors.length;
-  el('plan-pending').hidden = true;
+  el('reset-progress').disabled = state.exact;
   renderView();
-  save();
   el('status').textContent = `${plan.machineCount} machines, ${floors.length} build steps. ${summaryStatus || `${plan.status} material plan`}.`;
 }
 
@@ -391,9 +452,9 @@ function buildOrder(current) {
 
 const layerName = layer => layer===0 ? 'Layer 0 · Sources & imports' : `Layer ${layer}`;
 
-function guideWasteBuffer(out) {
+function guideWasteBuffer(out, result = plan) {
   return Boolean(activeRun() && !activePreset()?.stock && out?.method==='unresolved' && items.get(out.itemId)?.name==='Crushed Gangue' &&
-    ['Crushed Siterite','Crushed Callanite'].includes(plan.rows.find(row=>row.id===out.from)?.recipeName));
+    ['Crushed Siterite','Crushed Callanite'].includes(result.rows.find(row=>row.id===out.from)?.recipeName));
 }
 
 function runChanged(run) {
@@ -443,11 +504,11 @@ function renderSummary() {
   const run = activeRun();
   const title = state.name || (activePreset()?.stock && run ? run.name : activePreset()?.name || `${plan.targets[0]?.name || 'Custom'} Factory`);
   el('plan-title').textContent = title;
-  el('plan-sub').textContent = plan.targets.length>6 ? `${plan.targets.length} stock targets · see rates in Factory setup.` :
+  el('plan-sub').textContent = plan.targets.length>6 ? `${plan.targets.length} ${state.exact?'scaled outputs':'stock targets · see rates in Factory setup.'}` :
     (plan.targets.map(t => `${t.name} ${rate(t.rate,t.unit)}`).join(' · ') || 'Choose a material to plan a factory.');
   el('plan-context').textContent = `Belts Mk.${state.belt} · Pipes Mk.${state.pipe}`;
   renderPresetNotes();
-  const buffered = plan.overflow.filter(guideWasteBuffer);
+  const buffered = plan.overflow.filter(out=>guideWasteBuffer(out));
   const unresolved = plan.overflow.filter(o=>o.method==='unresolved'&&!guideWasteBuffer(o)).length;
   el('metrics').innerHTML = [
     metric('Machines',fmt(plan.machineCount),''),
@@ -458,7 +519,6 @@ function renderSummary() {
   const notifications = plan.diagnostics.filter(d => !['tier-gates-only','node-allocation-required'].includes(d.code) &&
     !(d.code==='unresolved-overflow' && buffered.some(out=>out.from===d.rowId && out.itemId===d.itemId)));
   if (plan.status==='estimated') notifications.unshift({message:'One or more outputs use estimated random yields. Use buffers and plan for variable supply.'});
-  if (plan.exactScale.applied) notifications.unshift({message:`Scaled all target rates by ${fmt(plan.exactScale.factor)} for continuous whole-machine ratios.`});
   for (const [transports, mk, u] of [[belts,state.belt,'items'],[pipes,state.pipe,'m³']]) {
     const current = mark(transports,mk);
     if (current?.tier > state.tier && (transports === belts || plan.routes.some(r=>r.unit==='m3'))) notifications.unshift({message:`${current.name} (${current.capacityPerMinute} ${u}/min) is a Tier ${current.tier} unlock. Check the cap before building at Tier ${state.tier}.`});
@@ -498,11 +558,12 @@ function equipment(row) {
 }
 
 function renderSteps() {
-  const built = floors.filter(({row})=>state.checked.includes(row.id)).length;
-  el('step-count').textContent = `${built}/${floors.length} built`;
+  const built = state.exact ? [] : state.checked;
+  const count = floors.filter(({row})=>built.includes(row.id)).length;
+  el('step-count').textContent = state.exact ? `${floors.length} steps` : `${count}/${floors.length} built`;
   const groups = groupBy(floors,entry=>entry.layer);
   let index = 1;
-  el('steps').innerHTML = [...groups].map(([layer,entries])=>`<div class="step-layer"><p class="layer-label">${escape(layerName(layer))}</p>${entries.map(({row,floor})=>`<button class="step-button ${state.checked.includes(row.id) ? 'is-done' : ''}" type="button" data-step="${escape(row.id)}" aria-current="${row.id === selected}"><span class="step-number">${String(index++).padStart(2,'0')}</span><span><strong>${escape(rowTitle(row))}</strong><small>${escape(dimensions(floor) || equipment(row))}</small></span></button>`).join('')}</div>`).join('');
+  el('steps').innerHTML = [...groups].map(([layer,entries])=>`<div class="step-layer"><p class="layer-label">${escape(layerName(layer))}</p>${entries.map(({row,floor})=>`<button class="step-button ${built.includes(row.id) ? 'is-done' : ''}" type="button" data-step="${escape(row.id)}" aria-current="${row.id === selected}"><span class="step-number">${String(index++).padStart(2,'0')}</span><span><strong>${escape(rowTitle(row))}</strong><small>${escape(dimensions(floor) || equipment(row))}</small></span></button>`).join('')}</div>`).join('');
   el('step-picker').innerHTML = [...groups].map(([layer,entries])=>`<optgroup label="${escape(layerName(layer))}">${options(entries,entry=>entry.row.id,entry=>rowTitle(entry.row))}</optgroup>`).join('');
   updateStepNavigation();
   revealStep();
@@ -541,6 +602,7 @@ function selectStep(id, move = false) {
 }
 
 function setBuilt(id, checked) {
+  if (state.exact) return;
   state.checked = checked ? [...new Set([...state.checked,id])] : state.checked.filter(value=>value!==id);
   if (selected === id) el('step-built').checked = checked;
   save();
@@ -629,8 +691,8 @@ function renderSelected() {
   const current = floors.find(entry => entry.row.id === selected);
   const built = el('step-built');
   const stage = el('blueprint-stage');
-  built.disabled = !current;
-  built.checked = Boolean(current && state.checked.includes(current.row.id));
+  built.disabled = !current || state.exact;
+  built.checked = Boolean(current && !state.exact && state.checked.includes(current.row.id));
   if (!current) {
     el('step-position').textContent = 'Foundation plan';
     el('step-title').textContent = 'Choose a production target';
@@ -682,7 +744,7 @@ function renderSelected() {
   const materialList = rowMaterials(row);
   const browse = (documentedProducers.has(row.itemId) || sourcesByItem.has(row.itemId) || manualsByItem.has(row.itemId)) && row.kind!=='disposal' ? `<button class="button quiet recipe-link" type="button" data-browse-recipes="${escape(row.itemId)}">Compare routes</button>` : '';
   const capacity = row.outputs?.find(p=>p.itemId===row.itemId && p.role==='product')?.perMachineRate * row.machineCount;
-  const extraOutput = row.kind==='production' && Number.isFinite(capacity) && capacity-row.outputRate>.001 ? `<button class="button quiet recipe-link" type="button" data-extra-output="${capacity-row.outputRate}">Output spare ${escape(rate(capacity-row.outputRate,row.unit))}</button>` : '';
+  const extraOutput = !state.exact && row.kind==='production' && Number.isFinite(capacity) && capacity-row.outputRate>.001 ? `<button class="button quiet recipe-link" type="button" data-extra-output="${capacity-row.outputRate}">Output spare ${escape(rate(capacity-row.outputRate,row.unit))}</button>` : '';
   const sourceAction = row.kind==='source'||row.kind==='import' ? `<button class="button quiet recipe-link" type="button" data-supply-mode="${row.kind==='source'?'import':'local'}">${row.kind==='source'?'Import this material':'Produce on site'}</button>` : '';
   const assigned = row.extraction?.allocatedNodes?.length ? `<p>${row.extraction.allocationStatus==='suggested'?'Suggested':'Allocated'} map position${row.extraction.allocatedNodes.length===1?'':'s'} · ${row.extraction.allocatedNodes.map(n=>`(${fmt(n.x)}, ${fmt(n.y)})`).join(', ')}</p>` : '';
   const conditions = row.operatingRequirements ? `<p>Operating conditions · ${fmt(row.operatingRequirements.temperature?.min)}–${fmt(row.operatingRequirements.temperature?.max)} °C · ${fmt(row.operatingRequirements.humidity?.min*100)}–${fmt(row.operatingRequirements.humidity?.max*100)}% humidity.</p>` : '';
@@ -877,7 +939,8 @@ function renderBuild() {
       row.extraction?.nodeRequired ? `Allocate ${row.machineCount} ${row.extraction.purity || ''} node(s) before placing this step.` : '';
     const labels = unlockNames(row.gateIds);
     const heading = floors[i-1]?.layer!==layer ? `<h3 class="build-layer">${escape(layerName(layer))}</h3>` : '';
-    return `${heading}<section class="build-check"><input aria-label="Mark ${escape(rowTitle(row))} built" type="checkbox" data-check="${escape(row.id)}" ${state.checked.includes(row.id) ? 'checked' : ''}>
+    const progress = state.exact ? 'disabled' : state.checked.includes(row.id) ? 'checked' : '';
+    return `${heading}<section class="build-check"><input aria-label="Mark ${escape(rowTitle(row))} built" type="checkbox" data-check="${escape(row.id)}" ${progress}>
       <div><h4>${i+1}. ${escape(rowTitle(row))}</h4><p>${escape([equipment(row),dimensions(floor)].filter(Boolean).join(' · '))}</p>
       ${labels ? `<p>Unlock ${escape(labels)}</p>` : ''}${nodeAlloc ? `<p>${escape(nodeAlloc)}</p>` : ''}${inbound}${outbound}</div>
       <button class="button quiet" type="button" data-open-floor="${escape(row.id)}">Open bay</button></section>`;
@@ -1183,7 +1246,39 @@ el('preset-run').addEventListener('change',event=>{
   syncForm();
   calculate({preserveChecks:true});
 });
-for (const id of ['belt','pipe','purity','alternates','exact','research','expected-yields','prefer-favorites']) el(id).addEventListener('change',()=>calculate({preserveChecks:true}));
+for (const id of ['belt','pipe','purity','alternates','research','expected-yields','prefer-favorites']) el(id).addEventListener('change',()=>calculate({preserveChecks:true}));
+el('exact').addEventListener('change',event=>{
+  if (!event.target.checked) {
+    state.exact = false;
+    ratioNotice = null;
+    restoreRequestedBay();
+    plan = requestedPlan;
+    renderPlan();
+    save();
+    return;
+  }
+  if (!el('plan-form').checkValidity()) {
+    ratioNotice = {status:'unavailable',message:'Enter a valid rate for each output and supplied material to preview the ratio.'};
+    renderRatio();
+    return;
+  }
+  calculate({preserveChecks:true});
+});
+el('apply-ratio').addEventListener('click',()=>{
+  if (!state.exact) return;
+  if (!el('plan-pending').hidden) {
+    calculate({preserveChecks:true});
+    return;
+  }
+  const factor = ratioNotice.factor;
+  for (const input of el('targets').querySelectorAll('.target-rate')) input.value = Number((input.valueAsNumber*factor).toPrecision(15));
+  el('exact').checked = false;
+  state.exact = false;
+  state.checked = [];
+  requestedBay = null;
+  calculate();
+  el('exact').focus();
+});
 el('add-import').addEventListener('click',()=>{
   takeForm();
   const itemId = el('imports').value;
@@ -1476,5 +1571,5 @@ if (serverEnabled) {
   el('server-catalog').href = `${serverOrigin}/v1/manifest`;
   el('server-catalog').hidden = false;
 }
-for (const id of ['preset','add-target','calculate']) el(id).disabled = false;
+for (const id of ['preset','add-target','calculate','exact']) el(id).disabled = false;
 calculate();
