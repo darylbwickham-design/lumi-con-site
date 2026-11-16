@@ -1,8 +1,8 @@
-import {catalog} from './catalog.js';
-import {solvePlan} from './solver.js';
-import {computeFloor, renderFloor} from './diagrams.js';
-import {renderCampus} from './campus.js';
-import {renderPowerPlanner} from './power.js';
+import {catalog} from './catalog.js?v=a62fa6af2c30';
+import {solvePlan} from './solver.js?v=a62fa6af2c30';
+import {computeFloor, renderFloor} from './diagrams.js?v=a62fa6af2c30';
+import {renderCampus} from './campus.js?v=a62fa6af2c30';
+import {renderPowerPlanner} from './power.js?v=a62fa6af2c30';
 
 const el = id => document.getElementById(id);
 const serverOrigin = document.querySelector('meta[name="gridline-api"]')?.content;
@@ -212,6 +212,7 @@ function keepOneTarget() {
 function markCustom() {
   state.preset = '';
   el('preset').value = '';
+  el('plan-pending').hidden = false;
 }
 
 function renderImports() {
@@ -281,6 +282,7 @@ function calculate({preserveChecks = false} = {}) {
   renderSteps();
   renderSelected();
   el('print-plan').disabled = !floors.length;
+  el('plan-pending').hidden = true;
   renderView();
   save();
   el('status').textContent = `${plan.machineCount} machines, ${floors.length} build steps, ${plan.status} material plan.`;
@@ -320,11 +322,13 @@ function renderSummary() {
   const title = state.name || (state.preset === '' ? `${plan.targets[0]?.name || 'Custom'} Factory` : presets[Number(state.preset)]?.name || 'Custom Factory');
   el('plan-title').textContent = title;
   el('plan-sub').textContent = plan.targets.map(t => `${t.name} ${rate(t.rate,t.unit)}`).join(' · ') || 'Choose a material to plan a factory.';
+  el('plan-context').textContent = `Tier ${state.tier} · Belts Mk.${state.belt} · Pipes Mk.${state.pipe}`;
+  const unresolved = plan.overflow.filter(o=>o.method==='unresolved').length;
   el('metrics').innerHTML = [
-    metric('MACHINES',fmt(plan.machineCount),'Whole buildings at 100% clock'),
-    metric('INSTALLED POWER',`${fmt(plan.power.installedPeakMW)} MW`,plan.power.complete ? 'Maximum draw' : 'Known draw only','<button class="metric-action" type="button" data-build-power>Build power →</button>'),
-    metric('FOUNDATIONS',measured ? fmt(measured) : '—',unknown ? 'Measured bays only · some area unknown' : 'Bay pads · corridors shown separately'),
-    metric('WASTE STREAMS',fmt(plan.overflow.length),`${plan.overflow.filter(o=>o.method==='unresolved').length} need a disposal decision`),
+    metric('Machines',fmt(plan.machineCount),''),
+    metric('Installed draw',`${fmt(plan.power.installedPeakMW)} MW`,plan.power.complete ? '' : 'Known draw only','<button class="metric-action" type="button" data-build-power>Build power →</button>'),
+    metric('Bay foundations',measured ? fmt(measured) : '—',unknown ? 'Measured bays only' : ''),
+    metric('Waste streams',fmt(plan.overflow.length),unresolved ? `${unresolved} need disposal` : ''),
   ].join('');
   const notifications = plan.diagnostics.filter(d => !['tier-gates-only','node-allocation-required'].includes(d.code));
   if (plan.status==='estimated') notifications.unshift({message:'One or more outputs use estimated random yields. Use buffers and plan for variable supply.'});
@@ -335,8 +339,16 @@ function renderSummary() {
   }
   const box = el('diagnostics');
   box.hidden = !notifications.length;
-  const messages = notifications.map(d => `<p class="${escape(d.severity || '')}">${escape(d.message)}</p>`);
-  box.innerHTML = messages.length > 3 ? `${messages.slice(0,2).join('')}<details><summary>${messages.length - 2} more checks</summary>${messages.slice(2).join('')}</details>` : messages.join('');
+  const errors = notifications.filter(d=>d.severity==='error');
+  const priority = errors.length ? [errors[0]] : [];
+  const remaining = notifications.filter(d=>!priority.includes(d));
+  const notices = list => list.map(d=>`<p class="${escape(d.severity || '')}">${escape(d.message)}</p>`).join('');
+  box.innerHTML = notices(priority) + (remaining.length ? `<details><summary>${remaining.length} ${priority.length ? 'more ' : ''}plan ${remaining.length===1?'check':'checks'}</summary>${notices(remaining)}</details>` : '');
+  const status = el('plan-state');
+  const statusText = ({partial:'Partial plan',blocked:'Needs input',estimated:'Estimated yields'})[plan.status];
+  status.hidden = !statusText;
+  status.dataset.state = plan.status;
+  status.textContent = statusText || '';
 }
 
 function rowTitle(row) {
@@ -359,18 +371,29 @@ function equipment(row) {
 }
 
 function renderSteps() {
-  el('step-count').textContent = `${floors.length} STEPS`;
+  const built = floors.filter(({row})=>state.checked.includes(row.id)).length;
+  el('step-count').textContent = `${built}/${floors.length} built`;
   el('steps').innerHTML = floors.map(({row,floor}, index) => `<button class="step-button ${state.checked.includes(row.id) ? 'is-done' : ''}" type="button" data-step="${escape(row.id)}" aria-current="${row.id === selected}"><span class="step-number">${String(index+1).padStart(2,'0')}</span><span><strong>${escape(rowTitle(row))}</strong><small>${escape(dimensions(floor) || equipment(row))}</small></span></button>`).join('');
+  el('step-picker').innerHTML = options(floors,entry=>entry.row.id,(entry)=>rowTitle(entry.row));
+  updateStepNavigation();
   revealStep();
+}
+
+function updateStepNavigation() {
+  const index = floors.findIndex(e=>e.row.id===selected);
+  el('step-prev').disabled = index<1;
+  el('step-next').disabled = index<0 || index===floors.length-1;
+  el('step-picker').disabled = index<0;
+  el('step-picker').value = selected || '';
 }
 
 function revealStep() {
   const list = el('steps');
   const active = list.querySelector('[aria-current=true]');
   if (!active || !list.clientWidth) return;
-  const left = active.offsetLeft;
-  if (left < list.scrollLeft || left + active.offsetWidth > list.scrollLeft + list.clientWidth) {
-    list.scrollLeft = Math.max(0,left - (list.clientWidth - active.offsetWidth) / 2);
+  const top = active.offsetTop;
+  if (top < list.scrollTop || top + active.offsetHeight > list.scrollTop + list.clientHeight) {
+    list.scrollTop = Math.max(0,top - (list.clientHeight-active.offsetHeight)/2);
   }
 }
 
@@ -379,6 +402,7 @@ function selectStep(id, move = false) {
   if (id !== selected) zoomIndex = fittedZoom;
   selected = id;
   for (const b of el('steps').querySelectorAll('[data-step]')) b.setAttribute('aria-current', String(b.dataset.step === id));
+  updateStepNavigation();
   renderSelected();
   if (move) {
     activate('floor');
@@ -443,7 +467,18 @@ function renderFootprintFacts(floor,row) {
     <div><dt>INSTALLED POWER</dt><dd>${row.power.installedPeakMW == null ? '—' : `${fmt(row.power.installedPeakMW)} MW`}</dd><span>${fmt(row.clockPercent ?? 100)}% clock per machine</span></div>
     <div>${canAdjust ? `<dt><label for="machines-across">ROW WIDTH</label></dt><dd><select id="machines-across"><option value="">Auto</option>${options(candidates,n=>n,n=>`${n} per row`)}</select></dd><span>Up to ${fmt(machinesAcross)} at the selected caps</span>` : `<dt>ROW WIDTH</dt><dd>1 per row</dd><span>${floor.overloaded.length ? 'Check transport capacity' : 'At the selected caps'}</span>`}</div>`;
   if (canAdjust) el('machines-across').value = candidates.includes(Number(requested)) ? String(requested) : '';
-  caveat.textContent = ['8 m grid. Lane loads assume all machines run at their configured clocks. Fitting positions are schematic.',warning].filter(Boolean).join(' ');
+  caveat.textContent = ['Fitting positions are schematic.',warning].filter(Boolean).join(' ');
+}
+
+function renderLanes(lanes = []) {
+  el('lanes-panel').hidden = !lanes.length;
+  el('lane-jump').hidden = !lanes.length;
+  el('lane-list').innerHTML = lanes.map(lane=>{
+    const transport = lane.transport==='pipe' ? 'Pipe' : 'Belt';
+    const flow = lane.low===lane.high ? fmt(lane.high) : `${fmt(lane.low)}–${fmt(lane.high)}`;
+    const capacity = lane.cap ? `${flow} / ${rate(lane.cap,lane.unit)}` : rate(lane.high,lane.unit);
+    return `<li class="lane-card${lane.overCapacity?' is-over':''}" data-kind="${escape(lane.kind)}"><span class="lane-code">${escape(lane.code)}</span><span class="lane-info"><strong>${escape(lane.name)}</strong><small>${escape(transport)} · ${escape(capacity)}</small><small>Planned bay ${escape(rate(lane.rate,lane.unit))}${lane.overCapacity?' · Over capacity':''}</small></span></li>`;
+  }).join('');
 }
 
 function rowMaterials(row) {
@@ -468,23 +503,27 @@ function renderSelected() {
   built.disabled = !current;
   built.checked = Boolean(current && state.checked.includes(current.row.id));
   if (!current) {
-    el('step-position').textContent = 'FOUNDATION DIAGRAM';
+    el('step-position').textContent = 'Foundation plan';
     el('step-title').textContent = 'Choose a production target';
     el('step-sub').textContent = '';
     stage.replaceChildren();
     el('step-detail').replaceChildren();
     el('download').disabled = true;
+    renderLanes();
     renderFootprintFacts();
     resizeBlueprint();
     return;
   }
   const {row,floor} = current;
-  el('step-position').textContent = `STEP ${floors.indexOf(current)+1} OF ${floors.length}`;
+  el('step-position').textContent = `Viewing step ${floors.indexOf(current)+1} of ${floors.length}`;
   el('step-title').textContent = rowTitle(row);
   el('step-sub').textContent = equipment(row);
   el('download').disabled = !floor?.foundationCount;
+  let svg;
   if (floor?.foundationCount) {
-    stage.replaceChildren(renderFloor(row,{...floorOptions(row),layout:floor,compact:true}));
+    const drawing = el('drawing');
+    svg = renderFloor(row,{...floorOptions(row),layout:floor,blueprintOnly:true,viewportWidth:drawing.clientWidth-28,viewportHeight:drawing.clientHeight-26});
+    stage.replaceChildren(svg);
   } else {
     const reason = row.machineCount > 1200 ? 'This bay exceeds the 1,200-machine drawing limit. Split this build into smaller sites.' :
       row.machineCount ? 'The official export has no measured clearance for this machine.' :
@@ -492,6 +531,7 @@ function renderSelected() {
       row.kind === 'unresolved' ? 'Choose a different recipe or supply this item from another factory.' : 'Gather this material at the required rate.';
     stage.innerHTML = `<p class="no-drawing">${escape(reason)}</p>`;
   }
+  renderLanes(svg?.laneKey);
   renderFootprintFacts(floor,row);
   resizeBlueprint();
   const eligible = (producers.get(row.itemId) || []).filter(recipeCanPin);
@@ -894,7 +934,32 @@ el('preset').innerHTML = '<option value="">Custom plan</option>' + options(prese
 el('belt').innerHTML = options(belts,t=>belts.indexOf(t)+1,t=>`Mk.${belts.indexOf(t)+1} · ${t.capacityPerMinute}/min`);
 el('pipe').innerHTML = options(pipes,t=>pipes.indexOf(t)+1,t=>`Mk.${pipes.indexOf(t)+1} · ${t.capacityPerMinute} m³/min`);
 el('imports').innerHTML = allItemOptions;
-el('plan-form').addEventListener('submit',event=>{event.preventDefault();calculate();});
+const narrowSetup = matchMedia('(max-width: 880px)');
+function showSetup(open) {
+  el('setup-panel').hidden = !open;
+  el('main').classList.toggle('setup-hidden',!open);
+  el('setup-toggle').setAttribute('aria-expanded',String(open));
+  el('setup-toggle').querySelector('span').textContent = open ? 'Hide setup' : 'Edit setup';
+}
+narrowSetup.addEventListener('change',event=>showSetup(!event.matches));
+showSetup(!narrowSetup.matches);
+el('setup-toggle').addEventListener('click',()=>{
+  const open = el('setup-panel').hidden;
+  showSetup(open);
+  if (open && narrowSetup.matches) el('preset').focus();
+});
+el('plan-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  if (!el('plan-form').reportValidity()) return;
+  calculate();
+  if (narrowSetup.matches) {
+    showSetup(false);
+    el('setup-toggle').focus();
+  }
+});
+el('plan-form').addEventListener('input',event=>{
+  if (event.target.matches('.target-rate,[data-import]')) el('plan-pending').hidden = false;
+});
 el('targets').addEventListener('change',event=>{
   const row = event.target.closest('.target-row');
   if (!row) return;
@@ -907,7 +972,7 @@ el('targets').addEventListener('change',event=>{
   markCustom();
 });
 el('item-filter').addEventListener('input',()=>{
-  for (const select of el('targets').querySelectorAll('select')) setTargetOptions(select, select.value);
+  for (const select of el('targets').querySelectorAll('.target-item')) setTargetOptions(select,select.value);
 });
 el('add-target').addEventListener('click',()=>{markCustom();addTarget().querySelector('select').focus();});
 el('preset').addEventListener('change',event=>{
@@ -923,6 +988,7 @@ el('add-import').addEventListener('click',()=>{
   const itemId = el('imports').value;
   if (!state.imports.some(t=>t.itemId===itemId)) state.imports.push({itemId,rate:60});
   renderImports();
+  el('plan-pending').hidden = false;
   el(`import-${itemId}`)?.focus();
 });
 el('import-list').addEventListener('click',event=>{
@@ -931,8 +997,16 @@ el('import-list').addEventListener('click',event=>{
   takeForm();
   state.imports = state.imports.filter(t=>t.itemId!==id);
   renderImports();
+  el('plan-pending').hidden = false;
 });
 el('steps').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)selectStep(b.dataset.step);});
+el('step-picker').addEventListener('change',event=>selectStep(event.target.value));
+for (const [id,delta] of [['step-prev',-1],['step-next',1]]) {
+  el(id).addEventListener('click',()=>{
+    const index = floors.findIndex(e=>e.row.id===selected);
+    if (floors[index+delta]) selectStep(floors[index+delta].row.id);
+  });
+}
 el('footprint-facts').addEventListener('change',event=>{
   if (event.target.id !== 'machines-across' || !selected) return;
   const count = Number(event.target.value);
@@ -1125,6 +1199,7 @@ el('elevator-batches').addEventListener('click',event=>{
 el('zoom').addEventListener('click',()=>changeZoom(1));
 el('zoom-out').addEventListener('click',()=>changeZoom(-1));
 el('zoom-reset').addEventListener('click',()=>changeZoom(0));
+el('lane-jump').addEventListener('click',()=>el('lanes-title').focus());
 el('download').addEventListener('click',()=>{
   const entry = floors.find(e=>e.row.id===selected);
   if (!entry?.floor?.foundationCount) return;

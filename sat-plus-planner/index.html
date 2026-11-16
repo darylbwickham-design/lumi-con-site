@@ -9,7 +9,7 @@
   <meta name="gridline-catalog-sha256" content="8bf53df15cc0ae86cdc2c933eec643d8b349791b75841e3aa8aa24bf94c38f97">
   <title>Gridline | Satisfactory Plus Planner</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=a62fa6af2c30">
 </head>
 <body>
   <a class="skip" href="#results">Skip to the plan</a>
@@ -19,12 +19,12 @@
   </header>
 
   <main class="workspace" id="main">
-    <aside class="config" aria-label="Plan settings">
-      <div class="config-head"><span class="eyebrow">FACTORY SETUP</span><h1>Plan a build</h1><p>Pick your output. See what to place and how to belt it.</p></div>
+    <aside class="config" id="setup-panel" aria-labelledby="setup-title">
+      <div class="config-head"><h2 id="setup-title">Factory setup</h2></div>
       <div class="field"><label for="preset">Quick start</label><select id="preset" aria-label="Quick start" disabled><option value="">Loading recipes…</option></select></div>
       <form id="plan-form">
-        <div class="setup-section"><div class="section-title"><h2>Output targets</h2><span>PER MINUTE</span></div><div id="targets"></div><div class="output-actions"><button type="button" id="add-target" class="add-button" disabled>＋ Add output</button><label class="check-label exact-toggle" title="Scale every output by the same factor for continuous whole-machine ratios"><input id="exact" type="checkbox"> Perfect ratio</label></div><input id="item-filter" type="search" aria-label="Filter available output items" placeholder="Filter output items"></div>
-        <div class="setup-section logistics"><div class="section-title"><h2>Unlocks &amp; logistics</h2></div><div class="field-pair">
+        <div class="setup-section"><div class="section-title"><h3>Output targets</h3><span>Per minute</span></div><div id="targets"></div><div class="output-actions"><button type="button" id="add-target" class="add-button" disabled>＋ Add output</button><label class="check-label exact-toggle" title="Scale every output by the same factor for continuous whole-machine ratios"><input id="exact" type="checkbox"> Perfect ratio</label></div><input id="item-filter" type="search" aria-label="Filter available output items" placeholder="Find an output"></div>
+        <div class="setup-section logistics"><div class="section-title"><h3>Unlocks &amp; transport</h3></div><div class="field-pair">
           <div class="field"><label for="tier">HUB tier</label><select id="tier"><option value="0">Tier 0</option><option value="1">Tier 1</option><option value="2" selected>Tier 2</option><option value="3">Tier 3</option><option value="4">Tier 4</option><option value="5">Tier 5</option><option value="6">Tier 6</option><option value="7">Tier 7</option><option value="8">Tier 8</option><option value="9">Tier 9</option></select></div>
           <div class="field"><label for="belt">Max belt tier</label><select id="belt"></select></div>
         </div><div class="field"><label for="pipe">Max pipe tier</label><select id="pipe"></select></div></div>
@@ -37,49 +37,69 @@
           <div class="field"><label for="imports">Supply from another factory</label><div class="input-add"><select id="imports"></select><button id="add-import" class="button quiet" type="button">Add</button></div><div id="import-list" class="chips"></div></div>
           <p class="field-note">Change a recipe in its production step. All unwanted coproducts leave the production chain.</p>
         </div></details>
-        <button class="button primary calculate" type="submit" id="calculate" disabled>Calculate plan <span aria-hidden="true">→</span></button>
+        <div class="setup-actions"><button class="button primary calculate" type="submit" id="calculate" disabled>Update plan <span aria-hidden="true">→</span></button></div>
       </form>
     </aside>
 
     <section class="results" id="results" aria-label="Factory plan">
-      <header class="plan-head"><div><span class="eyebrow"><i class="orange-dot"></i> PRODUCTION PLAN</span><h2 id="plan-title">Starter Parts Factory</h2><p id="plan-sub">Foundation layouts, belt routes and build order</p></div><div class="plan-head-actions"><button class="button quiet" type="button" id="print-plan" disabled>Print checklist</button></div></header>
+      <header class="plan-head">
+        <div>
+          <div class="plan-meta"><span id="plan-context">Factory plan</span><span id="plan-state" hidden></span><span id="plan-pending" role="status" hidden>Unapplied changes</span></div>
+          <h1 id="plan-title">Starter Parts Factory</h1>
+          <p id="plan-sub"></p>
+        </div>
+        <div class="plan-head-actions"><button class="button quiet icon-button" id="setup-toggle" type="button" aria-controls="setup-panel" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16M8 4v4M15 10v4M9 16v4"/></svg><span>Hide setup</span></button></div>
+      </header>
       <p class="sr-only" id="status" role="status" aria-live="polite"></p>
       <div id="diagnostics" class="diagnostics" hidden></div>
       <div class="metrics" id="metrics" aria-label="Plan totals"><div class="metric"><span>MACHINES</span><strong>—</strong><small>Whole buildings</small></div><div class="metric"><span>INSTALLED POWER</span><strong>—</strong><small>Maximum draw</small></div><div class="metric"><span>FOUNDATIONS</span><strong>—</strong><small>Separate production pads</small></div><div class="metric"><span>WASTE ROUTES</span><strong>—</strong><small>Isolated from production</small></div></div>
       <div class="tabs" role="tablist" aria-label="Plan views"><button id="tab-floor" role="tab" aria-selected="true" aria-controls="panel-floor" type="button" data-view="floor">Floor plans</button><button id="tab-campus" role="tab" aria-selected="false" aria-controls="panel-campus" type="button" data-view="campus" tabindex="-1">Factory layout</button><button id="tab-build" role="tab" aria-selected="false" aria-controls="panel-build" type="button" data-view="build" tabindex="-1">Build checklist</button><button id="tab-power" role="tab" aria-selected="false" aria-controls="panel-power" type="button" data-view="power" tabindex="-1">Power</button><button id="tab-recipes" role="tab" aria-selected="false" aria-controls="panel-recipes" type="button" data-view="recipes" tabindex="-1">Recipes</button></div>
 
       <div id="panel-floor" role="tabpanel" aria-labelledby="tab-floor" tabindex="0">
-        <nav class="step-panel floor-steps" aria-label="Production steps">
-          <header><span class="eyebrow">BUILD ORDER</span><span id="step-count" class="counter">0 STEPS</span></header>
-          <div id="steps" class="steps"></div>
-        </nav>
-        <section class="blueprint" id="footprint" aria-labelledby="step-title">
-          <header class="diagram-head footprint-head">
-            <div><span class="eyebrow" id="step-position">FOUNDATION DIAGRAM</span><h3 id="step-title">Loading catalogue…</h3><p id="step-sub">The planner is preparing your starter build.</p></div>
-            <div class="diagram-actions">
-              <label class="check-label built-toggle"><input id="step-built" type="checkbox" disabled> Built</label>
-              <button class="button quiet export" id="download" type="button" disabled>↓ SVG</button>
+        <div class="floor-workbench">
+          <nav class="step-panel floor-steps" aria-labelledby="build-order-label">
+            <header><h2 id="build-order-label">Build order</h2><span id="step-count" class="counter">0 steps</span></header>
+            <div class="step-navigation">
+              <button id="step-prev" class="button quiet" type="button" aria-label="Previous build step" title="Previous build step" disabled>←</button>
+              <label class="step-select"><span class="sr-only">Go to a build step</span><select id="step-picker"></select></label>
+              <button id="step-next" class="button quiet" type="button" aria-label="Next build step" title="Next build step" disabled>→</button>
             </div>
-          </header>
-          <div id="drawing" class="drawing footprint-drawing" tabindex="0" role="region" aria-label="Scrollable foundation blueprint">
-            <div id="blueprint-stage"><span class="loading-mark" aria-hidden="true">＋</span></div>
-          </div>
-          <footer class="diagram-foot" id="diagram-key">
-            <div class="routing-key"><span><i class="legend-feed"></i> Feed</span><span><i class="legend-product"></i> Product</span><span><i class="legend-waste"></i> Waste</span><span><i class="legend-pipe"></i> Pipe</span></div>
-            <div class="viewport-actions" aria-label="Diagram zoom">
-              <button class="button quiet" id="zoom-out" type="button" aria-label="Zoom out" title="Zoom out" disabled>−</button>
-              <button class="button quiet" id="zoom" type="button" aria-label="Zoom in" title="Zoom in" disabled>+</button>
-              <button class="button quiet" id="zoom-reset" type="button" aria-label="Fit diagram" disabled>Fit</button>
-              <output class="grid-label" id="zoom-level" aria-label="Current diagram zoom">100%</output>
+            <div id="steps" class="steps"></div>
+          </nav>
+          <section class="blueprint" id="footprint" aria-labelledby="step-title">
+            <header class="diagram-head footprint-head">
+              <div><span class="eyebrow" id="step-position">Foundation plan</span><h2 id="step-title">Loading catalogue…</h2><p id="step-sub"></p></div>
+              <div class="diagram-actions">
+                <label class="check-label built-toggle"><input id="step-built" type="checkbox" disabled> Built</label>
+                <button class="button quiet export" id="download" type="button" disabled>Export SVG</button>
+              </div>
+            </header>
+            <div class="blueprint-workspace">
+              <div id="drawing" class="drawing footprint-drawing" tabindex="0" role="region" aria-label="Scrollable foundation blueprint">
+                <div id="blueprint-stage"><span class="loading-mark" aria-hidden="true">＋</span></div>
+              </div>
+              <footer class="diagram-foot" id="diagram-key">
+                <div class="drawing-links"><span class="grid-label">8 m grid</span><button class="lane-jump" id="lane-jump" type="button" hidden>Lanes ↓</button></div>
+                <div class="viewport-actions" aria-label="Diagram zoom">
+                  <button class="button quiet" id="zoom-out" type="button" aria-label="Zoom out" title="Zoom out" disabled>−</button>
+                  <output class="grid-label" id="zoom-level" aria-label="Current diagram zoom">100%</output>
+                  <button class="button quiet" id="zoom" type="button" aria-label="Zoom in" title="Zoom in" disabled>+</button>
+                  <button class="button quiet" id="zoom-reset" type="button" aria-label="Fit diagram" disabled>Fit</button>
+                </div>
+              </footer>
             </div>
-          </footer>
-          <dl id="footprint-facts" class="footprint-facts" hidden></dl>
-          <p id="footprint-caveat" class="footprint-caveat" hidden></p>
-        </section>
+            <dl id="footprint-facts" class="footprint-facts" hidden></dl>
+            <p id="footprint-caveat" class="footprint-caveat" hidden></p>
+          </section>
+          <section class="lanes-panel" id="lanes-panel" aria-labelledby="lanes-title" hidden>
+            <header><h2 id="lanes-title" tabindex="-1">Transport lanes</h2><span class="counter">Per-row load / capacity</span></header>
+            <ul id="lane-list" class="lane-list"></ul>
+          </section>
+        </div>
         <div class="step-detail" id="step-detail"></div>
       </div>
       <div id="panel-campus" role="tabpanel" aria-labelledby="tab-campus" tabindex="0" hidden><section class="content-panel"><header class="diagram-head"><div><span class="eyebrow">SHARED FOUNDATION GRID</span><h3>Lay out the factory</h3><p id="campus-sub">Production bays and the corridors between them.</p></div><button class="button quiet export" type="button" id="download-campus" disabled>↓ SVG</button></header><div id="campus-drawing" class="drawing campus-drawing"></div><div id="campus-routes" class="routes"></div></section></div>
-      <div id="panel-build" role="tabpanel" aria-labelledby="tab-build" tabindex="0" hidden><section class="content-panel build-panel"><header class="diagram-head"><div><span class="eyebrow">BUILD CHECKLIST</span><h3>Build in this order</h3><p>Tick a step when its machines, feed and outlets are ready.</p></div><button class="button quiet" id="reset-progress" type="button">Reset checks</button></header><div id="build-list"></div></section></div>
+      <div id="panel-build" role="tabpanel" aria-labelledby="tab-build" tabindex="0" hidden><section class="content-panel build-panel"><header class="diagram-head"><div><h2>Build checklist</h2><p>Tick a step when its machines, feed and outlets are ready.</p></div><div class="diagram-actions"><button class="button quiet" id="reset-progress" type="button">Reset checks</button><button class="button quiet" type="button" id="print-plan" disabled>Print checklist</button></div></header><div id="build-list"></div></section></div>
       <div id="panel-power" role="tabpanel" aria-labelledby="tab-power" tabindex="0" hidden><section class="content-panel" id="power-planner" aria-label="Power build planner"></section></div>
       <div id="panel-recipes" role="tabpanel" aria-labelledby="tab-recipes" tabindex="0" hidden>
         <section class="content-panel">
@@ -90,12 +110,12 @@
             <label class="check-label"><input id="show-later-recipes" type="checkbox" checked> Show later unlocks</label>
             <label class="check-label"><input id="favorites-only" type="checkbox"> Favorites only</label>
           </div>
-          <div class="recipe-permissions">
+          <details class="recipe-settings"><summary>Clock and amplification settings</summary><div class="recipe-permissions">
             <label class="check-label"><input id="clock-unlocked" type="checkbox"> Slug Hatching researched</label>
             <label class="check-label"><input id="boost-unlocked" type="checkbox"> Production Amplifier researched</label>
             <label class="shard-stock">Power Shards in stock <input id="shard-stock" type="number" min="0" max="100000" step="1" value="0"></label>
             <label class="shard-stock">Somersloops in stock <input id="sloop-stock" type="number" min="0" max="100000" step="1" placeholder="Optional"></label>
-          </div>
+          </div></details>
           <div id="recipe-list" class="recipe-list"></div>
           <details class="batch-reference"><summary>Space Elevator delivery batches</summary><div id="elevator-batches"></div></details>
         </section>
@@ -110,6 +130,6 @@
     <footer class="library-footer"><button type="button" class="button quiet" id="export-plan">↓ Plan file</button><button type="button" class="button quiet" id="import-plan">Open plan file</button><input id="plan-file" type="file" accept=".json,application/json" hidden><output id="library-status" aria-live="polite"></output></footer>
   </dialog>
   <template id="target-template"><div class="target-row"><select class="target-item" aria-label="Output item" required></select><input class="target-rate" aria-label="Output rate per minute" type="number" min="0.000001" max="1000000" step="any" required><button type="button" class="remove-target" aria-label="Remove output" title="Remove output">×</button><label class="target-recipe-label"><span>Recipe</span><select class="target-recipe" aria-label="Output recipe"><option value="">Automatic</option></select></label></div></template>
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./app.js?v=a62fa6af2c30"></script>
 </body>
 </html>
