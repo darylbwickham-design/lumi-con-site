@@ -281,6 +281,10 @@ summary { cursor: pointer; color: var(--soft); font-weight: 600; }
 .route-table th { color: var(--ink); }
 .route-table .lane { color: var(--teal); font-family: var(--mono); }
 .route-table .blocked { color: var(--warn); }
+.route-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; }
+.route-heading h4 { margin: 0; }
+.route-table small { display: block; margin-top: 2px; color: var(--muted); }
+#campus-routes:not(:has(#show-route-averages:checked)) .route-average { display: none; }
 .build-check { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 9px; padding: 10px 13px; border-bottom: 1px solid var(--line); }
 .build-check h4, .build-materials h4 { margin: 0 0 3px; font-size: 13px; }
 .build-layer { margin: 0; padding: 7px 13px; border-bottom: 1px solid var(--line); background: var(--panel); font: 600 12px var(--mono); break-after: avoid; }

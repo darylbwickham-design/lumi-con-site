@@ -12,6 +12,97 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const intersects = (a, b) => a.x < b.x + b.widthM - EPS && a.x + a.widthM > b.x + EPS && a.y < b.y + b.depthM - EPS && a.y + a.depthM > b.y + EPS;
 let serial = 0;
 
+/** Size corridors in whole transport lines and keep machine ports together where known. */
+export function planTransportRuns(entries, routes, options) {
+  const rows = new Map(entries.map(({row}) => [row.id, row]));
+  const branches = new Map();
+  for (const route of routes) {
+    const key = JSON.stringify([route.from, route.itemId]);
+    branches.set(key, (branches.get(key) || 0) + 1);
+  }
+  function bank(row, port, capacity, bundleSize = 1) {
+    if (!row?.machineCount || !(port?.perMachineRate > 0) || port.perMachineRate > capacity + EPS) return null;
+    const perLine = Math.floor((capacity + EPS) / (port.perMachineRate * bundleSize)) * bundleSize;
+    if (!perLine) return null;
+    const full = Math.floor(row.machineCount / perLine);
+    const tail = row.machineCount % perLine;
+    return [
+      ...(full ? [{lines:full, machines:perLine, flow:perLine * port.perMachineRate}] : []),
+      ...(tail ? [{lines:1, machines:tail, flow:tail * port.perMachineRate}] : []),
+    ];
+  }
+  return routes.map(route => {
+    const fluid = route.unit === 'm3';
+    const tiers = fluid ? options.pipeTiers : options.beltTiers;
+    const capacity = tiers.at(-1);
+    const source = rows.get(route.from), destination = rows.get(route.to);
+    const outlet = source?.outputs.find(p => p.itemId === route.itemId);
+    const inlet = destination?.inputs.find(p => p.itemId === route.itemId && p.sourceId === route.from);
+    const shared = branches.get(JSON.stringify([route.from, route.itemId])) > 1;
+    // For mixed Sink inlets the solver's per-material rate is a share, not a physical port.
+    const sink = destination?.kind === 'disposal' && !destination.recipeId;
+    let outputBank = shared ? null : bank(source, outlet, capacity);
+    let inputBank = sink ? null : bank(destination, inlet, capacity);
+    const liveOutput = n(outlet?.perMachineRate) * n(source?.machineCount);
+    const liveInput = sink ? 0 : n(inlet?.perMachineRate) * n(destination?.machineCount);
+    if (outputBank && inputBank && Math.abs(liveOutput - liveInput) < EPS) {
+      // Preserve an exact machine-to-machine ratio whenever the smallest
+      // matched group fits one line.
+      let a = source.machineCount, b = destination.machineCount;
+      while (b) [a,b] = [b,a % b];
+      const matchedOutput = bank(source, outlet, capacity, source.machineCount / a);
+      const matchedInput = bank(destination, inlet, capacity, destination.machineCount / a);
+      if (matchedOutput && matchedInput) {
+        outputBank = matchedOutput;
+        inputBank = matchedInput;
+      }
+    }
+    const designRate = Math.max(n(route.rate), shared ? 0 : liveOutput, liveInput);
+    const full = Math.floor((designRate + EPS) / capacity);
+    const tail = designRate - full * capacity;
+    const capacityBank = [
+      ...(full ? [{lines:full, flow:capacity}] : []),
+      ...(tail > EPS || (!full && tail > 0) ? [{lines:1, flow:tail}] : []),
+    ];
+    const lineCount = bank => (bank || []).reduce((total, group) => total + group.lines, 0);
+    // Capacity alone is the fallback for external supply, storage or a grouped
+    // port whose physical connections still need checking.
+    const sizingBanks = [outputBank, inputBank].filter(Boolean);
+    const knownFlow = Math.max(
+      inputBank ? liveInput : 0,
+      outputBank ? liveOutput : 0,
+    );
+    if (!sizingBanks.length || knownFlow + EPS < designRate) sizingBanks.push(capacityBank);
+    const cuts = new Set([0]);
+    for (const groups of sizingBanks) {
+      let end = 0;
+      for (const group of groups) { end += group.lines; cuts.add(end); }
+    }
+    const lineFlow = (groups, index) => {
+      for (const group of groups) {
+        if (index < group.lines) return group.flow;
+        index -= group.lines;
+      }
+      return 0;
+    };
+    const sorted = [...cuts].sort((a,b) => a-b);
+    const lines = [];
+    for (let i = 1; i < sorted.length; i++) {
+      const flow = Math.max(...sizingBanks.map(groups => lineFlow(groups, sorted[i-1])));
+      const tier = tiers.findIndex(limit => limit + EPS >= flow) + 1;
+      const count = sorted[i] - sorted[i-1];
+      if (lines.at(-1)?.tier === tier) lines.at(-1).count += count;
+      else lines.push({tier, count, capacity:tiers[tier-1]});
+    }
+    const differences = inputBank && outputBank
+      ? sorted.slice(0,-1).map(index=>lineFlow(outputBank,index) - lineFlow(inputBank,index)) : [];
+    return {lines, designRate, parallelLanes:sorted.at(-1), inputBank, outputBank, shared,
+      separateBanks:Boolean(differences.length && (lineCount(inputBank) !== lineCount(outputBank) ||
+        (differences.some(d=>d > EPS) && differences.some(d=>d < -EPS)))),
+      portCheck:(outlet?.perMachineRate > capacity + EPS) || (inlet?.perMachineRate > capacity + EPS)};
+  });
+}
+
 /** Pure geometry, also useful for non-DOM validation and saved layouts. */
 export function computeCampus(entries = [], routes = [], options = {}) {
   const excluded = [], pads = [], ids = new Set();
@@ -46,19 +137,17 @@ export function computeCampus(entries = [], routes = [], options = {}) {
     const from = byId.get(route.from), to = byId.get(route.to);
     if (!(n(route.rate) > 0) || (!from && !to) || from === to) { omittedRoutes.push({ ...route, originalIndex, reason: 'No distinct measured campus endpoints.' }); return; }
     const capacity = route.unit === 'm3' ? pipeCapacity : beltCapacity;
-    const designRate = n(route.designRate) || Math.max(n(route.rate), busyRate(from, route, false), busyRate(to, route, true));
-    const parallelLanes = Math.max(1, Math.ceil((designRate - EPS) / capacity));
+    const transport = options.transportRuns?.[originalIndex];
+    const designRate = transport?.designRate ?? (n(route.designRate) || Math.max(n(route.rate), busyRate(from, route, false), busyRate(to, route, true)));
+    const parallelLanes = transport?.parallelLanes || Math.max(1, Math.ceil((designRate - EPS) / capacity));
     const value = { ...route, originalIndex, id: `C${String(corridorRoutes.length + 1).padStart(2, '0')}`,
       fromPadId: from?.id || null, toPadId: to?.id || null, capacity, designRate,
-      parallelLanes, trackWidthM: parallelLanes * trackSpacingM,
+      parallelLanes, lineGroups:transport?.lines, trackWidthM: parallelLanes * trackSpacingM,
       transport: route.unit === 'm3' ? 'pipe' : 'belt', boundary: !from || !to };
     corridorRoutes.push(value);
     if (from) from.incident.push(value);
     if (to) to.incident.push(value);
   });
-  let trackOffset = 4;
-  for (const route of corridorRoutes) { route.trackOffset = trackOffset; route.trackCentre = trackOffset + route.trackWidthM / 2; trackOffset += route.trackWidthM; }
-  const routingBandM = corridorRoutes.length ? snap(trackOffset + 4) : 8;
   const gapM = snap(Math.max(8, n(options.padGapM, 8)));
   const apronM = 8;
   for (const pad of pads) {
@@ -85,34 +174,74 @@ export function computeCampus(entries = [], routes = [], options = {}) {
   if (shelf.pads.length) shelves.push(shelf);
   const facilityWidthM = Math.max(0, ...shelves.map(s => s.widthM));
   const spineX = 8 + facilityWidthM + gapM;
+  for (const pad of pads) {
+    pad.x = pad.bayX + Math.floor((pad.bayWidthM - pad.widthM) / (2 * GRID)) * GRID;
+    let connectionX = pad.bayX + 4;
+    pad.handoffs = {};
+    for (const route of pad.incident) {
+      const x = connectionX + route.trackWidthM / 2;
+      pad.handoffs[route.id] = {x, dockX:clamp(x,pad.x+2,pad.x+pad.widthM-2)};
+      connectionX += route.trackWidthM;
+    }
+  }
+  const crossing = corridorRoutes.filter(route=>{
+    const from = byId.get(route.fromPadId), to = byId.get(route.toPadId);
+    return from && to && from.shelfIndex !== to.shelfIndex;
+  });
+  function tracks(routes, span) {
+    let edge = 4;
+    const placed = [];
+    const centers = new Map();
+    for (const route of routes) {
+      const [start,end] = span(route);
+      const conflicts = placed.filter(track=>start <= track.end && end >= track.start);
+      let offset = 4;
+      for (const track of conflicts.sort((a,b)=>a.offset-b.offset)) {
+        if (offset+route.trackWidthM <= track.offset) break;
+        offset = Math.max(offset,track.offset+track.width);
+      }
+      centers.set(route.id,offset + route.trackWidthM / 2);
+      placed.push({start,end,offset,width:route.trackWidthM});
+      edge = Math.max(edge,offset+route.trackWidthM);
+    }
+    return {centers, widthM:routes.length ? snap(edge+4) : 0};
+  }
+  const spine = tracks(crossing,route=>[
+    byId.get(route.fromPadId).shelfIndex, byId.get(route.toPadId).shelfIndex,
+  ].sort((a,b)=>a-b));
   let y = 8;
   for (const s of shelves) {
-    s.routingY = y; s.padY = y + routingBandM; s.depthM = snap(s.depthM);
+    const incident = [...new Set(s.pads.flatMap(pad=>pad.incident.filter(route=>!route.boundary)))];
+    const rack = tracks(incident,route=>[route.fromPadId,route.toPadId].map(id=>{
+      const pad = byId.get(id);
+      return pad.shelfIndex === s.index ? pad.handoffs[route.id].x : spineX + spine.centers.get(route.id);
+    }).sort((a,b)=>a-b));
+    s.trackCenters = rack.centers;
+    s.routingBandM = rack.widthM;
+    s.rackEndX = incident.some(route=>spine.centers.has(route.id)) ? spineX+spine.widthM : 8+s.widthM;
+    s.routingY = y; s.padY = y + s.routingBandM; s.depthM = snap(s.depthM);
     for (const pad of s.pads) {
-      pad.x = pad.bayX + Math.floor((pad.bayWidthM - pad.widthM) / (2 * GRID)) * GRID;
       pad.y = s.padY + apronM;
-      let connectionX = pad.bayX + 4;
-      pad.handoffs = {};
-      for (const route of pad.incident) {
-        const x = connectionX + route.trackWidthM / 2;
-        pad.handoffs[route.id] = { x, y: pad.y - 4, dockX: clamp(x, pad.x + 2, pad.x + pad.widthM - 2), dockY: pad.y };
-        connectionX += route.trackWidthM;
+      for (const slot of Object.values(pad.handoffs)) {
+        slot.y = pad.y-4;
+        slot.dockY = pad.y;
       }
     }
-    y += routingBandM + s.depthM + gapM;
+    y += s.routingBandM + s.depthM + gapM;
   }
-  const widthM = pads.length ? snap(spineX + routingBandM + 8) : 0;
+  const widthM = pads.length ? snap(spine.widthM ? spineX + spine.widthM + 8 : 16 + facilityWidthM) : 0;
   const depthM = pads.length ? snap(y) : 0;
   for (const route of corridorRoutes) {
     const from = byId.get(route.fromPadId), to = byId.get(route.toPadId);
     const a = from?.handoffs[route.id], b = to?.handoffs[route.id];
-    const ay = from ? shelves[from.shelfIndex].routingY + route.trackCentre : null;
-    const by = to ? shelves[to.shelfIndex].routingY + route.trackCentre : null;
-    const x = spineX + route.trackCentre;
+    const aShelf = from && shelves[from.shelfIndex], bShelf = to && shelves[to.shelfIndex];
+    const ay = aShelf ? aShelf.routingY + aShelf.trackCenters.get(route.id) : null;
+    const by = bShelf ? bShelf.routingY + bShelf.trackCenters.get(route.id) : null;
+    const x = spineX + spine.centers.get(route.id);
     if (from && to && from.shelfIndex === to.shelfIndex) route.points = [a, { x: a.x, y: ay }, { x: b.x, y: by }, b];
     else if (from && to) route.points = [a, { x: a.x, y: ay }, { x, y: ay }, { x, y: by }, { x: b.x, y: by }, b];
-    else if (from) route.points = [a, { x: a.x, y: ay }, { x, y: ay }];
-    else route.points = [{ x, y: by }, { x: b.x, y: by }, b];
+    else if (from) route.points = [a, { x:a.x, y:from.y-apronM }];
+    else route.points = [{ x:b.x, y:to.y-apronM }, b];
     route.points = route.points.map(p => ({ x: p.x, y: p.y })).filter((p, i, all) => !i || Math.abs(p.x - all[i - 1].x) > EPS || Math.abs(p.y - all[i - 1].y) > EPS);
     route.lengthM = route.points.slice(1).reduce((length, p, i) => length + Math.abs(p.x - route.points[i].x) + Math.abs(p.y - route.points[i].y), 0);
     route.rackElevationNote = 'Plan crossings are not junctions: perpendicular runs need separate rack elevations and lifts/risers. Heights, head lift and exact sockets require an in-game check.';
@@ -123,14 +252,15 @@ export function computeCampus(entries = [], routes = [], options = {}) {
     'This is a measured packing proposal on flat terrain, not a surveyed placement at the Dune Desert nodes.',
     'Each coloured corridor has reserved physical track width. Crossing lines are not junctions; build perpendicular runs at separate rack elevations.',
     'Pad-edge handoffs are schematic. Verify physical sockets, lifts, pipe head lift and access before placing the connecting runs.',
-    'Corridors allow the greater of routed demand and busy full-clock source/consumer flow. Average duty still controls long-term production.',
+    'Corridors reserve transport for each run. Shared supply branches fill as their receiving manifolds make room.',
   ];
   if (excluded.length) warnings.push(`${excluded.length} facilities are excluded from this area claim; their reasons are returned in excluded.`);
   if (pads.some(p => p.floor.areaIncludesAllComponents === false)) warnings.push('Partial assemblies were explicitly included. Their companion footprints are not included in the displayed campus dimensions.');
   if (pads.some(p => p.row.kind === 'source' && p.row.extraction?.nodeRequired)) warnings.push('Node-bound extraction was explicitly included as a clearance reference only; move it to its actual surveyed node.');
   return { version: 1, unit: 'metres', foundationM: GRID, widthM, depthM,
     widthFoundations: widthM / GRID, depthFoundations: depthM / GRID, foundationCount: widthM * depthM / 64,
-    pads, shelves, routes: corridorRoutes, excluded, omittedRoutes, overlaps, spineX, routingBandM, warnings,
+    pads, shelves, routes: corridorRoutes, excluded, omittedRoutes, overlaps, spineX,
+    routingBandM:Math.max(0,...shelves.map(s=>s.routingBandM)), spineWidthM:spine.widthM, warnings,
     serviceApronM: apronM, trackSpacingM, beltCapacity, pipeCapacity, status: pads.length ? overlaps.length ? 'invalid' : 'measured-proposal' : 'empty' };
 }
 
@@ -187,8 +317,8 @@ export function renderCampus(entries, routes, options = {}) {
   if (layout.pads.length) {
     append(g, 'rect', { x: 0, y: 0, width: layout.widthM, height: layout.depthM, fill: '#101e2a', stroke: '#527087', 'stroke-width': .5 });
     append(g, 'rect', { x: 0, y: 0, width: layout.widthM, height: layout.depthM, fill: `url(#${key}-grid)` });
-    append(g, 'rect', { x: layout.spineX, y: 8, width: layout.routingBandM, height: Math.max(0, layout.depthM - 16), fill: '#142d39', opacity: .8 });
-    for (const shelf of layout.shelves) append(g, 'rect', { x: 8, y: shelf.routingY, width: layout.spineX - 8 + layout.routingBandM, height: layout.routingBandM, fill: '#142d39', opacity: .8 });
+    if (layout.spineWidthM) append(g, 'rect', { x: layout.spineX, y: 8, width: layout.spineWidthM, height: Math.max(0, layout.depthM - 16), fill: '#142d39', opacity: .8 });
+    for (const shelf of layout.shelves) if (shelf.routingBandM) append(g, 'rect', { x:8, y:shelf.routingY, width:shelf.rackEndX-8, height:shelf.routingBandM, fill:'#142d39', opacity:.8 });
     for (const pad of layout.pads) {
       const bay = append(g, 'g', { role: options.onSelect ? 'button' : 'group', tabindex: options.onSelect ? 0 : null,
         'aria-label': `${pad.row.itemName || pad.row.machineName}, ${pad.floor.count ?? pad.row.machineCount} ${pad.row.machineName || 'machines'}, ${fmt(pad.widthM)} by ${fmt(pad.depthM)} metres`,
@@ -213,9 +343,9 @@ export function renderCampus(entries, routes, options = {}) {
       append(bay, 'text', { x: pad.x + 2, y: pad.y + 3.1, fill: '#f1f7fc', 'font-size': Math.min(3, pad.widthM / Math.max(12, label.length) * 1.4), 'font-weight': 700 }, label);
       append(bay, 'text', { x: pad.x + 2, y: pad.y + pad.depthM - 1.8, fill: '#b8d0df', 'font-size': 2.1 }, `${pad.widthM / 8} × ${pad.depthM / 8} foundations`);
       for (const [routeId, point] of Object.entries(pad.handoffs)) {
-        append(bay, 'path', { d: `M ${point.x} ${point.y} H ${point.dockX} V ${point.dockY}`, fill: 'none', stroke: '#9eb3c2', 'stroke-width': .22, 'stroke-dasharray': '.8 .6' });
+        const dock = append(bay, 'path', { d: `M ${point.x} ${point.y} H ${point.dockX} V ${point.dockY}`, fill: 'none', stroke: '#9eb3c2', 'stroke-width': .22, 'stroke-dasharray': '.8 .6' });
+        append(dock, 'title', {}, `${routeId} bay connection`);
         append(bay, 'circle', { cx: point.x, cy: point.y, r: .65, fill: '#cfdeea' });
-        append(bay, 'text', { x: point.x + .7, y: point.y + 1.9, fill: '#c5d4e0', 'font-size': 1.8 }, routeId);
       }
       if (typeof options.onSelect === 'function') {
         const activate = () => options.onSelect(pad.row, pad.floor, pad);
@@ -228,11 +358,16 @@ export function renderCampus(entries, routes, options = {}) {
     for (const route of layout.routes) {
       const path = route.points.map((point, i) => `${i ? 'L' : 'M'} ${point.x} ${point.y}`).join(' ');
       const routeGroup = append(g, 'g', { 'data-route-id': route.id });
-      append(routeGroup, 'title', {}, `${route.id} · ${route.name || route.itemId}: ${fmt(route.rate)} ${route.unit}/min planned; ${fmt(route.designRate)} design flow; ${route.parallelLanes} parallel ${route.transport} lane(s) at ${fmt(route.capacity)}/min. Approximate horizontal run ${fmt(route.lengthM)} m. ${route.rackElevationNote}`);
+      const lineLabel = route.lineGroups?.map(line => `${line.count} × ${route.transport} Mk.${line.tier}`).join(' + ') || `${route.parallelLanes} parallel ${route.transport} lines`;
+      const location = route.boundary ? 'Continues off-site.' : `Approximate horizontal run ${fmt(route.lengthM)} m.`;
+      append(routeGroup, 'title', {}, `${route.id} · ${route.name || route.itemId} · ${lineLabel}. ${location} ${route.rackElevationNote}`);
       append(routeGroup, 'path', { d: path, fill: 'none', stroke: colour(route), 'stroke-width': Math.max(.5, route.trackWidthM - .5), opacity: .12, 'stroke-linejoin': 'round' });
       append(routeGroup, 'path', { d: path, fill: 'none', stroke: colour(route), 'stroke-width': .35, 'stroke-linejoin': 'round', 'marker-end': `url(#${key}-arrow)` });
       const labelPoint = route.boundary ? route.fromPadId ? route.points.at(-1) : route.points[0] : route.points[1];
-      append(routeGroup, 'text', { x: labelPoint.x + 1, y: labelPoint.y - .7, fill: colour(route), 'font-size': 2.1, 'paint-order': 'stroke', stroke: '#10212d', 'stroke-width': .6 }, `${route.id}${route.parallelLanes > 1 ? ` ×${route.parallelLanes}` : ''}${route.boundary ? ' ↔ off campus' : ''}`);
+      const x = labelPoint.x + 1, y = labelPoint.y - .7;
+      append(routeGroup, 'text', { x, y, fill: colour(route), 'font-size': route.boundary ? 1.6 : 2.1, 'paint-order': 'stroke',
+        transform:route.boundary ? `rotate(-90,${x},${y})` : null, stroke:'#10212d', 'stroke-width':.45 },
+      `${route.id}${!route.boundary && route.parallelLanes > 1 ? ` ×${route.parallelLanes}` : ''}`);
     }
     append(g, 'line', { x1: 0, y1: -4, x2: layout.widthM, y2: -4, stroke: '#9cb1c1', 'stroke-width': .2 });
     append(g, 'text', { x: layout.widthM / 2, y: -6, fill: '#c9d9e6', 'font-size': 3, 'text-anchor': 'middle' }, `${fmt(layout.widthM)} m / ${layout.widthFoundations} foundations`);

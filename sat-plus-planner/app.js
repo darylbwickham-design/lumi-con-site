@@ -1,8 +1,9 @@
-import {catalog} from './catalog.js?v=e38d93c3fbca';
-import {solvePlan} from './solver.js?v=e38d93c3fbca';
-import {computeFloor, renderFloor} from './diagrams.js?v=e38d93c3fbca';
-import {renderCampus} from './campus.js?v=e38d93c3fbca';
-import {renderPowerPlanner} from './power.js?v=e38d93c3fbca';
+import {catalog} from './catalog.js?v=b08d61425826';
+import {solvePlan} from './solver.js?v=b08d61425826';
+import {computeFloor, renderFloor} from './diagrams.js?v=b08d61425826';
+import {planTransportRuns, renderCampus} from './campus.js?v=b08d61425826';
+import {renderPowerPlanner} from './power.js?v=b08d61425826';
+import {starterRuns} from './starter-runs.js?v=b08d61425826';
 
 const el = id => document.getElementById(id);
 const serverOrigin = document.querySelector('meta[name="gridline-api"]')?.content;
@@ -39,7 +40,7 @@ const guideRecipes = [
   ...['Iron Plate','Iron Rod','Copper Rod','Wire','Cable','Copper Busbars','Tin Plate','Tin Rod'].map(name=>[name,name]),
 ];
 const presets = [
-  {name:'Starter Parts Factory · Tier 0–2 stock',tier:2,belt:2,pipe:1,outputs:starterStock,stock:true},
+  {name:'Starter Parts Factory · Tier 0–2 stock',tier:2,belt:2,pipe:1,outputs:starterStock,stock:true,runs:starterRuns},
   {name:'Wire & Cable Factory',tier:2,belt:2,pipe:1,outputs:[['Wire',30],['Cable',15]]},
   {name:'Smart Plating Factory',tier:2,belt:2,pipe:1,outputs:[['Smart Plating',2]]},
   {name:'Steel Parts Factory',tier:4,belt:3,pipe:2,outputs:[['Steel Beam',15],['Steel Pipe',20]]},
@@ -77,7 +78,7 @@ const libraryKey = 'sfplus-foundry-library-v1';
 const favoriteKey = 'gridline-favorite-recipes-v1';
 let favorites = readFavorites();
 let state = restore();
-let plan, floors, selected, campus, view = 'floor';
+let plan, floors, runs, selected, campus, view = 'floor';
 const zoomLevels = [.6,.8,1,1.25,1.6,2.1,2.8,3.7,5];
 const fittedZoom = zoomLevels.indexOf(1);
 let zoomIndex = fittedZoom;
@@ -107,22 +108,22 @@ function activeRun() {
 
 function base(index = 0, runId) {
   const preset = presets[index] || presets[0];
-  const run = preset.runs?.find(choice=>choice.id===runId) || preset.runs?.[0];
+  const run = preset.runs?.find(choice=>choice.id===runId) || (preset.stock ? null : preset.runs?.[0]);
   const targets = values => values.map(([name,rate])=>({itemId:catalog.items.find(item=>item.name===name)?.id,rate})).filter(t=>t.itemId);
   const overrides = {}, sources = {}, allocations = {};
-  if (run) {
-    for (const [product,name] of guideRecipes) {
-      const item = catalog.items.find(entry=>entry.name===product);
-      const recipe = catalog.recipes.find(entry=>entry.name===name && entry.supported && entry.outputs.some(port=>port.itemId===item?.id));
-      if (recipe) overrides[item.id] = recipe.id;
-    }
+  for (const [product,name] of run ? preset.stock ? run.recipeChoices || [] : guideRecipes : []) {
+    const item = catalog.items.find(entry=>entry.name===product);
+    const recipe = catalog.recipes.find(entry=>entry.name===name && entry.supported && entry.outputs.some(port=>port.itemId===item?.id));
+    if (recipe) overrides[item.id] = recipe.id;
+  }
+  if (run && !preset.stock) {
     for (const [id,purity] of [['node-133','pure'],['node-104','normal']]) {
       const node = catalog.nodes.find(entry=>entry.id===id);
       const source = catalog.resourceSources.find(entry=>entry.itemId===node?.itemId && entry.purity===purity && entry.name.includes('Standard Mining Head'));
       if (source) {sources[node.itemId]=source.id;allocations[source.id]=[id];}
     }
   }
-  return {preset:String(index),presetRun:run?.id||'',tier:preset.tier,belt:preset.belt,pipe:preset.pipe,exact:false,alternates:false,research:!run,expectedYields:false,preferFavorites:!run,
+  return {preset:String(index),presetRun:run?.id||'',tier:preset.tier,belt:preset.belt,pipe:preset.pipe,exact:false,alternates:false,research:!run||Boolean(preset.stock),expectedYields:false,preferFavorites:!run,
     name:'',purity:'normal',imports:targets(run?.imports||[]),overrides,sources,allocations,across:{},machineOverrides:{},clockOverrides:{},boostOverrides:{},
     clockUnlocked:false,boostUnlocked:false,availablePowerShards:0,checked:[],powerSettings:{},
     availableSomersloops:null,
@@ -277,9 +278,13 @@ function renderImports() {
 
 function syncForm() {
   el('preset').value = state.preset;
-  const runs = activePreset()?.runs || [];
+  const preset = activePreset();
+  const runs = preset?.runs || [];
   el('preset-run-control').hidden = !runs.length;
-  el('preset-run').innerHTML = options(runs,run=>run.id,run=>run.name);
+  el('preset-run-label').textContent = preset?.stock ? 'Starter factory build' : 'Shared workshop run';
+  el('preset-run-help').textContent = preset?.stock ? 'Build one section first. Use All 29 stock targets for the combined mall.' :
+    'Run one job at a time using stock bins and shared machines.';
+  el('preset-run').innerHTML = (preset?.stock ? '<option value="">All 29 stock targets</option>' : '') + options(runs,run=>run.id,run=>run.name);
   el('preset-run').value = state.presetRun;
   for (const field of ['belt','pipe','purity']) el(field).value = state[field];
   for (const field of ['alternates','exact','research']) el(field).checked = Boolean(state[field]);
@@ -326,11 +331,15 @@ function calculate({preserveChecks = false} = {}) {
   updateTargetRecipes();
   if (!preserveChecks && previous !== JSON.stringify(state.targets)) state.checked = [];
   plan = solvePlan(plannerCatalog(),{...solverSettings(),targets:state.targets,imports:state.imports,exactScale:state.exact,exactScaleCap:1000});
-  if (activeRun()) applyGuideOutlet(plan);
+  if (activeRun() && !activePreset()?.stock) applyGuideOutlet(plan);
   floors = buildOrder(plan).map(({row,layer}) => {
     // Keep giant plans calculable without constructing one element per machine.
     const floor = row.machineCount > 0 && row.machineCount <= 1200 ? computeFloor(row, floorOptions(row)) : null;
     return {row,floor,layer};
+  });
+  runs = planTransportRuns(floors,plan.routes,{
+    beltTiers:belts.slice(0,state.belt).map(t=>t.capacityPerMinute),
+    pipeTiers:pipes.slice(0,state.pipe).map(t=>t.capacityPerMinute),
   });
   if (!floors.some(entry => entry.row.id === selected)) {
     const measured = floors.filter(e=>e.row.kind==='production' && e.floor?.foundationCount);
@@ -383,8 +392,15 @@ function buildOrder(current) {
 const layerName = layer => layer===0 ? 'Layer 0 · Sources & imports' : `Layer ${layer}`;
 
 function guideWasteBuffer(out) {
-  return Boolean(activeRun() && out?.method==='unresolved' && items.get(out.itemId)?.name==='Crushed Gangue' &&
+  return Boolean(activeRun() && !activePreset()?.stock && out?.method==='unresolved' && items.get(out.itemId)?.name==='Crushed Gangue' &&
     ['Crushed Siterite','Crushed Callanite'].includes(plan.rows.find(row=>row.id===out.from)?.recipeName));
+}
+
+function runChanged(run) {
+  const original = base(Number(state.preset),run.id);
+  return ['belt','pipe','purity','targets','imports','overrides','sources','allocations','machineOverrides',
+    'clockOverrides','boostOverrides','exact','expectedYields','research','alternates','preferFavorites']
+    .some(key=>JSON.stringify(state[key])!==JSON.stringify(original[key]));
 }
 
 function renderPresetNotes() {
@@ -392,13 +408,19 @@ function renderPresetNotes() {
   const run = activeRun();
   const notes = el('preset-notes');
   notes.hidden = !(run || preset?.stock);
-  if (run) {
+  if (run && runChanged(run)) {
+    el('preset-notes-title').textContent = 'Custom section settings';
+    el('preset-notes-content').innerHTML = '<p>Use the updated floor plans and build checklist for the selected recipes, clocks and transport.</p>';
+  } else if (run && preset?.stock) {
+    el('preset-notes-title').textContent = 'Build this starter section';
+    el('preset-notes-content').innerHTML = `<p>${escape(run.note)}</p>`;
+  } else if (run) {
     el('preset-notes-title').textContent = 'Part 1 run instructions';
     const node = run.id.startsWith('copper') ? 'C1' : 'S1';
     el('preset-notes-content').innerHTML = `<p>${escape(run.note)}</p><p>Use one Mk.1 outlet from ${node} and a separate Gangue bin for each Crusher. An empty 4,800-item bin holds 192 active minutes at 25 Gangue/min. Stop before it fills. Use hand transfers until splitters unlock.</p><p>The machine list shows each job. Reuse the workshop’s Smelters and Constructors between jobs.</p>`;
   } else if (preset?.stock) {
     el('preset-notes-title').textContent = 'Handcrafting and later-tier materials';
-    el('preset-notes-content').innerHTML = '<p>Stage this construction mall in production layers. Targets are stock left over after internal demand.</p><p>Handcraft Portable Miners in the Equipment Workshop from 2 Iron Plate and 4 Iron Rod each. For one Dimensional Depot collect a Mercer Sphere. Craft 12 SAM Fluctuators at the bench using 120 Reanimated SAM, 3 Bronze Frames and 9 Caterium Heatsinks. The Depot needs 10.</p><p>Some early unlocks still need later materials. Brass Pipes, Steel Bolts and Steel Beams need Tier 3. Crystal Oscillators need Tier 4. Computers, Lead Sheets, Plastic and Asphalt need later production.</p>';
+    el('preset-notes-content').innerHTML = '<p>This plan makes every listed stock target at once. Pick a starter factory build above for a smaller section. Targets are stock left over after internal demand.</p><p>Handcraft Portable Miners in the Equipment Workshop from 2 Iron Plate and 4 Iron Rod each. For one Dimensional Depot collect a Mercer Sphere. Craft 12 SAM Fluctuators at the bench using 120 Reanimated SAM, 3 Bronze Frames and 9 Caterium Heatsinks. The Depot needs 10.</p><p>Some early unlocks still need later materials. Brass Pipes, Steel Bolts and Steel Beams need Tier 3. Crystal Oscillators need Tier 4. Computers, Lead Sheets, Plastic and Asphalt need later production.</p>';
   }
 }
 
@@ -418,9 +440,9 @@ function metric(label, value, note, action = '') {
 function renderSummary() {
   const measured = floors.reduce((sum,e) => sum + (e.floor?.foundationCount || 0),0);
   const unknown = floors.some(e => e.row.machineCount && (!e.floor?.foundationCount || e.floor.partialAssembly));
-  const title = state.name || (state.preset === '' ? `${plan.targets[0]?.name || 'Custom'} Factory` : presets[Number(state.preset)]?.name || 'Custom Factory');
-  el('plan-title').textContent = title;
   const run = activeRun();
+  const title = state.name || (activePreset()?.stock && run ? run.name : activePreset()?.name || `${plan.targets[0]?.name || 'Custom'} Factory`);
+  el('plan-title').textContent = title;
   el('plan-sub').textContent = plan.targets.length>6 ? `${plan.targets.length} stock targets · see rates in Factory setup.` :
     (plan.targets.map(t => `${t.name} ${rate(t.rate,t.unit)}`).join(' · ') || 'Choose a material to plan a factory.');
   el('plan-context').textContent = `Belts Mk.${state.belt} · Pipes Mk.${state.pipe}`;
@@ -765,14 +787,27 @@ function changeZoom(change) {
   resizeBlueprint(true);
 }
 
-function runLabel(route, designRate = route.designRate ?? route.rate, lanes = route.minimumParallelLanes) {
-  const list = route.unit === 'm3' ? pipes : belts;
-  const maximum = route.unit === 'm3' ? state.pipe : state.belt;
-  const count = Math.max(1,lanes ?? Math.ceil(designRate / cap(list,maximum)));
-  const per = designRate / count;
-  const min = list.findIndex(t => t.capacityPerMinute + 1e-7 >= per) + 1;
+function runLabel(route, run) {
   const kind = route.unit === 'm3' ? 'pipe' : 'belt';
-  return `${count} × ${kind} Mk.${Math.min(maximum,min || maximum)}${count > 1 ? ` · ${fmt(per)}/min each` : ''}`;
+  return run.lines.map(line=>`${fmt(line.count)} × ${kind} Mk.${line.tier}`).join(' + ');
+}
+
+function machineGroups(bank) {
+  if (!bank || (bank.length===1 && bank[0].lines===1 && bank[0].machines===1)) return '';
+  return bank.map(group=>`${fmt(group.lines)} line${group.lines===1?'':'s'} × ${fmt(group.machines)} machine${group.machines===1?'':'s'}`).join(' + ');
+}
+
+function runInstructions(run) {
+  const output = machineGroups(run.outputBank);
+  const input = machineGroups(run.inputBank);
+  const groups = output && output === input ? [`${input} at both ends`] :
+    [output && `Collect from ${output}`,input && `Feed ${input}`];
+  return [
+    ...groups,
+    run.shared ? 'Branch off the shared supply header.' : '',
+    run.separateBanks ? 'Connect unequal groups through a distribution header at the bay.' : '',
+    run.portCheck ? 'Check the individual machine port capacity.' : '',
+  ].filter(Boolean);
 }
 
 function endpoint(id) {
@@ -789,7 +824,7 @@ function stepLink(id) {
 
 function renderFactory() {
   if (campus) return;
-  const kit = renderCampus(floors,plan.routes,{...layoutOptions(),onSelect:row=>selectStep(row.id,true)});
+  const kit = renderCampus(floors,plan.routes,{...layoutOptions(),transportRuns:runs,onSelect:row=>selectStep(row.id,true)});
   campus = kit;
   if (kit.layout.pads.length) {
     kit.svg.classList.add('wide');
@@ -801,12 +836,21 @@ function renderFactory() {
   }
   el('download-campus').disabled = !kit.layout.pads.length;
   const routed = new Map(kit.layout.routes.map(r=>[r.originalIndex,r]));
-  el('campus-routes').innerHTML = `<h4>Inter-bay and boundary runs</h4><p>Corridor widths allow for full-clock output bursts. Use separate rack heights at crossings. Check port connections, pipe hydraulics and off-site distances in game.</p>
-    <table class="route-table"><thead><tr><th>Run</th><th>Material</th><th>From → to</th><th>Target rate</th><th>Parallel transport</th></tr></thead><tbody>
+  const showAverages = el('show-route-averages')?.checked;
+  el('campus-routes').innerHTML = `<div class="route-heading"><h4>Install these transport lines</h4><label class="check-label"><input id="show-route-averages" type="checkbox"${showAverages?' checked':''}> Show average rates</label></div>
+    <p>Connect the listed machine groups at their configured clock. Use splitter branches on shared belts and let the receiving manifolds fill. Shared groups may pause between cycles. Put crossings on separate rack heights.</p>
+    <table class="route-table"><thead><tr><th>Run</th><th>Material</th><th>From → to</th><th>Install</th><th class="route-average">Plan average</th></tr></thead><tbody>
     ${plan.routes.map((r,i)=>{
       const track = routed.get(i);
+      const run = runs[i];
       const holding = r.method==='unresolved' && guideWasteBuffer(plan.overflow.find(out=>out.id===r.to));
-      return `<tr><td>${escape(track?.id || 'Off-site')}</td><td>${escape(r.name)}</td><td>${stepLink(r.from)} → ${stepLink(r.to)}</td><td>${escape(rate(r.rate,r.unit))}</td><td class="lane ${r.method==='unresolved'&&!holding?'blocked':''}">${escape(runLabel(r,track?.designRate,track?.parallelLanes))}</td></tr>`;
+      const instructions = runInstructions(run);
+      const installed = run.lines.reduce((sum,line)=>sum+line.count*line.capacity,0);
+      return `<tr><td>${escape(track?.id || 'Off-site')}</td><td>${escape(r.name)}</td><td>${stepLink(r.from)} → ${stepLink(r.to)}</td><td>
+        <strong class="lane ${r.method==='unresolved'&&!holding?'blocked':''}">${escape(runLabel(r,run))}</strong>
+        <small class="route-average">${escape(rate(installed,r.unit))} installed capacity</small>
+        ${instructions.map(note=>`<small>${escape(note)}</small>`).join('')}</td>
+        <td class="route-average">${escape(rate(r.rate,r.unit))}</td></tr>`;
     }).join('')}</tbody></table>
     ${kit.excluded.length ? `<details class="step-extra"><summary>Off-site or unmeasured steps</summary><ul>${kit.excluded.map(e=>`<li>${escape(rowTitle(e.row))} · ${escape(e.reason)}</li>`).join('')}</ul></details>` : ''}`;
 }
@@ -814,18 +858,28 @@ function renderFactory() {
 function renderBuild() {
   const footer = plan.construction.length ? `<section class="build-materials"><h4>Machine construction materials</h4><p>${plan.construction.map(c=>escape(`${fmt(c.amount)} ${c.name}`)).join(' · ')}</p><p>Add foundations, belts, fittings, power poles and storage for the chosen site.</p></section>` : '';
   const run = activeRun();
-  const commissioning = run ? `<p class="commissioning-note">${escape(run.note)} Put Gangue in separate stock bins and stop before they fill.</p>` :
+  const commissioning = run && !runChanged(run) ? `<p class="commissioning-note">${escape(run.note)}${activePreset()?.stock ? '' : ' Put Gangue in separate stock bins and stop before they fill.'}</p>` :
     plan.overflow.length ? '<p class="commissioning-note">Connect the dedicated waste outlets before switching on production bays.</p>' : '';
+  const connections = plan.routes.map((route,i)=>({route,run:runs[i]}));
+  const buildRun = (route,run,inbound) => {
+    const direction = inbound ? `from ${endpoint(route.from)}` : `to ${endpoint(route.to)}`;
+    const group = machineGroups(inbound ? run.inputBank : run.outputBank);
+    const external = inbound && !run.outputBank && floors.some(e=>e.row.id===route.from && e.row.kind==='import');
+    return [`${route.name} ${direction} on ${runLabel(route,run)}`,group && `${inbound?'Feed':'Collect from'} ${group}`,
+      external ? `Supply ${rate(route.rate,route.unit)} on average` : '',
+      run.separateBanks ? 'Connect unequal groups through a distribution header' : '',
+      run.portCheck ? 'Check the individual machine port' : ''].filter(Boolean).join(' · ');
+  };
   el('build-list').innerHTML = commissioning + floors.map(({row,floor,layer}, i) => {
-    const inbound = plan.routes.filter(r=>r.to===row.id).map(r=>`${r.name} ${rate(r.rate,r.unit)} from ${endpoint(r.from)} (${runLabel(r)})`).join(' · ');
-    const outbound = plan.routes.filter(r=>r.from===row.id && r.kind!=='input').map(r=>`${r.name} ${rate(r.rate,r.unit)} → ${endpoint(r.to)} (${runLabel(r)})`).join(' · ');
+    const inbound = connections.filter(({route})=>route.to===row.id).map(({route,run})=>`<p>Connect ${escape(buildRun(route,run,true))}.</p>`).join('');
+    const outbound = connections.filter(({route})=>route.from===row.id && route.kind!=='input').map(({route,run})=>`<p>Route ${escape(buildRun(route,run,false))}.</p>`).join('');
     const nodeAlloc = row.extraction?.allocatedNodes?.length ? `Allocated nodes ${row.extraction.allocatedNodes.map(n=>`(${fmt(n.x)}, ${fmt(n.y)})`).join(', ')}.` :
       row.extraction?.nodeRequired ? `Allocate ${row.machineCount} ${row.extraction.purity || ''} node(s) before placing this step.` : '';
     const labels = unlockNames(row.gateIds);
     const heading = floors[i-1]?.layer!==layer ? `<h3 class="build-layer">${escape(layerName(layer))}</h3>` : '';
     return `${heading}<section class="build-check"><input aria-label="Mark ${escape(rowTitle(row))} built" type="checkbox" data-check="${escape(row.id)}" ${state.checked.includes(row.id) ? 'checked' : ''}>
       <div><h4>${i+1}. ${escape(rowTitle(row))}</h4><p>${escape([equipment(row),dimensions(floor)].filter(Boolean).join(' · '))}</p>
-      ${labels ? `<p>Unlock ${escape(labels)}</p>` : ''}${nodeAlloc ? `<p>${escape(nodeAlloc)}</p>` : ''}${inbound ? `<p>Feed ${escape(inbound)}</p>` : ''}${outbound ? `<p>Route ${escape(outbound)}</p>` : ''}</div>
+      ${labels ? `<p>Unlock ${escape(labels)}</p>` : ''}${nodeAlloc ? `<p>${escape(nodeAlloc)}</p>` : ''}${inbound}${outbound}</div>
       <button class="button quiet" type="button" data-open-floor="${escape(row.id)}">Open bay</button></section>`;
   }).join('') + footer + `<section class="build-materials build-power-footer"><div><h4>Power for this factory</h4><p>${fmt(plan.power.installedPeakMW)} MW installed draw</p></div><button class="button quiet" type="button" data-build-power>Build power →</button></section>`;
 }

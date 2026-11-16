@@ -153,8 +153,32 @@ export function computeFloor(step = {}, options = {}) {
   const overloaded = constraints.filter(c => c.machinesPerLane < 1);
   for (const c of overloaded) warnings.push(`${c.name}: one machine at ${pretty(clockPercent)}% clock needs ${pretty(c.perMachineRate)} ${c.transport === 'pipe' ? 'm3' : 'items'}/min, above the selected ${pretty(c.capacity)} capacity. Upgrade its actual port connection or lower the configured clock; extra parallel trunks cannot fix a single overloaded port.`);
   const throughputLimit = constraints.length ? Math.max(1, Math.min(...constraints.map(c => c.machinesPerLane))) : Math.max(1, count);
-  const wish = Math.max(1, Math.round(num(options.across, footprint ? Math.ceil(Math.sqrt(Math.max(1, count) * footprint.depthM / footprint.widthM)) : 4)));
+  const aisleM = Math.max(0, num(options.aisleM, 2));
+  const laneSpacingM = Math.max(2, num(options.laneSpacingM, 2));
+  const edgeM = Math.max(2, num(options.edgeM, 2));
+  const portGapM = Math.max(2, num(options.portGapM, 2));
+  const input = streams.filter(s => s.direction === 'input');
+  const output = streams.filter(s => s.direction === 'output').sort((a,b) => (a.kind === 'waste') - (b.kind === 'waste'));
+  // Pack verified clearance envelopes, including soft clearance by default.
+  // Foundation snapping belongs at the outside of the pad, not between machines.
+  const pitchX = footprint ? footprint.widthM + aisleM : 0;
+  const feedBandM = input.length ? portGapM + (input.length - 1) * laneSpacingM : 0;
+  const outputBandM = output.length ? portGapM + (output.length - 1) * laneSpacingM : 0;
+  const rowBodyDepthM = feedBandM + (footprint?.depthM ?? 0) + outputBandM;
+  const rowGapM = Math.max(aisleM, streams.length ? laneSpacingM : 0);
+  const pitchY = rowBodyDepthM + rowGapM;
   const maxAcross = Math.max(1, Math.round(num(options.maxAcross, 12)));
+  const dimensions = columns => ({
+    widthM:snap(edgeM * 2 + columns * pitchX - aisleM),
+    depthM:snap(edgeM * 2 + Math.ceil(count / columns) * rowBodyDepthM + Math.max(0,Math.ceil(count / columns)-1) * rowGapM)
+  });
+  let automaticAcross=1, bestArea=Infinity, bestShape=Infinity;
+  if(footprint && count)for(let columns=1;columns<=Math.min(count,throughputLimit,maxAcross);columns++){
+    const size=dimensions(columns),area=size.widthM*size.depthM;
+    const shape=Math.abs(Math.log(size.widthM/size.depthM/1.6));
+    if(area<bestArea-EPS || Math.abs(area-bestArea)<EPS && shape<bestShape){automaticAcross=columns;bestArea=area;bestShape=shape;}
+  }
+  const wish = Math.max(1, Math.round(num(options.across, automaticAcross)));
   const across = Math.max(1, Math.min(Math.max(1, count), wish, throughputLimit, maxAcross));
   if (options.across && across < wish && throughputLimit < wish) warnings.push(`Requested ${wish} across; limited to ${across} per row by the selected transport tier. Each row has independent headers.`);
   const rowCount = count ? Math.ceil(count / across) : 0;
@@ -178,17 +202,7 @@ export function computeFloor(step = {}, options = {}) {
       rows:[], machines:[], lanes:[], connections:[], junctions:[], ports:[], dimensionLines:[],
       warnings:uniqueWarnings(warnings)};
   }
-  const aisleM = Math.max(0, num(options.aisleM, 2));
-  const laneSpacingM = Math.max(2, num(options.laneSpacingM, 4));
-  const edgeM = Math.max(2, num(options.edgeM, 4));
-  const input = streams.filter(s => s.direction === 'input');
-  const output = streams.filter(s => s.direction === 'output').sort((a,b) => (a.kind === 'waste') - (b.kind === 'waste'));
-  const pitchX = snap(footprint.widthM + aisleM);
-  const feedBandM = input.length * laneSpacingM + 4;
-  const outputBandM = output.length * laneSpacingM + 4;
-  const pitchY = snap(feedBandM + footprint.depthM + outputBandM + aisleM);
-  const widthM = snap(edgeM * 2 + across * pitchX - Math.max(0,pitchX-footprint.widthM));
-  const depthM = snap(edgeM * 2 + rowCount * pitchY - aisleM);
+  const {widthM,depthM} = dimensions(across);
   const rows = [], machines = [], lanes = [], junctions = [], ports = [], connections = [];
   let index = 0;
   for (let ri = 0; ri < rowCount; ri++) {
@@ -196,13 +210,13 @@ export function computeFloor(step = {}, options = {}) {
     const top = edgeM + ri*pitchY;
     const bodyY = top+feedBandM;
     const row = {id:`row-${ri+1}`, index:ri, count:n, x:edgeM, y:top,
-      widthM:n*pitchX-(pitchX-footprint.widthM), depthM:pitchY-aisleM,
+      widthM:n*pitchX-aisleM, depthM:rowBodyDepthM, bodyY,
       machineIds:[], laneIds:[], fullClockMW:n*num(step.power?.perMachineMaxMW ?? machine.maxPowerMW ?? machine.powerMW),
       requiredAverageFraction:num(step.dutyCycle, 1)};
     const firstCentre = edgeM + footprint.widthM/2;
     const lastCentre = edgeM+(n-1)*pitchX+footprint.widthM/2;
     for (const [direction, ss] of [['input',input],['output',output]]) ss.forEach((s, li) => {
-      const y = direction==='input' ? bodyY-4-li*laneSpacingM : bodyY+footprint.depthM+4+li*laneSpacingM;
+      const y = direction==='input' ? bodyY-portGapM-li*laneSpacingM : bodyY+footprint.depthM+portGapM+li*laneSpacingM;
       const capacity = s.transport==='pipe'?pipeCapacity:beltCapacity;
       const fullClockRate = n*s.perMachineRate;
       const lane = {id:`${row.id}-${s.id}`, rowId:row.id, streamId:s.id, itemId:s.itemId, name:s.name,
@@ -258,7 +272,7 @@ export function computeFloor(step = {}, options = {}) {
   if (streams.some(s=>s.transport==='pipe')) warnings.push('Fluid row capacities do not verify head lift, pumps, priming or terrain. Keep feed and waste networks separate.');
   return {...base,status:overloaded.length?'transport-blocked':partialAssembly?'partial-assembly':'ready',widthM,depthM,areaM2:widthM*depthM,
     foundationColumns:widthM/8,foundationRows:depthM/8,foundationCount:widthM*depthM/64,
-    aisleM,laneSpacingM,edgeM,pitchX,pitchY,rows,machines,lanes,connections,junctions,ports,
+    aisleM,laneSpacingM,edgeM,portGapM,rowGapM,rowBodyDepthM,pitchX,pitchY,rows,machines,lanes,connections,junctions,ports,
     dimensionLines:[{axis:'x',from:{x:0,y:-3},to:{x:widthM,y:-3},valueM:widthM},
       {axis:'y',from:{x:widthM+3,y:0},to:{x:widthM+3,y:depthM},valueM:depthM}],
     warnings:uniqueWarnings(warnings)};
@@ -314,8 +328,13 @@ export function renderFloor(step={}, options={}) {
   const ppm=layout.widthM?Math.max(requestedPpm,Math.min(24,400/layout.widthM)):requestedPpm;
   const floorW=layout.widthM?layout.widthM*ppm:560;
   const floorH=layout.depthM?layout.depthM*ppm:190;
-  const width=Math.max(360,floorW+(blueprintOnly?110:72));
-  const left=blueprintOnly?54:(width-floorW)/2-6;
+  const lanePitchPx=(layout.laneSpacingM??2)*ppm;
+  const maximumLaneFont=blueprintOnly?Math.min(22.4,Math.max(12,lanePitchPx*.55)):10.5;
+  const codeColumns=Math.max(1,Math.ceil((maximumLaneFont+10)/lanePitchPx));
+  const codeCharacters=1+String(Math.max(1,layout.streams.length)).length;
+  const codeColumnWidth=Math.ceil(codeCharacters*maximumLaneFont*.62+14)+8;
+  const left=Math.max(blueprintOnly?54:42,10+codeColumns*codeColumnWidth);
+  const width=Math.max(360,floorW+left+56);
   const titleLines=textWrap(layout.title,Math.max(24,Math.floor((width-32)/11))).slice(0,3);
   const headerH=chrome?64+titleLines.length*23:0;
   const alertText=layout.overloaded.length?'PORT CAPACITY EXCEEDED':layout.partialAssembly?'PRIMARY COMPONENT ONLY':null;
@@ -326,6 +345,7 @@ export function renderFloor(step={}, options={}) {
   const laneFont=blueprintOnly?Math.min(16*labelScale,Math.max(12,(layout.laneSpacingM??4)*ppm*.55)):10.5;
   const counts={feed:0,product:0,waste:0};
   const codeOf=new Map(layout.streams.map(s=>[s.id,`${s.kind==='feed'?'F':s.kind==='waste'?'W':'P'}${++counts[s.kind]}`]));
+  const laneOrder=new Map([...layout.lanes].sort((a,b)=>a.from.y-b.from.y).map((lane,index)=>[lane.id,index]));
   const keyRows=layout.streams.map(s=>{
     const lanes=layout.lanes.filter(l=>l.streamId===s.id);
     const rates=lanes.map(l=>l.fullClockRate);
@@ -393,7 +413,7 @@ export function renderFloor(step={}, options={}) {
   const draw=el('g',{id:`${id}-drawing`});
   el('rect',{width,height,fill:p.bg},draw);
   if(chrome){
-    el('text',{x:16,y:20,'font-size':10,'font-weight':700,'letter-spacing':1.6,fill:p.product},draw,'FOUNDRY  /  MEASURED FACTORY BAY');
+    el('text',{x:16,y:20,'font-size':10,'font-weight':700,'letter-spacing':1.6,fill:p.product},draw,'GRIDLINE  /  FACTORY BAY');
     titleLines.forEach((s,i)=>el('text',{x:16,y:47+i*23,'font-size':20,'font-weight':700},draw,s));
     const sy=52+titleLines.length*23;
     el('text',{x:16,y:sy,'font-size':11,fill:p.muted},draw,`${layout.count} × ${layout.machineName} · ${layout.across} across × ${layout.rowCount} rows`);
@@ -423,10 +443,11 @@ export function renderFloor(step={}, options={}) {
     const verticalLabelX=dimX+(blueprintOnly?22:13);
     el('text',{x:verticalLabelX,y:top+floorH/2,'text-anchor':'middle','font-size':blueprintOnly?14*labelScale:11,'font-weight':blueprintOnly?650:400,fill:blueprintOnly?p.text:p.muted,transform:`rotate(90 ${verticalLabelX} ${top+floorH/2})`},draw,`${pretty(layout.depthM)} m · ${layout.foundationRows} foundations`);
     for(const row of layout.rows){
-      const q=xy({x:0,y:row.y});
-      if(row.index)el('line',{x1:left+8,y1:q.y-19,x2:left+floorW-8,y2:q.y-19,stroke:p.major,'stroke-width':.8},draw);
-      el('text',{x:left+10,y:q.y-5,'font-size':blueprintOnly?14*labelScale:12,'font-weight':700,fill:p.text},draw,`ROW ${String(row.index+1).padStart(2,'0')}`);
-      el('text',{x:left+floorW-10,y:q.y-5,'text-anchor':'end','font-size':blueprintOnly?12*labelScale:11,fill:p.muted},draw,`${row.count} × ${layout.machineName}`);
+      const firstMachine=layout.machines.find(machine=>machine.rowIndex===row.index);
+      const q=xy({x:0,y:firstMachine?firstMachine.y+firstMachine.depthM/2:row.y+row.depthM/2});
+      // Row labels live in the service gutter, never in measured machine/lane space.
+      el('text',{x:left-10,y:q.y-3,'text-anchor':'end','font-size':blueprintOnly?13*labelScale:11,'font-weight':700,fill:p.text},draw,`R${String(row.index+1).padStart(2,'0')}`);
+      el('text',{x:left-10,y:q.y+13,'text-anchor':'end','font-size':blueprintOnly?11:10,fill:p.muted},draw,`${row.count} ×`);
     }
     for(const lane of layout.lanes){
       const color=laneColor(lane,p),a=xy(lane.from),b=xy(lane.to);
@@ -435,8 +456,10 @@ export function renderFloor(step={}, options={}) {
       const trunk=el('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:color,'stroke-width':blueprintOnly?3.6:lane.transport==='pipe'?3:2.7,
         'stroke-dasharray':lane.transport==='pipe'?'8 5':null,class:'sf-lane','marker-end':`url(#${id}-${lane.kind})`,'data-lane-id':lane.id},draw);
       const code=codeOf.get(lane.streamId);
-      if(blueprintOnly)labelBox(left-10,a.y+laneFont*.34,code,lane.overCapacity?p.waste:color,'end');
-      else labelBox(a.x,lane.direction==='input'?a.y-9:a.y+19,`${code}  ${pretty(lane.fullClockRate)} / ${pretty(lane.capacity)}`,lane.overCapacity?p.waste:color);
+      const laneIndex=laneOrder.get(lane.id)??0;
+      const badgeRight=left-10-(laneIndex%codeColumns)*codeColumnWidth;
+      el('line',{x1:badgeRight+3,y1:a.y,x2:a.x-3,y2:a.y,stroke:color,'stroke-width':.8,opacity:.55},draw);
+      labelBox(badgeRight,a.y+laneFont*.34,code,lane.overCapacity?p.waste:color,'end');
       el('title',{},trunk,`${code} · ${lane.name}\n${labelRate(lane.fullClockRate,lane.unit)} busy row at ${pretty(layout.clockPercent??100)}% configured clock / ${pretty(lane.capacity)} capacity\n${labelRate(lane.scheduledAverageRate,lane.unit)} planned row average\n${lane.note}`);
       const xs=[a.x,...layout.junctions.filter(j=>j.laneId===lane.id).map(j=>xy(j).x),b.x].sort((x,y)=>x-y);
       for(let i=1;i<xs.length;i++)if(xs[i]-xs[i-1]>55){

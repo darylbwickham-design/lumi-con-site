@@ -9,7 +9,7 @@
   <meta name="gridline-catalog-sha256" content="8bf53df15cc0ae86cdc2c933eec643d8b349791b75841e3aa8aa24bf94c38f97">
   <title>Gridline | Satisfactory Plus Planner</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=e38d93c3fbca">
+  <link rel="stylesheet" href="./style.css?v=b08d61425826">
 </head>
 <body>
   <a class="skip" href="#results">Skip to the plan</a>
@@ -52,8 +52,8 @@
       </header>
       <p class="sr-only" id="status" role="status" aria-live="polite"></p>
       <div class="preset-run-bar" id="preset-run-control" hidden>
-        <label class="field" for="preset-run">Shared workshop run<select id="preset-run"></select></label>
-        <p>Run one job at a time using stock bins and shared machines.</p>
+        <label class="field" for="preset-run"><span id="preset-run-label">Shared workshop run</span><select id="preset-run"></select></label>
+        <p id="preset-run-help"></p>
       </div>
       <details class="preset-notes" id="preset-notes" hidden><summary id="preset-notes-title"></summary><div id="preset-notes-content"></div></details>
       <div id="diagnostics" class="diagnostics" hidden></div>
@@ -136,6 +136,6 @@
     <footer class="library-footer"><button type="button" class="button quiet" id="export-plan">↓ Plan file</button><button type="button" class="button quiet" id="import-plan">Open plan file</button><input id="plan-file" type="file" accept=".json,application/json" hidden><output id="library-status" aria-live="polite"></output></footer>
   </dialog>
   <template id="target-template"><div class="target-row"><select class="target-item" aria-label="Output item" required></select><input class="target-rate" aria-label="Output rate per minute" type="number" min="0.000001" max="1000000" step="any" required><button type="button" class="remove-target" aria-label="Remove output" title="Remove output">×</button><label class="target-recipe-label"><span>Recipe</span><select class="target-recipe" aria-label="Output recipe"><option value="">Automatic</option></select></label></div></template>
-  <script type="module" src="./app.js?v=e38d93c3fbca"></script>
+  <script type="module" src="./app.js?v=b08d61425826"></script>
 </body>
 </html>
