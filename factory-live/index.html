@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Factory Live for Satisfactory | LumiCon</title>
+  <meta name="description" content="Download Factory Live and connect Lumia Stream or Streamer.bot to Satisfactory. Find the Windows mod, local bridge, installation guide, and ready-to-copy commands.">
+  <link rel="canonical" href="https://lumi-con.com/factory-live/">
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="guide.css">
+  <script src="guide.js" defer></script>
+</head>
+<body>
+  <a class="fl-skip" href="#factory-live">Skip to Factory Live</a>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="LumiCon home">
+      <img src="../assets/lumicon-logo.png" alt="" width="42" height="42">
+      <span><strong>LumiCon</strong><small>Stream controller platform</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../">Home</a>
+      <a href="./" aria-current="page">Factory Live</a>
+      <a href="../sat-plus-planner/" title="Satisfactory Plus factory planner">Gridline</a>
+      <a href="https://github.com/darylbwickham-design/lumi-con-site">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="fl-guide" id="factory-live">
+    <section class="fl-hero" aria-labelledby="title">
+      <div>
+        <p class="eyebrow">Satisfactory 1.2 mod · 0.5.0 preview</p>
+        <h1 id="title">Factory Live</h1>
+        <p class="lede">Give your viewers a way to send creature waves and impact-detonated Nobelisk drops into your factory. Connect Lumia Stream or Streamer.bot through a bridge on your game PC.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="downloads/0.5.0/FactoryLive_0.5.0_Share.zip" download>Download everything <small>ZIP</small></a>
+          <a class="button secondary" href="#install">Setup guide</a>
+        </div>
+        <p class="fl-platform">Windows · Steam · Satisfactory Mod Loader 3.12 · Node.js 22+</p>
+      </div>
+      <div class="fl-downloads" id="downloads">
+        <h2>Release downloads</h2>
+        <a href="downloads/0.5.0/FactoryLive_0.5.0_Windows.zip" download>
+          <span><strong>Windows mod</strong><small>Steam game plugin</small></span><span aria-hidden="true">↓</span>
+        </a>
+        <a href="downloads/0.5.0/FactoryLive_0.5.0_Bridge.zip" download>
+          <span><strong>Bridge and integrations</strong><small>Node.js, presets, templates and README</small></span><span aria-hidden="true">↓</span>
+        </a>
+        <a class="fl-checksums" href="downloads/0.5.0/SHA256SUMS.txt" download>SHA-256 checksums</a>
+      </div>
+    </section>
+
+    <nav class="fl-contents" aria-label="On this page">
+      <a href="#install">Install</a>
+      <a href="#presets">Presets</a>
+      <a href="#integrations">Integrations</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </nav>
+
+    <section class="fl-section" id="install">
+      <h2>Install and start</h2>
+      <p class="fl-note"><strong>Preview build.</strong> Version 0.5.0 passed offline checks. Its gameplay is unverified. Start in a test save since the game’s explosions can damage the pioneer and remove destructible scenery.</p>
+      <ol class="fl-steps">
+        <li>
+          <h3>Install the Windows mod</h3>
+          <p>With Satisfactory closed, turn on <strong>Mods</strong> in <a href="https://smm.ficsit.app/">Satisfactory Mod Manager</a> and enable <strong>Satisfactory Mod Loader 3.12</strong> in the profile you’ll launch. Extract the Windows mod ZIP into <code>FactoryGame\Mods\FactoryLive</code> under your Satisfactory folder. Check that the descriptor is directly inside the mod folder.</p>
+          <pre class="fl-path"><code>FactoryGame\Mods\FactoryLive\FactoryLive.uplugin</code></pre>
+        </li>
+        <li>
+          <h3>Start the bridge</h3>
+          <p>Extract the bridge ZIP to a separate folder. Install <a href="https://nodejs.org/en/download">Node.js 22 or later</a>, then open PowerShell in the bridge folder and run this command. Leave that window open.</p>
+          <div class="fl-command">
+            <pre><code id="serve-command">node bridge.mjs serve</code></pre>
+            <button type="button" data-copy="serve-command" aria-label="Copy bridge start command" hidden>Copy</button>
+          </div>
+        </li>
+        <li>
+          <h3>Load your save and arm</h3>
+          <p>Launch Satisfactory through SMM and load your save. In a second PowerShell window in the bridge folder, check for <code>connected: true</code> and <code>game.ready: true</code>. Then run <code>arm</code> and choose a <a href="#presets">preset</a> below.</p>
+          <div class="fl-command">
+            <pre><code id="session-commands">node bridge.mjs status
+node bridge.mjs arm</code></pre>
+            <button type="button" data-copy="session-commands" aria-label="Copy status and arm commands" hidden>Copy</button>
+          </div>
+        </li>
+        <li>
+          <h3>Stop events when you’re done</h3>
+          <p>Disarm to clear the queue and cancel undetonated drops. Living creatures and kill history are saved with the world.</p>
+          <div class="fl-command">
+            <pre><code id="disarm-command">node bridge.mjs disarm</code></pre>
+            <button type="button" data-copy="disarm-command" aria-label="Copy disarm command" hidden>Copy</button>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="fl-section" id="presets">
+      <h2>Pick an event</h2>
+      <p>Use the preset name in your terminal, webhook or Streamer.bot mapping. Large requests run in paced waves as the game has room.</p>
+      <div class="fl-picker">
+        <label for="preset">Preset</label>
+        <select id="preset">
+          <option value="hog-swarm">Hog swarm</option>
+          <option value="alpha-hogs">Alpha hogs</option>
+          <option value="spitter-pack">Forest spitters</option>
+          <option value="nobelisk-rain">Standard Nobelisks</option>
+          <option value="pulse-rain">Pulse Nobelisks</option>
+          <option value="gas-rain">Gas Nobelisks</option>
+          <option value="cluster-rain" selected>Cluster Nobelisks</option>
+          <option value="nuke-drop">Nuke Nobelisk</option>
+        </select>
+      </div>
+      <div class="fl-command">
+        <pre><code id="trigger-command">node bridge.mjs trigger cluster-rain</code></pre>
+        <button type="button" data-copy="trigger-command" aria-label="Copy selected preset command" hidden>Copy</button>
+      </div>
+      <div class="fl-table">
+        <table>
+          <caption class="fl-sr-only">Factory Live default presets, quantities and chat mappings</caption>
+          <thead><tr><th scope="col">Preset</th><th scope="col">Default event</th><th scope="col">Chat mapping</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>hog-swarm</code></th><td>80 hogs</td><td><code>!hogs</code></td></tr>
+            <tr><th scope="row"><code>alpha-hogs</code></th><td>12 alpha hogs</td><td><code>!alphas</code></td></tr>
+            <tr><th scope="row"><code>spitter-pack</code></th><td>24 forest spitters</td><td><code>!spitters</code></td></tr>
+            <tr><th scope="row"><code>nobelisk-rain</code></th><td>6 standard Nobelisks</td><td><code>!nobelisk</code></td></tr>
+            <tr><th scope="row"><code>pulse-rain</code></th><td>4 Pulse Nobelisks</td><td><code>!pulse</code></td></tr>
+            <tr><th scope="row"><code>gas-rain</code></th><td>3 Gas Nobelisks</td><td><code>!gas</code></td></tr>
+            <tr><th scope="row"><code>cluster-rain</code></th><td>5 Cluster Nobelisks</td><td><code>!cluster</code></td></tr>
+            <tr><th scope="row"><code>nuke-drop</code></th><td>1 Nuke Nobelisk</td><td><code>!nuke</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="fl-section" id="integrations">
+      <h2>Connect your stream</h2>
+      <p>Run your stream tool and the bridge on the PC hosting Satisfactory. The bridge listens on <code>127.0.0.1:37128</code> by default. Use one mapping per command or reward when both tools are running.</p>
+      <div class="fl-integrations">
+        <article>
+          <h3>Lumia Stream</h3>
+          <ol>
+            <li>Add an API action to your chat command, alert or point redemption.</li>
+            <li>Set the method to <code>POST</code> and the URL to <code>http://127.0.0.1:37128/v1/trigger</code>.</li>
+            <li>Set <code>Content-Type</code> to <code>application/json</code> and <code>Authorization</code> to <code>Bearer YOUR_WEBHOOK_TOKEN</code>. The bridge creates your <code>webhookToken</code> in <code>%LOCALAPPDATA%\FactoryLive\link.json</code> on first start. Keep it on your PC.</li>
+            <li>Paste this JSON as the request body. It follows the preset selected above.</li>
+          </ol>
+          <div class="fl-command">
+            <pre><code id="webhook-body">{"preset":"cluster-rain"}</code></pre>
+            <button type="button" data-copy="webhook-body" aria-label="Copy preset webhook JSON" hidden>Copy</button>
+          </div>
+          <p>For a Custom JavaScript action, paste the template and set its preset and webhook token in Lumia’s editor.</p>
+          <a href="downloads/0.5.0/lumia-action.txt" download>Download the Lumia action</a>
+          <a href="https://dev.lumiastream.com/docs/custom-code/custom-actions">Lumia action documentation</a>
+        </article>
+        <article>
+          <h3>Streamer.bot</h3>
+          <ol>
+            <li>In <strong>Servers/Clients → WebSocket Server</strong>, start the server on <code>127.0.0.1:8080</code>. Create the chat commands you want under <strong>Commands</strong>.</li>
+            <li>Make a copy of <code>bridge.config.json</code> named <code>bridge.local.json</code>. Set <code>streamerBot.enabled</code> to <code>true</code> and confirm the WebSocket URL is <code>ws://127.0.0.1:8080/</code>.</li>
+            <li>Use <code>streamerBot.commands</code> to map exact chat commands to presets. Use <code>streamerBot.rewards</code> to map Twitch reward IDs. Stop any existing bridge with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then start it with the new config and arm again.</li>
+          </ol>
+          <div class="fl-command">
+            <pre><code id="streamer-command">node bridge.mjs serve bridge.local.json</code></pre>
+            <button type="button" data-copy="streamer-command" aria-label="Copy Streamer.bot bridge command" hidden>Copy</button>
+          </div>
+          <p>If WebSocket authentication is enabled, set <code>FACTORYLIVE_STREAMERBOT_PASSWORD</code> in the same PowerShell session before starting the bridge.</p>
+          <div class="fl-command">
+            <pre><code id="streamer-password">$env:FACTORYLIVE_STREAMERBOT_PASSWORD = Read-Host "Streamer.bot WebSocket password" -MaskInput</code></pre>
+            <button type="button" data-copy="streamer-password" aria-label="Copy Streamer.bot password command" hidden>Copy</button>
+          </div>
+          <p>For subs, cheers, hotkeys or other actions, paste the C# webhook template under <strong>Core → C# → Execute C# Code</strong> and set its <code>Preset</code>.</p>
+          <a href="downloads/0.5.0/StreamerBotWebhook.cs" download>Download the C# webhook</a>
+          <a href="downloads/0.5.0/bridge.config.json" download>Download the default bridge config</a>
+          <a href="https://docs.streamer.bot/api/websocket/guide/configuration">Streamer.bot WebSocket documentation</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="fl-section" id="troubleshooting">
+      <h2>Troubleshooting</h2>
+      <div class="fl-faq">
+        <details><summary>Satisfactory reports a missing SML plugin</summary><p>Enable Mods and Satisfactory Mod Loader 3.12 in the same SMM profile. Check that the Factory Live folder is named <code>FactoryLive</code> and the <code>.uplugin</code> file is directly inside it. <a href="https://docs.ficsit.app/satisfactory-modding/latest/ManualInstallDirections.html">Satisfactory manual install guide</a></p></details>
+        <details><summary>The bridge says the game is disconnected or unready</summary><p>Load a save as the host, unpause and regain control of your pioneer. Run <code>node bridge.mjs status</code> from the bridge folder. Arm the bridge again after a world change or lost heartbeat.</p></details>
+        <details><summary>A webhook returns 401, 409 or 429</summary><p><code>401</code> means the bridge rejected the token. <code>409</code> means the effect is unavailable or the game needs to be ready and armed. <code>429</code> means a cooldown, rate limit, queue cap or frame-time pause is active. Wait for capacity before retrying.</p></details>
+        <details><summary>How can I check which mobs or drops appeared?</summary><p><code>status</code> reports the save’s mob counters and the session’s Nobelisk launches, impacts, expirations and cancellations. In the game console, use <code>FactoryLive.Mobs</code> to see individual records. The game logs are in <code>%LOCALAPPDATA%\FactoryGame\Saved\Logs</code>.</p></details>
+      </div>
+      <p class="fl-guide-link"><a href="downloads/0.5.0/README.txt" download>Download the full README</a></p>
+    </section>
+  </main>
+  <p class="fl-sr-only" id="copy-feedback" role="status"></p>
+  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.5.0</span></footer>
+</body>
+</html>

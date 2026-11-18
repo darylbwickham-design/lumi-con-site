@@ -1,0 +1,28 @@
+{
+  "port": 37128,
+  "presets": {
+    "hog-swarm": { "effect": "creatures", "creature": "hog", "count": 80, "cooldownSeconds": 30 },
+    "alpha-hogs": { "effect": "creatures", "creature": "alpha-hog", "count": 12, "cooldownSeconds": 30 },
+    "spitter-pack": { "effect": "creatures", "creature": "spitter", "count": 24, "cooldownSeconds": 25 },
+    "nobelisk-rain": { "effect": "nobelisk", "nobelisk": "standard", "count": 6, "cooldownSeconds": 8 },
+    "pulse-rain": { "effect": "nobelisk", "nobelisk": "pulse", "count": 4, "cooldownSeconds": 10 },
+    "gas-rain": { "effect": "nobelisk", "nobelisk": "gas", "count": 3, "cooldownSeconds": 12 },
+    "cluster-rain": { "effect": "nobelisk", "nobelisk": "cluster", "count": 5, "cooldownSeconds": 15 },
+    "nuke-drop": { "effect": "nobelisk", "nobelisk": "nuke", "count": 1, "cooldownSeconds": 30 }
+  },
+  "streamerBot": {
+    "enabled": false,
+    "url": "ws://127.0.0.1:8080/",
+    "commands": {
+      "!hogs": "hog-swarm",
+      "!alphas": "alpha-hogs",
+      "!spitters": "spitter-pack",
+      "!nobelisk": "nobelisk-rain",
+      "!pulse": "pulse-rain",
+      "!gas": "gas-rain",
+      "!cluster": "cluster-rain",
+      "!nuke": "nuke-drop"
+    },
+    "rewards": {}
+  }
+}
