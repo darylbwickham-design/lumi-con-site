@@ -1,0 +1,42 @@
+{
+  "port": 37128,
+  "presets": {
+    "hog-swarm": { "effect": "creatures", "creature": "hog", "count": 80, "cooldownSeconds": 30 },
+    "alpha-hogs": { "effect": "creatures", "creature": "alpha-hog", "count": 12, "cooldownSeconds": 30 },
+    "spitter-pack": { "effect": "creatures", "creature": "spitter", "count": 24, "cooldownSeconds": 25 },
+    "stinger-pack": { "effect": "creatures", "creature": "stinger", "count": 12, "cooldownSeconds": 35 },
+    "elite-stinger": { "effect": "creatures", "creature": "elite-stinger", "count": 1, "cooldownSeconds": 45 },
+    "hatcher-drop": { "effect": "creatures", "creature": "crab-hatcher", "count": 1, "cooldownSeconds": 45 },
+    "nobelisk-rain": { "effect": "nobelisk", "nobelisk": "standard", "count": 6, "cooldownSeconds": 8 },
+    "pulse-rain": { "effect": "nobelisk", "nobelisk": "pulse", "count": 4, "cooldownSeconds": 10 },
+    "gas-rain": { "effect": "nobelisk", "nobelisk": "gas", "count": 3, "cooldownSeconds": 12 },
+    "cluster-rain": { "effect": "nobelisk", "nobelisk": "cluster", "count": 5, "cooldownSeconds": 15 },
+    "nuke-drop": { "effect": "nobelisk", "nobelisk": "nuke", "count": 1, "cooldownSeconds": 30 },
+    "pack-shuffle": { "effect": "backpack-shuffle", "count": 1, "cooldownSeconds": 45 },
+    "turn-around": { "effect": "turn-around", "count": 1, "cooldownSeconds": 30 },
+    "creature-roulette": { "effect": "random", "choices": ["alpha-hogs", "spitter-pack", "stinger-pack", "elite-stinger", "hatcher-drop"], "cooldownSeconds": 60 },
+    "surprise-me": { "effect": "random", "choices": ["pack-shuffle", "turn-around", "elite-stinger"], "cooldownSeconds": 60 }
+  },
+  "streamerBot": {
+    "enabled": false,
+    "url": "ws://127.0.0.1:8080/",
+    "commands": {
+      "!hogs": "hog-swarm",
+      "!alphas": "alpha-hogs",
+      "!spitters": "spitter-pack",
+      "!stingers": "stinger-pack",
+      "!elitestinger": "elite-stinger",
+      "!hatcher": "hatcher-drop",
+      "!nobelisk": "nobelisk-rain",
+      "!pulse": "pulse-rain",
+      "!gas": "gas-rain",
+      "!cluster": "cluster-rain",
+      "!nuke": "nuke-drop",
+      "!shuffle": "pack-shuffle",
+      "!turn": "turn-around",
+      "!roulette": "creature-roulette",
+      "!surprise": "surprise-me"
+    },
+    "rewards": {}
+  }
+}

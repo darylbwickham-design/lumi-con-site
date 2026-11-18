@@ -1,15 +1,15 @@
 const preset = document.getElementById('preset');
 const triggerCommand = document.getElementById('trigger-command');
-const webhookBody = document.getElementById('webhook-body');
 const feedback = document.getElementById('copy-feedback');
 
 function updatePreset() {
   triggerCommand.textContent = 'node bridge.mjs trigger ' + preset.value;
-  webhookBody.textContent = JSON.stringify({ preset: preset.value });
 }
 
-preset.addEventListener('change', updatePreset);
-updatePreset();
+if (preset && triggerCommand) {
+  preset.addEventListener('change', updatePreset);
+  updatePreset();
+}
 
 for (const button of document.querySelectorAll('[data-copy]')) {
   const snippet = document.getElementById(button.dataset.copy);

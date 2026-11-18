@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lumia Stream setup | Factory Live</title>
+  <meta name="description" content="Install the Factory Live Lumia Stream plugin, add native actions to Twitch Points or chat commands, and check the local bridge.">
+  <link rel="canonical" href="https://lumi-con.com/factory-live/lumia/">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../guide.css">
+  <script src="../guide.js" defer></script>
+</head>
+<body>
+  <a class="fl-skip" href="#setup">Skip to setup</a>
+  <header class="site-header">
+    <a class="brand" href="../../" aria-label="LumiCon home">
+      <img src="../../assets/lumicon-logo.png" alt="" width="42" height="42">
+      <span><strong>LumiCon</strong><small>Stream controller platform</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Factory Live navigation">
+      <a href="../">Factory Live</a>
+      <a href="../lumia/" aria-current="page">Lumia Stream</a>
+      <a href="../streamerbot/">Streamer.bot</a>
+    </nav>
+  </header>
+  <main class="fl-guide fl-platform-guide" id="setup">
+    <section class="fl-hero fl-hero-single" aria-labelledby="title">
+      <div>
+        <p class="eyebrow">Factory Live setup</p>
+        <h1 id="title">Lumia Stream setup</h1>
+        <p class="lede">Install the Factory Live plugin and choose effects directly from Lumia’s action picker. The plugin finds the bridge automatically on the PC hosting Satisfactory.</p>
+        <div class="hero-actions"><a class="button primary" href="../downloads/0.8.0/FactoryLive_Lumia_1.0.0.lumiaplugin" download>Download Lumia plugin</a>
+          <a class="button secondary" href="../#install">Game and bridge setup</a>
+        </div>
+      </div>
+    </section>
+    <nav class="fl-contents" aria-label="On this page">
+      <a href="#plugin">Install plugin</a>
+      <a href="#channel-points">Twitch Points</a>
+      <a href="#chat-and-alerts">Chat and alerts</a>
+      <a href="#migrate">Upgrade rewards</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </nav>
+    <section class="fl-section" id="plugin">
+      <h2>Install the plugin</h2>
+      <ol class="fl-instructions">
+        <li>Use <strong>Lumia Stream 9.4 or later in the 9.x series</strong> and <strong>Factory Live Bridge 0.8.0</strong>. Set up the <a href="../#install">Windows mod and bridge</a> on the same PC. Start the bridge in PowerShell and leave it running.</li>
+        <li>Download <strong>FactoryLive_Lumia_1.0.0.lumiaplugin</strong> above. In Lumia, open <strong>Settings → Plugins → Installed → Install Manually</strong> and select the file as downloaded.</li>
+        <li>Confirm the install in Lumia. Enable <strong>Factory Live</strong> on the Installed tab and connect it if prompted. It reads the bridge’s local link automatically. If you start the bridge after installing the plugin, reconnect Factory Live once the PowerShell window says it’s listening.</li>
+        <li>For a dry check, add <strong>Factory Live → Check Bridge</strong> to a temporary chat command and click <strong>Test</strong> on that command’s row. A popup should report <strong>Bridge connected</strong>. This check is safe with the game closed or the bridge disarmed.</li>
+      </ol>
+      <p>Factory Live is distributed here as a manual download. Use the Installed tab for this package. <a href="https://dev.lumiastream.com/docs/plugin-sdk/overview">Lumia’s official Plugin SDK documentation</a></p>
+    </section>
+    <section class="fl-section" id="channel-points">
+      <h2>Create a Twitch channel point reward</h2>
+      <p>This example sets up Surprise Me for 1 point with a 60-second cooldown.</p>
+      <ol class="fl-instructions">
+        <li>Connect the Twitch broadcaster account in <strong>Settings → Connections</strong> and allow Lumia to manage channel point rewards. Then go to <strong>Commands → Twitch Points → Add Command</strong>.</li>
+        <li>In the command’s first step, open <strong>Actions</strong>. Find <strong>Factory Live</strong> in the picker, add <strong>Trigger Preset</strong>, and choose <strong>Surprise Me</strong>. Save the action.</li>
+        <li>Expand <strong>Name &amp; description</strong>. Enter <strong>Factory Live Surprise Me</strong> as the title and set <strong>Points</strong> to <strong>1</strong>. For the description, use <em>Roll for a backpack shuffle, a quick turn, or an Elite Stinger.</em></li>
+        <li>Expand <strong>Advanced Command options</strong>, set <strong>Global cooldown</strong> to <strong>60 seconds</strong>, and click <strong>Complete and Save</strong>. Check that the reward is enabled and says <strong>Linked</strong> in the Twitch Points list.</li>
+        <li>Keep the reward disabled or paused while setting up if viewers are active. When you’re ready, load a test save, wait for <code>game.ready</code>, arm the bridge, and use <strong>Test</strong> once on the reward row. Look for the effect in game or check the queue if it was delayed.</li>
+      </ol>
+      <div class="fl-table">
+        <table>
+          <caption class="fl-sr-only">Factory Live channel point examples</caption>
+          <thead><tr><th scope="col">Reward title</th><th scope="col">Preset in Lumia</th><th scope="col">Effect</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Creature Roulette</th><td>Creature Roulette</td><td>Roll one of five creature presets</td></tr>
+            <tr><th scope="row">Carpet Bomb</th><td>Carpet Bomb (Cluster)</td><td>Drop five Cluster Nobelisks</td></tr>
+            <tr><th scope="row">Crab Hatcher</th><td>Crab Hatcher</td><td>Place a nest on clear ground</td></tr>
+            <tr><th scope="row">Backpack Shuffle</th><td>Backpack Shuffle</td><td>Swap up to four pairs of occupied backpack slots</td></tr>
+            <tr><th scope="row">Turn Around</th><td>Turn Around</td><td>Flip the host’s view 180° on foot</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="fl-section" id="chat-and-alerts">
+      <h2>Bind a chat command or alert</h2>
+      <ul class="fl-instructions">
+        <li><strong>Chat.</strong> In <strong>Commands → Chat Commands → Add Command</strong>, enter <code>shuffle</code> as the command name and add <strong>Factory Live → Trigger Preset → Backpack Shuffle</strong>. Set the chat permissions and cooldown, save, then type <code>!shuffle</code> in chat.</li>
+        <li><strong>Alerts.</strong> In Lumia’s <strong>Alerts</strong> section, edit an event such as a raid. Add <strong>Factory Live → Trigger Preset → Creature Roulette</strong> to the event’s actions. A matching alert can queue one wave.</li>
+        <li><strong>Custom bridge presets.</strong> Choose <strong>Trigger Custom Preset</strong> for a name you added under <code>presets</code> in your bridge config. Enter the exact name as fixed text in the action.</li>
+      </ul>
+      <p>Optional action results for follow-up messages or overlays include <code>factory_live_result</code> (for example, <code>queued</code> or <code>cooldown</code>), <code>factory_live_status</code>, and <code>factory_live_selected_preset</code>. The last one tells you what a random reward selected. <code>queued</code> means the bridge accepted the request.</p>
+    </section>
+    <section class="fl-section" id="migrate">
+      <h2>Upgrade an existing Lumia reward</h2>
+      <p>Open the reward’s edit pencil in <strong>Twitch Points</strong>. Add <strong>Factory Live → Trigger Preset</strong> with the same effect, remove its previous Factory Live API or Code action, then save. This keeps the same Twitch reward, title, and cost. If Streamer.bot also listens for that reward, remove its Factory Live mapping for that reward before testing.</p>
+    </section>
+    <section class="fl-section" id="troubleshooting">
+      <h2>Troubleshooting</h2>
+      <div class="fl-faq">
+        <details><summary>Factory Live is missing from the action picker</summary><p>Check that the plugin appears and is enabled in <strong>Settings → Plugins → Installed</strong>. Run Bridge 0.8.0 before connecting the plugin. Reopen the editor after enabling it.</p></details>
+        <details><summary>Check Bridge reports disconnected or disarmed</summary><p>Use the popup to tell the local bridge from the game connection. Start the bridge if it’s unreachable. If the bridge is connected, load a save as host and unpause. From the bridge folder, run <code>node bridge.mjs status</code>, then <code>node bridge.mjs arm</code> once <code>game.ready</code> is true.</p></details>
+        <details><summary>The action ran but no effect appeared</summary><p>Check the result variable and the bridge’s status. A cooldown, full queue, game frame-time pause, or unavailable player action can block a request. A queued creature wave can take time to complete. For Shuffle and Turn Around, the pioneer needs to be able to use the backpack or look around.</p></details>
+      </div>
+    </section>
+    <p class="fl-guide-link"><a href="../#presets">See all Factory Live presets and chat mappings</a></p>
+    <span class="fl-sr-only" id="copy-feedback" role="status" aria-live="polite"></span>
+  </main>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Streamer.bot setup | Factory Live</title>
+  <meta name="description" content="Configure Streamer.bot Twitch rewards and chat commands for Factory Live. Set up actions, optional WebSocket mappings, and test your bridge.">
+  <link rel="canonical" href="https://lumi-con.com/factory-live/streamerbot/">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../guide.css">
+  <script src="../guide.js" defer></script>
+</head>
+<body>
+  <a class="fl-skip" href="#setup">Skip to setup</a>
+  <header class="site-header">
+    <a class="brand" href="../../" aria-label="LumiCon home">
+      <img src="../../assets/lumicon-logo.png" alt="" width="42" height="42">
+      <span><strong>LumiCon</strong><small>Stream controller platform</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Factory Live navigation">
+      <a href="../">Factory Live</a>
+      <a href="../lumia/">Lumia Stream</a>
+      <a href="../streamerbot/" aria-current="page">Streamer.bot</a>
+    </nav>
+  </header>
+  <main class="fl-guide fl-platform-guide" id="setup">
+    <section class="fl-hero fl-hero-single" aria-labelledby="title">
+      <div>
+        <p class="eyebrow">Factory Live setup</p>
+        <h1 id="title">Streamer.bot setup</h1>
+        <p class="lede">Create one reusable Factory Live action per effect, then attach a Twitch reward, chat command, hotkey, or other trigger.</p>
+        <div class="hero-actions"><a class="button primary" href="../downloads/0.8.0/StreamerBotWebhook.cs" download>Download C# action</a>
+          <a class="button secondary" href="../#install">Game and bridge setup</a>
+        </div>
+      </div>
+    </section>
+    <nav class="fl-contents" aria-label="On this page">
+      <a href="#action">Action setup</a>
+      <a href="#rewards">Twitch rewards</a>
+      <a href="#chat">Chat commands</a>
+      <a href="#websocket">WebSocket option</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </nav>
+    <section class="fl-section" id="action">
+      <h2>Create a Factory Live action</h2>
+      <p>Use this setup if you want to attach a reward or command in Streamer.bot’s action editor. Complete the <a href="../#install">game and bridge setup</a> and leave the bridge running on the same Windows PC.</p>
+      <ol class="fl-instructions">
+        <li>Download <strong>StreamerBotWebhook.cs</strong> and open it in a text editor. For this example, find the <code>Preset</code> constant near the top and set it to <code>"surprise-me"</code>. Use the preset name from the <a href="../#presets">preset list</a> for other effects.</li>
+        <li>In <strong>Actions &amp; Queues → Actions</strong>, right-click the action list and choose <strong>Add</strong>. Name the action <strong>Factory Live Surprise Me</strong>.</li>
+        <li>In <strong>Sub-Actions</strong>, right-click and choose <strong>Core → C# → Execute C# Code</strong>. Paste the entire C# file. If the editor can’t find <code>HttpClient</code> or <code>JObject</code>, use the C# editor’s references to add <code>System.Net.Http.dll</code> or the <code>Newtonsoft.Json.dll</code> shipped with Streamer.bot.</li>
+        <li>Click <strong>Save and Compile</strong>. When compiled, the action reads Factory Live’s local link file and sends the selected preset. The action arguments <code>factoryLiveStatus</code> and <code>factoryLiveResult</code> report the bridge’s response.</li>
+      </ol>
+      <p><a href="https://docs.streamer.bot/api/csharp/guide/intro">Streamer.bot’s C# editor guide</a></p>
+    </section>
+    <section class="fl-section" id="rewards">
+      <h2>Connect a Twitch reward</h2>
+      <ol class="fl-instructions">
+        <li>Connect the Twitch broadcaster account. Under <strong>Platforms → Twitch → Channel Point Rewards</strong>, right-click and select <strong>Add</strong>, or use a reward already synced from Twitch.</li>
+        <li>For a new reward, enter <strong>Factory Live Surprise Me</strong>, set its cost to <strong>1</strong> and global cooldown to <strong>60 seconds</strong>, and save it.</li>
+        <li>Return to the Factory Live action. In <strong>Triggers</strong>, right-click and choose <strong>Twitch → Channel Reward → Reward Redemption</strong>. Select the specific reward you want to bind.</li>
+        <li>Load a test save, unpause, and arm Factory Live. Enable the reward and run one redemption. Check <strong>Action History</strong> in Streamer.bot for the action and <code>node bridge.mjs status</code> for the game connection.</li>
+      </ol>
+      <p>Bind each reward once if Lumia is also running. Use a specific reward rather than the <strong>Any</strong> trigger so unrelated redemptions don’t spawn effects. <a href="https://docs.streamer.bot/api/triggers/twitch/channel-reward/reward-redemption">Reward Redemption documentation</a></p>
+    </section>
+    <section class="fl-section" id="chat">
+      <h2>Connect a chat command</h2>
+      <ol class="fl-instructions">
+        <li>In <strong>Commands</strong>, add an exact-match command such as <code>!surprise</code>. Enable it for the platform you use and set its permissions and global cooldown.</li>
+        <li>In the action’s <strong>Triggers</strong>, add <strong>Core → Commands → Command Triggered</strong> and select <code>!surprise</code>.</li>
+        <li>Test in chat once the local game is ready and armed. To bind <code>!shuffle</code>, create a second action with <code>"pack-shuffle"</code> as its <code>Preset</code> and attach that command.</li>
+      </ol>
+      <p>Other triggers can use the same action. For example, add a raid trigger to a <code>creature-roulette</code> action or bind a hotkey to <code>turn-around</code>. <a href="https://docs.streamer.bot/api/triggers/core/commands/command-triggered">Command Triggered documentation</a></p>
+    </section>
+    <section class="fl-section" id="websocket">
+      <h2>Optional WebSocket setup</h2>
+      <p>Use the WebSocket route to map several chat commands or Twitch rewards in one config file. This route works without the C# action. Each command or reward should use one route.</p>
+      <ol class="fl-instructions">
+        <li>In <strong>Servers/Clients → WebSocket Server</strong>, set the address to <code>127.0.0.1</code>, confirm the port and endpoint (defaults <code>8080</code> and <code>/</code>), and start the server. Keep your WebSocket password enabled if you already use one.</li>
+        <li>From the bridge folder, copy <code>bridge.config.json</code> into <code>bridge.local.json</code>. Edit that copy. If you already have a local config, keep it and edit its existing <code>streamerBot</code> block.</li>
+        <li>Set <code>streamerBot.enabled</code> to <code>true</code>. Check the <code>url</code> matches your server. Create the matching commands in Streamer.bot. For a reward, right-click it in <strong>Channel Point Rewards</strong> and choose <strong>Copy Reward ID</strong>. Add that ID as a key under <code>rewards</code> with the preset name as its value.</li>
+      </ol>
+      <p>Example <code>streamerBot</code> settings block. Replace the sample UUID with your reward’s ID.</p>
+      <div class="fl-command">
+            <pre><code id="sb-config">{
+  "enabled": true,
+  "url": "ws://127.0.0.1:8080/",
+  "commands": {
+    "!shuffle": "pack-shuffle",
+    "!roulette": "creature-roulette",
+    "!surprise": "surprise-me"
+  },
+  "rewards": {
+    "00000000-0000-0000-0000-000000000000": "cluster-rain"
+  }
+}</code></pre>
+            <button type="button" data-copy="sb-config" aria-label="Copy the Streamer.bot mapping example" hidden>Copy</button>
+          </div>
+      <p>Stop any running bridge with <kbd>Ctrl</kbd>+<kbd>C</kbd>. If Streamer.bot requires a password, run the first line below. Run the second line in the same PowerShell window. When you see <code>Streamer.bot WebSocket subscribed</code>, load your test save and arm the bridge as usual.</p>
+      <div class="fl-command">
+            <pre><code id="sb-start">$env:FACTORYLIVE_STREAMERBOT_PASSWORD = Read-Host "Streamer.bot WebSocket password" -MaskInput
+node bridge.mjs serve bridge.local.json</code></pre>
+            <button type="button" data-copy="sb-start" aria-label="Copy the WebSocket bridge start commands" hidden>Copy</button>
+          </div>
+      <p><a href="../downloads/0.8.0/bridge.config.json" download>Download the default bridge config</a> · <a href="https://docs.streamer.bot/api/websocket/guide/configuration">WebSocket server documentation</a> · <a href="https://docs.streamer.bot/guide/platforms/twitch/">Reward ID documentation</a></p>
+    </section>
+    <section class="fl-section" id="troubleshooting">
+      <h2>Troubleshooting</h2>
+      <div class="fl-faq">
+        <details><summary>Webhook reports 409 or 429</summary><p><code>409</code> means the bridge or selected effect is unavailable, often because the game is disarmed or unready. <code>429</code> means a cooldown, queue limit, rate limit, or in-game frame-time pause is active. Review the response in the action history or log.</p></details>
+        <details><summary>Streamer.bot approves the reward but no effect starts</summary><p>Check the command name or reward ID mapping, confirm the action used the intended preset, and run <code>node bridge.mjs status</code>. A <code>202</code> response confirms queue entry. The game can defer the wave until it has room.</p></details>
+        <details><summary>The WebSocket doesn’t subscribe</summary><p>Check the server is started and the URL matches its bind address, port, and endpoint. If password authentication is enabled, provide <code>FACTORYLIVE_STREAMERBOT_PASSWORD</code> in the same shell that starts the bridge.</p></details>
+      </div>
+    </section>
+    <p class="fl-guide-link"><a href="../#presets">See all Factory Live presets and chat mappings</a></p>
+    <span class="fl-sr-only" id="copy-feedback" role="status" aria-live="polite"></span>
+  </main>
+</body>
+</html>

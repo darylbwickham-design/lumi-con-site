@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Factory Live for Satisfactory | LumiCon</title>
-  <meta name="description" content="Download Factory Live 0.7.0 for Satisfactory. Set up Stinger waves, Crab Hatchers, Nobelisks, viewer pranks, and inventory backups.">
+  <meta name="description" content="Download Factory Live for Satisfactory and follow dedicated Lumia Stream and Streamer.bot setup guides. Pick creature waves, viewer pranks, or random rewards.">
   <link rel="canonical" href="https://lumi-con.com/factory-live/">
   <link rel="stylesheet" href="../assets/site.css">
   <link rel="stylesheet" href="guide.css">
@@ -28,24 +28,27 @@
   <main class="fl-guide" id="factory-live">
     <section class="fl-hero" aria-labelledby="title">
       <div>
-        <p class="eyebrow">Satisfactory 1.2 mod · 0.7.0 preview</p>
+        <p class="eyebrow">Satisfactory 1.2 mod · Bridge 0.8.0</p>
         <h1 id="title">Factory Live</h1>
-        <p class="lede">Let viewers send creature waves, drop impact-detonated Nobelisks, shuffle your backpack, or turn you around. Connect Lumia Stream or Streamer.bot through a bridge on your game PC.</p>
+        <p class="lede">Let viewers send creature waves, drop Nobelisks, scramble your backpack, or roll a surprise. Set up your stream with native Lumia actions or a Streamer.bot action.</p>
         <div class="hero-actions">
-          <a class="button primary" href="downloads/0.7.0/FactoryLive_0.7.0_Share.zip" download>Download everything <small>ZIP</small></a>
+          <a class="button primary" href="downloads/0.8.0/FactoryLive_0.8.0_Share.zip" download>Download everything <small>ZIP</small></a>
           <a class="button secondary" href="#install">Setup guide</a>
         </div>
         <p class="fl-platform">Windows · Steam · Satisfactory Mod Loader 3.12 · Node.js 22+</p>
       </div>
       <div class="fl-downloads" id="downloads">
         <h2>Release downloads</h2>
-        <a href="downloads/0.7.0/FactoryLive_0.7.0_Windows.zip" download>
-          <span><strong>Windows mod</strong><small>Steam game plugin</small></span><span aria-hidden="true">↓</span>
+        <a href="downloads/0.8.0/FactoryLive_0.7.0_Windows.zip" download>
+          <span><strong>Windows mod</strong><small>Version 0.7.0 · Steam game plugin</small></span><span aria-hidden="true">↓</span>
         </a>
-        <a href="downloads/0.7.0/FactoryLive_0.7.0_Bridge.zip" download>
-          <span><strong>Bridge and integrations</strong><small>Node.js, presets, templates and README</small></span><span aria-hidden="true">↓</span>
+        <a href="downloads/0.8.0/FactoryLive_0.8.0_Bridge.zip" download>
+          <span><strong>Bridge and integrations</strong><small>Version 0.8.0 · Node.js, presets and integrations</small></span><span aria-hidden="true">↓</span>
         </a>
-        <a class="fl-checksums" href="downloads/0.7.0/SHA256SUMS.txt" download>SHA-256 checksums</a>
+        <a href="downloads/0.8.0/FactoryLive_Lumia_1.0.0.lumiaplugin" download>
+          <span><strong>Lumia Stream plugin</strong><small>Version 1.0.0 · Native actions for Lumia 9.4</small></span><span aria-hidden="true">↓</span>
+        </a>
+        <a class="fl-checksums" href="downloads/0.8.0/SHA256SUMS.txt" download>SHA-256 checksums</a>
       </div>
     </section>
 
@@ -53,22 +56,24 @@
       <a href="#install">Install</a>
       <a href="#presets">Presets</a>
       <a href="#inventory">Inventory</a>
-      <a href="#integrations">Integrations</a>
+      <a href="lumia/">Lumia setup</a>
+      <a href="streamerbot/">Streamer.bot setup</a>
       <a href="#troubleshooting">Troubleshooting</a>
     </nav>
 
     <section class="fl-section" id="install">
       <h2>Install and start</h2>
-      <p class="fl-note"><strong>Preview build.</strong> Version 0.7.0 passed offline checks. Its gameplay is unverified. Start in a test save since the game’s explosions can damage the pioneer and remove destructible scenery.</p>
+      <p class="fl-note"><strong>Windows preview.</strong> Start in a test save. Explosions can damage the pioneer and remove destructible scenery. The game mod and Bridge 0.8.0 passed offline checks.</p>
+      <p>Already on Factory Live 0.7.0? Stop the old bridge and extract Bridge 0.8.0 to a new folder. Start the new bridge there. If you use a custom config, copy your existing settings into the new config and keep the two new presets and chat mappings. The existing game mod and local link are compatible.</p>
       <ol class="fl-steps">
         <li>
           <h3>Install the Windows mod</h3>
-          <p>With Satisfactory closed, turn on <strong>Mods</strong> in <a href="https://smm.ficsit.app/">Satisfactory Mod Manager</a> and enable <strong>Satisfactory Mod Loader 3.12</strong> in the profile you’ll launch. Extract the Windows mod ZIP into <code>FactoryGame\Mods\FactoryLive</code> under your Satisfactory folder. Check that the descriptor is directly inside the mod folder.</p>
+          <p>With Satisfactory closed, turn on <strong>Mods</strong> in <a href="https://smm.ficsit.app/">Satisfactory Mod Manager</a> and enable <strong>Satisfactory Mod Loader 3.12</strong> in the profile you’ll launch. In Steam, right-click Satisfactory and choose <strong>Manage → Browse local files</strong>. Extract the Windows mod ZIP into <code>FactoryGame\Mods\FactoryLive</code> in that folder. Check that the descriptor is directly inside <code>FactoryLive</code>.</p>
           <pre class="fl-path"><code>FactoryGame\Mods\FactoryLive\FactoryLive.uplugin</code></pre>
         </li>
         <li>
           <h3>Start the bridge</h3>
-          <p>Extract the bridge ZIP to a separate folder. Install <a href="https://nodejs.org/en/download">Node.js 22 or later</a>, then open PowerShell in the bridge folder and run this command. Leave that window open.</p>
+          <p>Extract the bridge ZIP to a separate folder. Install <a href="https://nodejs.org/en/download">Node.js 22 or later</a>. Open the folder that contains <code>bridge.mjs</code>, type <code>powershell</code> into File Explorer’s address bar, and press Enter. Run the command below and leave that window open.</p>
           <div class="fl-command">
             <pre><code id="serve-command">node bridge.mjs serve</code></pre>
             <button type="button" data-copy="serve-command" aria-label="Copy bridge start command" hidden>Copy</button>
@@ -82,6 +87,7 @@
 node bridge.mjs arm</code></pre>
             <button type="button" data-copy="session-commands" aria-label="Copy status and arm commands" hidden>Copy</button>
           </div>
+          <p>Once armed, you can try <code>node bridge.mjs trigger turn-around</code> while on foot in a test save. A bridge receipt confirms the request was queued.</p>
         </li>
         <li>
           <h3>Stop events when you’re done</h3>
@@ -96,7 +102,7 @@ node bridge.mjs arm</code></pre>
 
     <section class="fl-section" id="presets">
       <h2>Pick an event</h2>
-      <p>Use the preset name in your terminal, webhook or Streamer.bot mapping. Large requests run in paced waves as the game has room.</p>
+      <p>Choose the effect in Lumia or use the preset name in Streamer.bot or PowerShell. Large requests run in paced waves as the game has room.</p>
       <div class="fl-picker">
         <label for="preset">Preset</label>
         <select id="preset">
@@ -113,6 +119,8 @@ node bridge.mjs arm</code></pre>
           <option value="nuke-drop">Nuke Nobelisk</option>
           <option value="pack-shuffle">Backpack shuffle</option>
           <option value="turn-around">Turn around</option>
+          <option value="creature-roulette">Creature Roulette</option>
+          <option value="surprise-me">Surprise Me</option>
         </select>
       </div>
       <div class="fl-command">
@@ -137,10 +145,13 @@ node bridge.mjs arm</code></pre>
             <tr><th scope="row"><code>nuke-drop</code></th><td>1 Nuke Nobelisk</td><td><code>!nuke</code></td></tr>
             <tr><th scope="row"><code>pack-shuffle</code></th><td>Up to 4 pairs of backpack slots swapped</td><td><code>!shuffle</code></td></tr>
             <tr><th scope="row"><code>turn-around</code></th><td>Turn the host’s view 180° on foot</td><td><code>!turn</code></td></tr>
+            <tr><th scope="row"><code>creature-roulette</code></th><td>One random wave of alpha hogs, spitters, Stingers, an Elite Stinger, or a Hatcher</td><td><code>!roulette</code></td></tr>
+            <tr><th scope="row"><code>surprise-me</code></th><td>One random Backpack Shuffle, Turn Around, or Elite Stinger</td><td><code>!surprise</code></td></tr>
           </tbody>
         </table>
       </div>
       <p>Crab Hatchers have a shared cap of two living or queued nests. Their position, health and defeat history are saved with the world. On reload, a living nest can reappear when you approach it and its terrain is ready. Flying crabs are temporary.</p>
+      <p>Each random preset has a 60-second default cooldown. It picks one available effect and shares that effect’s cooldown and queue limits with direct triggers. You can edit the choices and cooldowns in your local bridge config.</p>
     </section>
 
     <section class="fl-section" id="inventory">
@@ -180,68 +191,24 @@ node bridge.mjs arm</code></pre>
           </div>
         </li>
       </ol>
-      <p>To let viewers rearrange your backpack, create <code>!shuffle</code> in Streamer.bot and keep its default <code>pack-shuffle</code> mapping, or send the same preset from a Lumia action. Shuffle uses the game’s stack swap and has a 45-second default cooldown.</p>
+      <p>To let viewers rearrange your backpack, choose <strong>Backpack Shuffle</strong> in Lumia’s Factory Live action, or bind <code>!shuffle</code> to <code>pack-shuffle</code> in Streamer.bot. Shuffle uses the game’s stack swap and has a 45-second default cooldown.</p>
       <p>Use <code>!turn</code> or <code>turn-around</code> to turn the host’s view 180° when they can look around on foot. Its default bridge cooldown is 30 seconds.</p>
     </section>
 
     <section class="fl-section" id="integrations">
       <h2>Connect your stream</h2>
-      <p>Run your stream tool and the bridge on the PC hosting Satisfactory. The bridge listens on <code>127.0.0.1:37128</code> by default. Use one mapping per command or reward when both tools are running.</p>
+      <p>Run the bridge and your stream tool on the PC hosting Satisfactory. Bind each reward or chat command in one place when both tools are running.</p>
       <div class="fl-integrations">
         <article>
           <h3>Lumia Stream</h3>
-          <ol>
-            <li>Add an API action to your chat command, alert or point redemption.</li>
-            <li>Set the method to <code>POST</code> and the URL to <code>http://127.0.0.1:37128/v1/trigger</code>.</li>
-            <li>Set <code>Content-Type</code> to <code>application/json</code> and <code>Authorization</code> to <code>Bearer YOUR_WEBHOOK_TOKEN</code>. The bridge creates your <code>webhookToken</code> in <code>%LOCALAPPDATA%\FactoryLive\link.json</code> on first start. Keep it on your PC.</li>
-            <li>Paste this JSON as the request body. It follows the preset selected above.</li>
-          </ol>
-          <div class="fl-command">
-            <pre><code id="webhook-body">{"preset":"cluster-rain"}</code></pre>
-            <button type="button" data-copy="webhook-body" aria-label="Copy preset webhook JSON" hidden>Copy</button>
-          </div>
-          <p>For a Custom JavaScript action, paste the template and set its preset and webhook token in Lumia’s editor.</p>
-          <a href="downloads/0.7.0/lumia-action.txt" download>Download the Lumia action</a>
-          <a href="https://dev.lumiastream.com/docs/custom-code/custom-actions">Lumia action documentation</a>
+          <p>Install the plugin, pick a Factory Live action, and attach it to Twitch Points, a chat command, or an alert. Includes a bridge check you can run with the game closed.</p>
+          <a href="lumia/">Lumia Stream setup guide →</a>
         </article>
         <article>
           <h3>Streamer.bot</h3>
-          <ol>
-            <li>In <strong>Servers/Clients → WebSocket Server</strong>, start the server on <code>127.0.0.1:8080</code>. Create the chat commands you want under <strong>Commands</strong>.</li>
-            <li>Make a copy of <code>bridge.config.json</code> named <code>bridge.local.json</code>. Set <code>streamerBot.enabled</code> to <code>true</code> and confirm the WebSocket URL is <code>ws://127.0.0.1:8080/</code>.</li>
-            <li>Use <code>streamerBot.commands</code> to map exact chat commands to presets. Use <code>streamerBot.rewards</code> to map Twitch reward IDs. Stop any existing bridge with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then start it with the new config and arm again.</li>
-          </ol>
-          <div class="fl-command">
-            <pre><code id="streamer-command">node bridge.mjs serve bridge.local.json</code></pre>
-            <button type="button" data-copy="streamer-command" aria-label="Copy Streamer.bot bridge command" hidden>Copy</button>
-          </div>
-          <p>If WebSocket authentication is enabled, set <code>FACTORYLIVE_STREAMERBOT_PASSWORD</code> in the same PowerShell session before starting the bridge.</p>
-          <div class="fl-command">
-            <pre><code id="streamer-password">$env:FACTORYLIVE_STREAMERBOT_PASSWORD = Read-Host "Streamer.bot WebSocket password" -MaskInput</code></pre>
-            <button type="button" data-copy="streamer-password" aria-label="Copy Streamer.bot password command" hidden>Copy</button>
-          </div>
-          <p>For subs, cheers, hotkeys or other actions, paste the C# webhook template under <strong>Core → C# → Execute C# Code</strong> and set its <code>Preset</code>.</p>
-          <a href="downloads/0.7.0/StreamerBotWebhook.cs" download>Download the C# webhook</a>
-          <a href="downloads/0.7.0/bridge.config.json" download>Download the default bridge config</a>
-          <a href="https://docs.streamer.bot/api/websocket/guide/configuration">Streamer.bot WebSocket documentation</a>
+          <p>Set up a C# action for a reward, command, or hotkey. Use the optional WebSocket guide to map many chat commands and rewards at once.</p>
+          <a href="streamerbot/">Streamer.bot setup guide →</a>
         </article>
-      </div>
-      <h3 class="fl-subheading">One-point Twitch reward examples</h3>
-      <p>Under <strong>Commands → Twitch Points</strong> in Lumia, create a reward, set its cost to <strong>1 point</strong>, and attach the API action above. Select the matching preset and use its JSON as the body. Enable the rewards when you’re ready to arm Factory Live.</p>
-      <div class="fl-table">
-        <table>
-          <caption class="fl-sr-only">Example Lumia Twitch channel point rewards</caption>
-          <thead><tr><th scope="col">Reward title</th><th scope="col">Preset</th><th scope="col">What it does</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Factory Live Carpet Bomb</th><td><code>cluster-rain</code></td><td>Drop 5 Cluster Nobelisks</td></tr>
-            <tr><th scope="row">Factory Live Hog Wave</th><td><code>hog-swarm</code></td><td>Queue a paced wave of 80 hogs</td></tr>
-            <tr><th scope="row">Factory Live Backpack Shuffle</th><td><code>pack-shuffle</code></td><td>Rearrange backpack stacks</td></tr>
-            <tr><th scope="row">Factory Live Stinger Pack</th><td><code>stinger-pack</code></td><td>Queue 12 small Stingers</td></tr>
-            <tr><th scope="row">Factory Live Elite Stinger</th><td><code>elite-stinger</code></td><td>Queue one Elite Stinger</td></tr>
-            <tr><th scope="row">Factory Live Crab Hatcher</th><td><code>hatcher-drop</code></td><td>Place a Hatcher nest on clear ground</td></tr>
-            <tr><th scope="row">Factory Live Turn Around</th><td><code>turn-around</code></td><td>Turn the host’s view 180°</td></tr>
-          </tbody>
-        </table>
       </div>
     </section>
 
@@ -254,7 +221,7 @@ node bridge.mjs arm</code></pre>
         <details><summary>How can I check which mobs or drops appeared?</summary><p><code>status</code> reports the save’s mob counters and the session’s Nobelisk launches, impacts, expirations and cancellations. In the game console, use <code>FactoryLive.Mobs</code> to see individual records. The game logs are in <code>%LOCALAPPDATA%\FactoryGame\Saved\Logs</code>.</p></details>
         <details><summary>Restore says the snapshot is unavailable or incompatible</summary><p>Use the same save and host account that made the snapshot. Check <code>node bridge.mjs inventory status</code>. A restore requires compatible slots for the saved stacks.</p></details>
       </div>
-      <p class="fl-guide-link"><a href="downloads/0.7.0/README.txt" download>Download the full README</a></p>
+      <p class="fl-guide-link"><a href="downloads/0.8.0/README.txt" download>Download the full README</a></p>
     </section>
   </main>
   <p class="fl-sr-only" id="copy-feedback" role="status"></p>
