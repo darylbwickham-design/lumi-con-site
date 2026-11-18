@@ -29,7 +29,7 @@
         <p class="eyebrow">Factory Live setup</p>
         <h1 id="title">Streamer.bot setup</h1>
         <p class="lede">Create one reusable Factory Live action per effect, then attach a Twitch reward, chat command, hotkey, or other trigger.</p>
-        <div class="hero-actions"><a class="button primary" href="../downloads/0.8.0/StreamerBotWebhook.cs" download>Download C# action</a>
+        <div class="hero-actions"><a class="button primary" href="../downloads/0.8.5/StreamerBotWebhook.cs" download>Download C# action</a>
           <a class="button secondary" href="../#install">Game and bridge setup</a>
         </div>
       </div>
@@ -67,7 +67,7 @@
       <ol class="fl-instructions">
         <li>In <strong>Commands</strong>, add an exact-match command such as <code>!surprise</code>. Enable it for the platform you use and set its permissions and global cooldown.</li>
         <li>In the action’s <strong>Triggers</strong>, add <strong>Core → Commands → Command Triggered</strong> and select <code>!surprise</code>.</li>
-        <li>Test in chat once the local game is ready and armed. To bind <code>!shuffle</code>, create a second action with <code>"pack-shuffle"</code> as its <code>Preset</code> and attach that command.</li>
+        <li>Test in chat once the local game is ready and armed. To bind <code>!nukewave</code>, create a second action with <code>"nuke-carpet"</code> as its <code>Preset</code> and attach that command.</li>
       </ol>
       <p>Other triggers can use the same action. For example, add a raid trigger to a <code>creature-roulette</code> action or bind a hotkey to <code>turn-around</code>. <a href="https://docs.streamer.bot/api/triggers/core/commands/command-triggered">Command Triggered documentation</a></p>
     </section>
@@ -85,7 +85,7 @@
   "enabled": true,
   "url": "ws://127.0.0.1:8080/",
   "commands": {
-    "!shuffle": "pack-shuffle",
+    "!nukewave": "nuke-carpet",
     "!roulette": "creature-roulette",
     "!surprise": "surprise-me"
   },
@@ -101,7 +101,7 @@
 node bridge.mjs serve bridge.local.json</code></pre>
             <button type="button" data-copy="sb-start" aria-label="Copy the WebSocket bridge start commands" hidden>Copy</button>
           </div>
-      <p><a href="../downloads/0.8.0/bridge.config.json" download>Download the default bridge config</a> · <a href="https://docs.streamer.bot/api/websocket/guide/configuration">WebSocket server documentation</a> · <a href="https://docs.streamer.bot/guide/platforms/twitch/">Reward ID documentation</a></p>
+      <p><a href="../downloads/0.8.5/bridge.config.json" download>Download the default bridge config</a> · <a href="https://docs.streamer.bot/api/websocket/guide/configuration">WebSocket server documentation</a> · <a href="https://docs.streamer.bot/guide/platforms/twitch/">Reward ID documentation</a></p>
     </section>
     <section class="fl-section" id="troubleshooting">
       <h2>Troubleshooting</h2>

@@ -28,27 +28,27 @@
   <main class="fl-guide" id="factory-live">
     <section class="fl-hero" aria-labelledby="title">
       <div>
-        <p class="eyebrow">Satisfactory 1.2 mod · Bridge 0.8.0</p>
+        <p class="eyebrow">Satisfactory 1.2 mod · Version 0.8.5</p>
         <h1 id="title">Factory Live</h1>
-        <p class="lede">Let viewers send creature waves, drop Nobelisks, scramble your backpack, or roll a surprise. Set up your stream with native Lumia actions or a Streamer.bot action.</p>
+        <p class="lede">Let viewers send creature waves, drop Nobelisks, turn the pioneer around, or roll a surprise. Use native Lumia actions or connect Streamer.bot.</p>
         <div class="hero-actions">
-          <a class="button primary" href="downloads/0.8.0/FactoryLive_0.8.0_Share.zip" download>Download everything <small>ZIP</small></a>
+          <a class="button primary" href="downloads/0.8.5/FactoryLive_0.8.5_Share.zip" download>Download everything <small>ZIP</small></a>
           <a class="button secondary" href="#install">Setup guide</a>
         </div>
         <p class="fl-platform">Windows · Steam · Satisfactory Mod Loader 3.12 · Node.js 22+</p>
       </div>
       <div class="fl-downloads" id="downloads">
         <h2>Release downloads</h2>
-        <a href="downloads/0.8.0/FactoryLive_0.7.0_Windows.zip" download>
-          <span><strong>Windows mod</strong><small>Version 0.7.0 · Steam game plugin</small></span><span aria-hidden="true">↓</span>
+        <a href="downloads/0.8.5/FactoryLive_0.8.5_Windows.zip" download>
+          <span><strong>Windows mod</strong><small>Version 0.8.5 · Steam game plugin</small></span><span aria-hidden="true">↓</span>
         </a>
-        <a href="downloads/0.8.0/FactoryLive_0.8.0_Bridge.zip" download>
-          <span><strong>Bridge and integrations</strong><small>Version 0.8.0 · Node.js, presets and integrations</small></span><span aria-hidden="true">↓</span>
+        <a href="downloads/0.8.5/FactoryLive_0.8.5_Bridge.zip" download>
+          <span><strong>Bridge and integrations</strong><small>Version 0.8.5 · Node.js, presets and integrations</small></span><span aria-hidden="true">↓</span>
         </a>
-        <a href="downloads/0.8.0/FactoryLive_Lumia_1.0.0.lumiaplugin" download>
-          <span><strong>Lumia Stream plugin</strong><small>Version 1.0.0 · Native actions for Lumia 9.4</small></span><span aria-hidden="true">↓</span>
+        <a href="downloads/0.8.5/FactoryLive_Lumia_1.1.0.lumiaplugin" download>
+          <span><strong>Lumia Stream plugin</strong><small>Version 1.1.0 · Native actions for Lumia 9.4</small></span><span aria-hidden="true">↓</span>
         </a>
-        <a class="fl-checksums" href="downloads/0.8.0/SHA256SUMS.txt" download>SHA-256 checksums</a>
+        <a class="fl-checksums" href="downloads/0.8.5/SHA256SUMS.txt" download>SHA-256 checksums</a>
       </div>
     </section>
 
@@ -63,8 +63,8 @@
 
     <section class="fl-section" id="install">
       <h2>Install and start</h2>
-      <p class="fl-note"><strong>Windows preview.</strong> Start in a test save. Explosions can damage the pioneer and remove destructible scenery. The game mod and Bridge 0.8.0 passed offline checks.</p>
-      <p>Already on Factory Live 0.7.0? Stop the old bridge and extract Bridge 0.8.0 to a new folder. Start the new bridge there. If you use a custom config, copy your existing settings into the new config and keep the two new presets and chat mappings. The existing game mod and local link are compatible.</p>
+      <p class="fl-note"><strong>Windows preview.</strong> Start in a test save. Explosions can damage the pioneer and remove destructible scenery.</p>
+      <p>Upgrading from an older release? Close Satisfactory and replace the Windows mod. Stop the old bridge and start the new one from a fresh folder. Use the new config as the base for custom mappings and update your Lumia plugin in place. The local connection credentials carry over.</p>
       <ol class="fl-steps">
         <li>
           <h3>Install the Windows mod</h3>
@@ -111,13 +111,12 @@ node bridge.mjs arm</code></pre>
           <option value="spitter-pack">Forest spitters</option>
           <option value="stinger-pack">Small Stingers</option>
           <option value="elite-stinger">Elite Stinger</option>
-          <option value="hatcher-drop">Crab Hatcher</option>
           <option value="nobelisk-rain">Standard Nobelisks</option>
           <option value="pulse-rain">Pulse Nobelisks</option>
           <option value="gas-rain">Gas Nobelisks</option>
           <option value="cluster-rain" selected>Cluster Nobelisks</option>
           <option value="nuke-drop">Nuke Nobelisk</option>
-          <option value="pack-shuffle">Backpack shuffle</option>
+          <option value="nuke-carpet">Nuclear Carpet Bomb</option>
           <option value="turn-around">Turn around</option>
           <option value="creature-roulette">Creature Roulette</option>
           <option value="surprise-me">Surprise Me</option>
@@ -137,20 +136,19 @@ node bridge.mjs arm</code></pre>
             <tr><th scope="row"><code>spitter-pack</code></th><td>24 forest spitters</td><td><code>!spitters</code></td></tr>
             <tr><th scope="row"><code>stinger-pack</code></th><td>12 small Stingers</td><td><code>!stingers</code></td></tr>
             <tr><th scope="row"><code>elite-stinger</code></th><td>1 Elite Stinger</td><td><code>!elitestinger</code></td></tr>
-            <tr><th scope="row"><code>hatcher-drop</code></th><td>1 Crab Hatcher nest</td><td><code>!hatcher</code></td></tr>
-            <tr><th scope="row"><code>nobelisk-rain</code></th><td>6 standard Nobelisks</td><td><code>!nobelisk</code></td></tr>
-            <tr><th scope="row"><code>pulse-rain</code></th><td>4 Pulse Nobelisks</td><td><code>!pulse</code></td></tr>
-            <tr><th scope="row"><code>gas-rain</code></th><td>3 Gas Nobelisks</td><td><code>!gas</code></td></tr>
-            <tr><th scope="row"><code>cluster-rain</code></th><td>5 Cluster Nobelisks</td><td><code>!cluster</code></td></tr>
+            <tr><th scope="row"><code>nobelisk-rain</code></th><td>12 standard Nobelisks</td><td><code>!nobelisk</code></td></tr>
+            <tr><th scope="row"><code>pulse-rain</code></th><td>8 Pulse Nobelisks</td><td><code>!pulse</code></td></tr>
+            <tr><th scope="row"><code>gas-rain</code></th><td>6 Gas Nobelisks</td><td><code>!gas</code></td></tr>
+            <tr><th scope="row"><code>cluster-rain</code></th><td>10 Cluster Nobelisks</td><td><code>!cluster</code></td></tr>
             <tr><th scope="row"><code>nuke-drop</code></th><td>1 Nuke Nobelisk</td><td><code>!nuke</code></td></tr>
-            <tr><th scope="row"><code>pack-shuffle</code></th><td>Up to 4 pairs of backpack slots swapped</td><td><code>!shuffle</code></td></tr>
+            <tr><th scope="row"><code>nuke-carpet</code></th><td>5 Nuke Nobelisks launched at least 4 seconds apart</td><td><code>!nukewave</code></td></tr>
             <tr><th scope="row"><code>turn-around</code></th><td>Turn the host’s view 180° on foot</td><td><code>!turn</code></td></tr>
-            <tr><th scope="row"><code>creature-roulette</code></th><td>One random wave of alpha hogs, spitters, Stingers, an Elite Stinger, or a Hatcher</td><td><code>!roulette</code></td></tr>
-            <tr><th scope="row"><code>surprise-me</code></th><td>One random Backpack Shuffle, Turn Around, or Elite Stinger</td><td><code>!surprise</code></td></tr>
+            <tr><th scope="row"><code>creature-roulette</code></th><td>One random wave of alpha hogs, spitters, small Stingers, or an Elite Stinger</td><td><code>!roulette</code></td></tr>
+            <tr><th scope="row"><code>surprise-me</code></th><td>Turn Around or an Elite Stinger</td><td><code>!surprise</code></td></tr>
           </tbody>
         </table>
       </div>
-      <p>Crab Hatchers have a shared cap of two living or queued nests. Their position, health and defeat history are saved with the world. On reload, a living nest can reappear when you approach it and its terrain is ready. Flying crabs are temporary.</p>
+      <p>Living creature waves share a 224-point budget. Hogs count as one point, and tougher creatures count for more. The game spaces out new spawns and pauses them when frame times rise.</p>
       <p>Each random preset has a 60-second default cooldown. It picks one available effect and shares that effect’s cooldown and queue limits with direct triggers. You can edit the choices and cooldowns in your local bridge config.</p>
     </section>
 
@@ -191,8 +189,6 @@ node bridge.mjs arm</code></pre>
           </div>
         </li>
       </ol>
-      <p>To let viewers rearrange your backpack, choose <strong>Backpack Shuffle</strong> in Lumia’s Factory Live action, or bind <code>!shuffle</code> to <code>pack-shuffle</code> in Streamer.bot. Shuffle uses the game’s stack swap and has a 45-second default cooldown.</p>
-      <p>Use <code>!turn</code> or <code>turn-around</code> to turn the host’s view 180° when they can look around on foot. Its default bridge cooldown is 30 seconds.</p>
     </section>
 
     <section class="fl-section" id="integrations">
@@ -221,10 +217,10 @@ node bridge.mjs arm</code></pre>
         <details><summary>How can I check which mobs or drops appeared?</summary><p><code>status</code> reports the save’s mob counters and the session’s Nobelisk launches, impacts, expirations and cancellations. In the game console, use <code>FactoryLive.Mobs</code> to see individual records. The game logs are in <code>%LOCALAPPDATA%\FactoryGame\Saved\Logs</code>.</p></details>
         <details><summary>Restore says the snapshot is unavailable or incompatible</summary><p>Use the same save and host account that made the snapshot. Check <code>node bridge.mjs inventory status</code>. A restore requires compatible slots for the saved stacks.</p></details>
       </div>
-      <p class="fl-guide-link"><a href="downloads/0.8.0/README.txt" download>Download the full README</a></p>
+      <p class="fl-guide-link"><a href="downloads/0.8.5/README.txt" download>Download the full README</a></p>
     </section>
   </main>
   <p class="fl-sr-only" id="copy-feedback" role="status"></p>
-  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.7.0</span></footer>
+  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.8.5</span></footer>
 </body>
 </html>

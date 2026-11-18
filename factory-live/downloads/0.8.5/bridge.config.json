@@ -1,0 +1,40 @@
+{
+  "port": 37128,
+  "presets": {
+    "hog-swarm": { "effect": "creatures", "creature": "hog", "count": 80, "cooldownSeconds": 30 },
+    "alpha-hogs": { "effect": "creatures", "creature": "alpha-hog", "count": 12, "cooldownSeconds": 30 },
+    "spitter-pack": { "effect": "creatures", "creature": "spitter", "count": 24, "cooldownSeconds": 25 },
+    "stinger-pack": { "effect": "creatures", "creature": "stinger", "count": 12, "cooldownSeconds": 35 },
+    "elite-stinger": { "effect": "creatures", "creature": "elite-stinger", "count": 1, "cooldownSeconds": 45 },
+    "nobelisk-rain": { "effect": "nobelisk", "nobelisk": "standard", "count": 12, "cooldownSeconds": 5 },
+    "pulse-rain": { "effect": "nobelisk", "nobelisk": "pulse", "count": 8, "cooldownSeconds": 7 },
+    "gas-rain": { "effect": "nobelisk", "nobelisk": "gas", "count": 6, "cooldownSeconds": 8 },
+    "cluster-rain": { "effect": "nobelisk", "nobelisk": "cluster", "count": 10, "cooldownSeconds": 10 },
+    "nuke-drop": { "effect": "nobelisk", "nobelisk": "nuke", "count": 1, "cooldownSeconds": 20 },
+    "nuke-carpet": { "effect": "nuke-wave", "count": 5, "cooldownSeconds": 45 },
+    "turn-around": { "effect": "turn-around", "count": 1, "cooldownSeconds": 30 },
+    "creature-roulette": { "effect": "random", "choices": ["alpha-hogs", "spitter-pack", "stinger-pack", "elite-stinger"], "cooldownSeconds": 60 },
+    "surprise-me": { "effect": "random", "choices": ["turn-around", "elite-stinger"], "cooldownSeconds": 60 }
+  },
+  "streamerBot": {
+    "enabled": false,
+    "url": "ws://127.0.0.1:8080/",
+    "commands": {
+      "!hogs": "hog-swarm",
+      "!alphas": "alpha-hogs",
+      "!spitters": "spitter-pack",
+      "!stingers": "stinger-pack",
+      "!elitestinger": "elite-stinger",
+      "!nobelisk": "nobelisk-rain",
+      "!pulse": "pulse-rain",
+      "!gas": "gas-rain",
+      "!cluster": "cluster-rain",
+      "!nuke": "nuke-drop",
+      "!nukewave": "nuke-carpet",
+      "!turn": "turn-around",
+      "!roulette": "creature-roulette",
+      "!surprise": "surprise-me"
+    },
+    "rewards": {}
+  }
+}
