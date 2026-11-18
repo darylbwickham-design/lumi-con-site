@@ -1,0 +1,3 @@
+c1e445db831eda2ca72eabbef8b3bc9ea69dff9e56875911e3fff13b77e9711f  FactoryLive_0.7.0_Bridge.zip
+16248b6db34211a636be2e23c45b95b5a0bd903e01680b95a553e790fc68ed58  FactoryLive_0.7.0_Share.zip
+fa08e20c1c526d68c91a60582c4db9a0b639603c82583bccaa9df575c4accb95  FactoryLive_0.7.0_Windows.zip

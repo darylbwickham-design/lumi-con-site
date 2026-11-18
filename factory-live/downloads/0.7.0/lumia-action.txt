@@ -1,0 +1,19 @@
+async function() {
+    const preset = "cluster-rain";
+    const webhookToken = "PASTE_WEBHOOK_TOKEN_HERE";
+    try {
+        await actions([{
+            base: "api",
+            type: "post",
+            value: {
+                url: "http://127.0.0.1:37128/v1/trigger",
+                method: "POST",
+                headers: ["Authorization=Bearer " + webhookToken, "Content-Type=application/json"],
+                rawBody: JSON.stringify({ preset }),
+                timeout: 2500
+            }
+        }]);
+    } finally {
+        done();
+    }
+}

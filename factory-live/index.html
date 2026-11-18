@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Factory Live for Satisfactory | LumiCon</title>
-  <meta name="description" content="Download Factory Live 0.6.0 for Satisfactory. Set up Lumia Stream or Streamer.bot, viewer-triggered waves, backpack shuffles, and inventory backups.">
+  <meta name="description" content="Download Factory Live 0.7.0 for Satisfactory. Set up Stinger waves, Crab Hatchers, Nobelisks, viewer pranks, and inventory backups.">
   <link rel="canonical" href="https://lumi-con.com/factory-live/">
   <link rel="stylesheet" href="../assets/site.css">
   <link rel="stylesheet" href="guide.css">
@@ -28,24 +28,24 @@
   <main class="fl-guide" id="factory-live">
     <section class="fl-hero" aria-labelledby="title">
       <div>
-        <p class="eyebrow">Satisfactory 1.2 mod · 0.6.0 preview</p>
+        <p class="eyebrow">Satisfactory 1.2 mod · 0.7.0 preview</p>
         <h1 id="title">Factory Live</h1>
-        <p class="lede">Let viewers send creature waves, drop impact-detonated Nobelisks, or shuffle your backpack. Connect Lumia Stream or Streamer.bot through a bridge on your game PC.</p>
+        <p class="lede">Let viewers send creature waves, drop impact-detonated Nobelisks, shuffle your backpack, or turn you around. Connect Lumia Stream or Streamer.bot through a bridge on your game PC.</p>
         <div class="hero-actions">
-          <a class="button primary" href="downloads/0.6.0/FactoryLive_0.6.0_Share.zip" download>Download everything <small>ZIP</small></a>
+          <a class="button primary" href="downloads/0.7.0/FactoryLive_0.7.0_Share.zip" download>Download everything <small>ZIP</small></a>
           <a class="button secondary" href="#install">Setup guide</a>
         </div>
         <p class="fl-platform">Windows · Steam · Satisfactory Mod Loader 3.12 · Node.js 22+</p>
       </div>
       <div class="fl-downloads" id="downloads">
         <h2>Release downloads</h2>
-        <a href="downloads/0.6.0/FactoryLive_0.6.0_Windows.zip" download>
+        <a href="downloads/0.7.0/FactoryLive_0.7.0_Windows.zip" download>
           <span><strong>Windows mod</strong><small>Steam game plugin</small></span><span aria-hidden="true">↓</span>
         </a>
-        <a href="downloads/0.6.0/FactoryLive_0.6.0_Bridge.zip" download>
+        <a href="downloads/0.7.0/FactoryLive_0.7.0_Bridge.zip" download>
           <span><strong>Bridge and integrations</strong><small>Node.js, presets, templates and README</small></span><span aria-hidden="true">↓</span>
         </a>
-        <a class="fl-checksums" href="downloads/0.6.0/SHA256SUMS.txt" download>SHA-256 checksums</a>
+        <a class="fl-checksums" href="downloads/0.7.0/SHA256SUMS.txt" download>SHA-256 checksums</a>
       </div>
     </section>
 
@@ -59,7 +59,7 @@
 
     <section class="fl-section" id="install">
       <h2>Install and start</h2>
-      <p class="fl-note"><strong>Preview build.</strong> Version 0.6.0 passed offline checks. Its gameplay is unverified. Start in a test save since the game’s explosions can damage the pioneer and remove destructible scenery.</p>
+      <p class="fl-note"><strong>Preview build.</strong> Version 0.7.0 passed offline checks. Its gameplay is unverified. Start in a test save since the game’s explosions can damage the pioneer and remove destructible scenery.</p>
       <ol class="fl-steps">
         <li>
           <h3>Install the Windows mod</h3>
@@ -103,12 +103,16 @@ node bridge.mjs arm</code></pre>
           <option value="hog-swarm">Hog swarm</option>
           <option value="alpha-hogs">Alpha hogs</option>
           <option value="spitter-pack">Forest spitters</option>
+          <option value="stinger-pack">Small Stingers</option>
+          <option value="elite-stinger">Elite Stinger</option>
+          <option value="hatcher-drop">Crab Hatcher</option>
           <option value="nobelisk-rain">Standard Nobelisks</option>
           <option value="pulse-rain">Pulse Nobelisks</option>
           <option value="gas-rain">Gas Nobelisks</option>
           <option value="cluster-rain" selected>Cluster Nobelisks</option>
           <option value="nuke-drop">Nuke Nobelisk</option>
           <option value="pack-shuffle">Backpack shuffle</option>
+          <option value="turn-around">Turn around</option>
         </select>
       </div>
       <div class="fl-command">
@@ -123,15 +127,20 @@ node bridge.mjs arm</code></pre>
             <tr><th scope="row"><code>hog-swarm</code></th><td>80 hogs</td><td><code>!hogs</code></td></tr>
             <tr><th scope="row"><code>alpha-hogs</code></th><td>12 alpha hogs</td><td><code>!alphas</code></td></tr>
             <tr><th scope="row"><code>spitter-pack</code></th><td>24 forest spitters</td><td><code>!spitters</code></td></tr>
+            <tr><th scope="row"><code>stinger-pack</code></th><td>12 small Stingers</td><td><code>!stingers</code></td></tr>
+            <tr><th scope="row"><code>elite-stinger</code></th><td>1 Elite Stinger</td><td><code>!elitestinger</code></td></tr>
+            <tr><th scope="row"><code>hatcher-drop</code></th><td>1 Crab Hatcher nest</td><td><code>!hatcher</code></td></tr>
             <tr><th scope="row"><code>nobelisk-rain</code></th><td>6 standard Nobelisks</td><td><code>!nobelisk</code></td></tr>
             <tr><th scope="row"><code>pulse-rain</code></th><td>4 Pulse Nobelisks</td><td><code>!pulse</code></td></tr>
             <tr><th scope="row"><code>gas-rain</code></th><td>3 Gas Nobelisks</td><td><code>!gas</code></td></tr>
             <tr><th scope="row"><code>cluster-rain</code></th><td>5 Cluster Nobelisks</td><td><code>!cluster</code></td></tr>
             <tr><th scope="row"><code>nuke-drop</code></th><td>1 Nuke Nobelisk</td><td><code>!nuke</code></td></tr>
             <tr><th scope="row"><code>pack-shuffle</code></th><td>Up to 4 pairs of backpack slots swapped</td><td><code>!shuffle</code></td></tr>
+            <tr><th scope="row"><code>turn-around</code></th><td>Turn the host’s view 180° on foot</td><td><code>!turn</code></td></tr>
           </tbody>
         </table>
       </div>
+      <p>Crab Hatchers have a shared cap of two living or queued nests. Their position, health and defeat history are saved with the world. On reload, a living nest can reappear when you approach it and its terrain is ready. Flying crabs are temporary.</p>
     </section>
 
     <section class="fl-section" id="inventory">
@@ -172,6 +181,7 @@ node bridge.mjs arm</code></pre>
         </li>
       </ol>
       <p>To let viewers rearrange your backpack, create <code>!shuffle</code> in Streamer.bot and keep its default <code>pack-shuffle</code> mapping, or send the same preset from a Lumia action. Shuffle uses the game’s stack swap and has a 45-second default cooldown.</p>
+      <p>Use <code>!turn</code> or <code>turn-around</code> to turn the host’s view 180° when they can look around on foot. Its default bridge cooldown is 30 seconds.</p>
     </section>
 
     <section class="fl-section" id="integrations">
@@ -191,7 +201,7 @@ node bridge.mjs arm</code></pre>
             <button type="button" data-copy="webhook-body" aria-label="Copy preset webhook JSON" hidden>Copy</button>
           </div>
           <p>For a Custom JavaScript action, paste the template and set its preset and webhook token in Lumia’s editor.</p>
-          <a href="downloads/0.6.0/lumia-action.txt" download>Download the Lumia action</a>
+          <a href="downloads/0.7.0/lumia-action.txt" download>Download the Lumia action</a>
           <a href="https://dev.lumiastream.com/docs/custom-code/custom-actions">Lumia action documentation</a>
         </article>
         <article>
@@ -211,8 +221,8 @@ node bridge.mjs arm</code></pre>
             <button type="button" data-copy="streamer-password" aria-label="Copy Streamer.bot password command" hidden>Copy</button>
           </div>
           <p>For subs, cheers, hotkeys or other actions, paste the C# webhook template under <strong>Core → C# → Execute C# Code</strong> and set its <code>Preset</code>.</p>
-          <a href="downloads/0.6.0/StreamerBotWebhook.cs" download>Download the C# webhook</a>
-          <a href="downloads/0.6.0/bridge.config.json" download>Download the default bridge config</a>
+          <a href="downloads/0.7.0/StreamerBotWebhook.cs" download>Download the C# webhook</a>
+          <a href="downloads/0.7.0/bridge.config.json" download>Download the default bridge config</a>
           <a href="https://docs.streamer.bot/api/websocket/guide/configuration">Streamer.bot WebSocket documentation</a>
         </article>
       </div>
@@ -226,6 +236,10 @@ node bridge.mjs arm</code></pre>
             <tr><th scope="row">Factory Live Carpet Bomb</th><td><code>cluster-rain</code></td><td>Drop 5 Cluster Nobelisks</td></tr>
             <tr><th scope="row">Factory Live Hog Wave</th><td><code>hog-swarm</code></td><td>Queue a paced wave of 80 hogs</td></tr>
             <tr><th scope="row">Factory Live Backpack Shuffle</th><td><code>pack-shuffle</code></td><td>Rearrange backpack stacks</td></tr>
+            <tr><th scope="row">Factory Live Stinger Pack</th><td><code>stinger-pack</code></td><td>Queue 12 small Stingers</td></tr>
+            <tr><th scope="row">Factory Live Elite Stinger</th><td><code>elite-stinger</code></td><td>Queue one Elite Stinger</td></tr>
+            <tr><th scope="row">Factory Live Crab Hatcher</th><td><code>hatcher-drop</code></td><td>Place a Hatcher nest on clear ground</td></tr>
+            <tr><th scope="row">Factory Live Turn Around</th><td><code>turn-around</code></td><td>Turn the host’s view 180°</td></tr>
           </tbody>
         </table>
       </div>
@@ -240,10 +254,10 @@ node bridge.mjs arm</code></pre>
         <details><summary>How can I check which mobs or drops appeared?</summary><p><code>status</code> reports the save’s mob counters and the session’s Nobelisk launches, impacts, expirations and cancellations. In the game console, use <code>FactoryLive.Mobs</code> to see individual records. The game logs are in <code>%LOCALAPPDATA%\FactoryGame\Saved\Logs</code>.</p></details>
         <details><summary>Restore says the snapshot is unavailable or incompatible</summary><p>Use the same save and host account that made the snapshot. Check <code>node bridge.mjs inventory status</code>. A restore requires compatible slots for the saved stacks.</p></details>
       </div>
-      <p class="fl-guide-link"><a href="downloads/0.6.0/README.txt" download>Download the full README</a></p>
+      <p class="fl-guide-link"><a href="downloads/0.7.0/README.txt" download>Download the full README</a></p>
     </section>
   </main>
   <p class="fl-sr-only" id="copy-feedback" role="status"></p>
-  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.6.0</span></footer>
+  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.7.0</span></footer>
 </body>
 </html>
