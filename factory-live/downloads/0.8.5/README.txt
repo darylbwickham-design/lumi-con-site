@@ -89,7 +89,7 @@ Manual saves and autosaves capture the current creatures and their history. Load
 
 ## Lumia Stream
 
-Download `FactoryLive_Lumia_1.1.0.lumiaplugin`. In Lumia 9.4, open **Settings → Plugins → Installed → Install Manually** and select the file. Enable the plugin while the bridge is running. Under a command, alert, or Twitch Points reward, add **Factory Live → Trigger Preset** and choose an effect from the dropdown.
+Download `FactoryLive_Lumia_1.1.1.lumiaplugin`. In Lumia 9.4, open **Settings → Plugins → Installed → Install Manually** and select the file. Enable the plugin while the bridge is running. Under a command, alert, or Twitch Points reward, add **Factory Live → Trigger Preset** and choose an effect from the dropdown.
 
 **Check Bridge** shows whether the bridge and the loaded game are ready. **Trigger Custom Preset** accepts a fixed name from your local config. The plugin reads the local link file and sends only the webhook credential over loopback. [Complete Lumia setup and reward guide](https://lumi-con.com/factory-live/lumia/)
 
