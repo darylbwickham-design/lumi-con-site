@@ -13,6 +13,7 @@ if (preset && triggerCommand) {
 
 for (const button of document.querySelectorAll('[data-copy]')) {
   const snippet = document.getElementById(button.dataset.copy);
+  const originalLabel = button.textContent;
   let resetTimer;
   button.hidden = false;
   button.addEventListener('click', async () => {
@@ -31,7 +32,7 @@ for (const button of document.querySelectorAll('[data-copy]')) {
       feedback.textContent = 'Text selected. Press Ctrl+C or Command+C to copy.';
     }
     resetTimer = setTimeout(() => {
-      button.textContent = 'Copy';
+      button.textContent = originalLabel;
       feedback.textContent = '';
     }, 2200);
   });

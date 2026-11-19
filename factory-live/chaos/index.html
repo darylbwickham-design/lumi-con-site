@@ -26,21 +26,22 @@
   <main class="fl-guide" id="chaos-guide">
     <section class="fl-hero" aria-labelledby="title">
       <div>
-        <p class="eyebrow">Satisfactory Chaos release · 0.9.0-chaos.3</p>
+        <p class="eyebrow">Satisfactory Chaos release · 0.9.0-chaos.4</p>
         <h1 id="title">Factory Live Chaos</h1>
         <p class="lede">Send mixed creature waves, launch a 250-Nobelisk firework show, or make the pioneer drop a piece of equipment.</p>
         <div class="hero-actions">
-          <a class="button primary" href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Share.zip" download>Download everything <small>ZIP</small></a>
-          <a class="button secondary" href="#webhook">Webhook setup</a>
+          <a class="button primary" href="../downloads/0.9.0-chaos.4/FactoryLive_Chaos_0.9.0-chaos.4_Share.zip" download>Download share kit <small>ZIP</small></a>
+          <a class="button secondary" href="#install">Quick setup</a>
         </div>
         <p class="fl-platform">Windows · Steam build 517554 · SML 3.12 · Node.js 22+</p>
+        <div class="fl-command"><pre><code id="share-link">https://lumi-con.com/factory-live/chaos/</code></pre><button type="button" data-copy="share-link" hidden>Copy setup link</button></div>
       </div>
       <div class="fl-downloads" id="downloads">
         <h2>Release downloads</h2>
-        <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Windows.zip" download><span><strong>Windows mod</strong><small>Factory Live game plugin</small></span><span aria-hidden="true">↓</span></a>
-        <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Bridge.zip" download><span><strong>Bridge and integrations</strong><small>Node.js bridge, presets and Streamer.bot action</small></span><span aria-hidden="true">↓</span></a>
-        <a href="../downloads/lumia/FactoryLive_Chaos_Lumia_1.3.0.lumiaplugin" download><span><strong>Lumia Stream plugin</strong><small>Version 1.3.0 · Direct actions and multipliers</small></span><span aria-hidden="true">↓</span></a>
-        <a class="fl-checksums" href="../downloads/0.9.0-chaos.3/SHA256SUMS.txt" download>SHA-256 checksums</a>
+        <a href="../downloads/0.9.0-chaos.4/FactoryLive_Chaos_0.9.0-chaos.4_Windows.zip" download><span><strong>Windows mod</strong><small>Factory Live game plugin</small></span><span aria-hidden="true">↓</span></a>
+        <a href="../downloads/0.9.0-chaos.4/FactoryLive_Chaos_0.9.0-chaos.4_Bridge.zip" download><span><strong>Bridge and integrations</strong><small>Double-click launcher, presets, and Streamer.bot action</small></span><span aria-hidden="true">↓</span></a>
+        <a href="../downloads/lumia/FactoryLive_Chaos_Lumia_1.4.0.lumiaplugin" download><span><strong>Lumia Stream plugin</strong><small>Version 1.4.0 · Bridge controls and Pioneer Death alert</small></span><span aria-hidden="true">↓</span></a>
+        <a class="fl-checksums" href="../downloads/0.9.0-chaos.4/SHA256SUMS.txt" download>SHA-256 checksums</a>
       </div>
     </section>
 
@@ -53,19 +54,17 @@
       <h2>Install and arm the bridge</h2>
       <ol class="fl-steps">
         <li><h3>Install the mod</h3><p>Use a SML 3.12 profile and a copy of your save. Close Satisfactory and extract the Windows mod ZIP into <code>FactoryGame\Mods\FactoryLive</code> in the game installation. The descriptor <code>FactoryLive.uplugin</code> should be directly inside that folder.</p></li>
-        <li><h3>Start the bridge</h3><p>Extract the bridge ZIP into its own folder. Run <code>node bridge.mjs serve</code> there. A fresh Chaos bridge uses port <strong>37129</strong> and writes its link under <code>%LOCALAPPDATA%\FactoryLiveChaos</code>. To carry over a custom setup, keep its port, link credentials, and mappings. Add <code>equipment-drop</code> from the new default config.</p></li>
-        <li><h3>Load the save and arm</h3><p>Launch your Satisfactory profile and load the save. Once the pioneer is ready, use a second PowerShell window in the bridge folder.</p>
-          <div class="fl-command"><pre><code id="arm-chaos">node bridge.mjs status
-node bridge.mjs arm</code></pre><button type="button" data-copy="arm-chaos" hidden>Copy</button></div>
-        </li>
+        <li><h3>Start the bridge</h3><p>Install Node.js 22 or later. Open <strong>Bridge</strong> in the share kit and double-click <strong>Start Factory Live Bridge.cmd</strong>. Leave that window open. The bridge starts disarmed, uses port <strong>37129</strong> by default, and writes its link under <code>%LOCALAPPDATA%\FactoryLiveChaos</code>. An existing <code>bridge.local.json</code> in the bridge folder takes precedence over the default config.</p></li>
+        <li><h3>Arm from Lumia</h3><p>Install the plugin below. Load a Satisfactory save as host, then use <strong>Factory Live Chaos → Arm Bridge</strong> on a private control. <a href="../lumia/#bridge-controls">Set up your Arm and Disarm buttons</a></p></li>
       </ol>
-      <p><code>node bridge.mjs disarm</code> clears queued work and cancels undetonated drops. The game still saves your living creatures and kill history. A respawn clears pending effects and holds new effects for five seconds after the game's respawn transition.</p>
+      <p><strong>Disarm Bridge</strong> clears queued work and cancels undetonated drops. The game saves your living creatures and kill history. A respawn clears pending effects and holds new effects for five seconds after the game's respawn transition.</p>
     </section>
 
     <section class="fl-section" id="integrations">
       <h2>Lumia Stream and Streamer.bot</h2>
-      <p>Install <strong>Factory Live Chaos 1.3.0</strong> under <strong>Settings → Plugins → Installed → Install Manually</strong>. Use the plugin download above for the latest actions. Add <strong>Mob Chaos</strong>, <strong>Nobelisk Chaos</strong>, or <strong>Drop Random Equipment</strong> directly to a chat command, alert, or Twitch reward.</p>
-      <p>For a specific creature or explosive, pick <strong>Spawn Hog</strong>, <strong>Spawn Spitter</strong>, <strong>Spawn Stinger</strong>, <strong>Spawn Crab Hatcher</strong>, or <strong>Drop Nobelisk</strong>. Choose the tier where available and set <strong>Quantity</strong> and <strong>Multiplier</strong>. If you already use the regular Factory Live plugin with this bridge, upgrade it in place to 1.2.0 for the same actions. <a href="../lumia/#direct-actions">Lumia direct action setup</a></p>
+      <p>Install <strong>Factory Live Chaos 1.4.0</strong> under <strong>Settings → Plugins → Installed → Install Manually</strong>. Add <strong>Mob Chaos</strong>, <strong>Nobelisk Chaos</strong>, or <strong>Drop Random Equipment</strong> directly to a chat command, alert, or Twitch reward.</p>
+      <p>For a specific creature or explosive, pick <strong>Spawn Hog</strong>, <strong>Spawn Spitter</strong>, <strong>Spawn Stinger</strong>, <strong>Spawn Crab Hatcher</strong>, or <strong>Drop Nobelisk</strong>. Choose the tier where available and set <strong>Quantity</strong> and <strong>Multiplier</strong>. If you already use the regular Factory Live plugin with this bridge, upgrade it in place to 1.3.0 for the same actions. <a href="../lumia/#direct-actions">Lumia direct action setup</a></p>
+      <p>Find <strong>Pioneer Death</strong> under <strong>Alerts → Factory Live Chaos</strong> to attach a sound, overlay, or action when the host dies. The alert also works with viewer effects disarmed.</p>
       <p>In Streamer.bot, add the supplied <code>integrations/StreamerBotWebhook.cs</code> as an <strong>Execute C# Code</strong> sub-action. Set <code>Preset</code> to the ID in the table, then bind your event. Set any price or permissions on the alert or chat platform.</p>
       <p><code>equipment-drop</code> puts one item from the pioneer's equipment slots on the ground as a normal pickup. It requires a living pioneer on foot on solid ground. The default cooldown is 60 seconds.</p>
     </section>
@@ -84,7 +83,7 @@ Authorization: Bearer YOUR_WEBHOOK_TOKEN</code></pre>
       <h3>Or use a preset</h3>
       <div class="fl-command"><pre><code id="preset-json">{"preset":"equipment-drop"}</code></pre><button type="button" data-copy="preset-json" hidden>Copy</button></div>
       <p>Use one request format per event. Add an optional <code>eventId</code> and reuse it when retrying that event. HTTP 202 means the request entered the queue. HTTP 409 means the game or effect is unavailable, and HTTP 429 means a cooldown, queue limit, or busy lane applies.</p>
-      <p><code>GET /v1/presets</code> with the same authorization header returns the configured presets and variant list. <a href="../downloads/0.9.0-chaos.3/catalog.json" download>Download the default catalog</a></p>
+      <p><code>GET /v1/presets</code> with the same authorization header returns the configured presets and variant list. <a href="../downloads/0.9.0-chaos.4/catalog.json" download>Download the default catalog</a></p>
     </section>
 
     <section class="fl-section" id="variants">
@@ -153,6 +152,6 @@ Authorization: Bearer YOUR_WEBHOOK_TOKEN</code></pre>
     </section>
     <span class="fl-sr-only" id="copy-feedback" role="status" aria-live="polite"></span>
   </main>
-  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.0-chaos.3</span></footer>
+  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.0-chaos.4</span></footer>
 </body>
 </html>
