@@ -39,7 +39,7 @@
         <h2>Release downloads</h2>
         <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Windows.zip" download><span><strong>Windows mod</strong><small>Factory Live game plugin</small></span><span aria-hidden="true">↓</span></a>
         <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Bridge.zip" download><span><strong>Bridge and integrations</strong><small>Node.js bridge, presets and Streamer.bot action</small></span><span aria-hidden="true">↓</span></a>
-        <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_Lumia_1.2.0.lumiaplugin" download><span><strong>Lumia Stream plugin</strong><small>Version 1.2.0 for Lumia 9.4</small></span><span aria-hidden="true">↓</span></a>
+        <a href="../downloads/lumia/FactoryLive_Chaos_Lumia_1.3.0.lumiaplugin" download><span><strong>Lumia Stream plugin</strong><small>Version 1.3.0 · Direct actions and multipliers</small></span><span aria-hidden="true">↓</span></a>
         <a class="fl-checksums" href="../downloads/0.9.0-chaos.3/SHA256SUMS.txt" download>SHA-256 checksums</a>
       </div>
     </section>
@@ -64,7 +64,8 @@ node bridge.mjs arm</code></pre><button type="button" data-copy="arm-chaos" hidd
 
     <section class="fl-section" id="integrations">
       <h2>Lumia Stream and Streamer.bot</h2>
-      <p>Install the Chaos Lumia plugin under <strong>Settings → Plugins → Installed → Install Manually</strong>. Add <strong>Factory Live Chaos → Trigger Preset</strong> to a chat command, alert or Twitch reward. Choose <strong>Chaos Mode</strong>, <strong>Nobelisk Chaos</strong>, or <strong>Drop Random Equipment</strong>. With an existing Factory Live plugin connected to the updated bridge, use <strong>Trigger Custom Preset</strong> and enter the preset ID.</p>
+      <p>Install <strong>Factory Live Chaos 1.3.0</strong> under <strong>Settings → Plugins → Installed → Install Manually</strong>. Use the plugin download above for the latest actions. Add <strong>Mob Chaos</strong>, <strong>Nobelisk Chaos</strong>, or <strong>Drop Random Equipment</strong> directly to a chat command, alert, or Twitch reward.</p>
+      <p>For a specific creature or explosive, pick <strong>Spawn Hog</strong>, <strong>Spawn Spitter</strong>, <strong>Spawn Stinger</strong>, <strong>Spawn Crab Hatcher</strong>, or <strong>Drop Nobelisk</strong>. Choose the tier where available and set <strong>Quantity</strong> and <strong>Multiplier</strong>. If you already use the regular Factory Live plugin with this bridge, upgrade it in place to 1.2.0 for the same actions. <a href="../lumia/#direct-actions">Lumia direct action setup</a></p>
       <p>In Streamer.bot, add the supplied <code>integrations/StreamerBotWebhook.cs</code> as an <strong>Execute C# Code</strong> sub-action. Set <code>Preset</code> to the ID in the table, then bind your event. Set any price or permissions on the alert or chat platform.</p>
       <p><code>equipment-drop</code> puts one item from the pioneer's equipment slots on the ground as a normal pickup. It requires a living pioneer on foot on solid ground. The default cooldown is 60 seconds.</p>
     </section>
