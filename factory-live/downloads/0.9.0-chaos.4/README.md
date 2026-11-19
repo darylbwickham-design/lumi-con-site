@@ -17,7 +17,7 @@ node bridge.mjs trigger chaos-mode
 
 ## Set up a $10 alert in Lumia Stream
 
-1. In Lumia 9.4, open **Settings → Plugins → Installed → Install Manually** and install `FactoryLive_Chaos_Lumia_1.4.0.lumiaplugin`. Upgrade the same plugin edition to keep existing bindings.
+1. In Lumia 9.4, open **Settings → Plugins → Installed → Install Manually** and install `FactoryLive_Chaos_Lumia_1.4.1.lumiaplugin`. Upgrade the same plugin edition to keep existing bindings.
 2. Add **Arm Bridge** and **Disarm Bridge** to a private Stream Deck control or broadcaster-only commands. Disarming clears pending viewer effects.
 3. On the successful tip or payment alert, add **Factory Live Chaos → Mob Chaos**. Set the amount and currency filter in the alert or payment integration. For example, trigger on USD 10 or more. For a channel-points reward, set the price in Twitch and attach the same action.
 

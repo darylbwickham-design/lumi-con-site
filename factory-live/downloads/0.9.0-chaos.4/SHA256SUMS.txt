@@ -2,3 +2,4 @@
 06f29609379e6604a30acbf5f7ef1af519b85e4c65ef010ed5a70800df1838dc  FactoryLive_Chaos_0.9.0-chaos.4_Bridge.zip
 b032ae2f3289d83253759dc8cd7e2dbf9f5b1bf0df3cbb3da48f2c4b4cfee48e  FactoryLive_Chaos_0.9.0-chaos.4_Share.zip
 e5797ad7e83601aff1ad1489fd9abcf76a5d76838f029cdfaaf1bfbcee536e15  catalog.json
+e64aee5e1830646a842575eaecabc94a38f675c774339ff085baff9be4cf469b  FactoryLive_Chaos_0.9.0-chaos.4_Share_Lumia1.4.1.zip
