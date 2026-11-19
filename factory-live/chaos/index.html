@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Factory Live Chaos | LumiCon</title>
+  <meta name="description" content="Install Factory Live Chaos for Satisfactory and set up creature variants, fireworks and equipment drops with Lumia, Streamer.bot or StreamElements alerts.">
+  <link rel="canonical" href="https://lumi-con.com/factory-live/chaos/">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../guide.css">
+  <script src="../guide.js" defer></script>
+</head>
+<body>
+  <a class="fl-skip" href="#chaos-guide">Skip to the Chaos guide</a>
+  <header class="site-header">
+    <a class="brand" href="../../" aria-label="LumiCon home">
+      <img src="../../assets/lumicon-logo.png" alt="" width="42" height="42">
+      <span><strong>LumiCon</strong><small>Stream controller platform</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../../">Home</a>
+      <a href="../">Factory Live</a>
+      <a href="./" aria-current="page">Chaos</a>
+    </nav>
+  </header>
+  <main class="fl-guide" id="chaos-guide">
+    <section class="fl-hero" aria-labelledby="title">
+      <div>
+        <p class="eyebrow">Satisfactory Chaos release · 0.9.0-chaos.3</p>
+        <h1 id="title">Factory Live Chaos</h1>
+        <p class="lede">Send mixed creature waves, launch a 250-Nobelisk firework show, or make the pioneer drop a piece of equipment.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Share.zip" download>Download everything <small>ZIP</small></a>
+          <a class="button secondary" href="#webhook">Webhook setup</a>
+        </div>
+        <p class="fl-platform">Windows · Steam build 517554 · SML 3.12 · Node.js 22+</p>
+      </div>
+      <div class="fl-downloads" id="downloads">
+        <h2>Release downloads</h2>
+        <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Windows.zip" download><span><strong>Windows mod</strong><small>Factory Live game plugin</small></span><span aria-hidden="true">↓</span></a>
+        <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_0.9.0-chaos.3_Bridge.zip" download><span><strong>Bridge and integrations</strong><small>Node.js bridge, presets and Streamer.bot action</small></span><span aria-hidden="true">↓</span></a>
+        <a href="../downloads/0.9.0-chaos.3/FactoryLive_Chaos_Lumia_1.2.0.lumiaplugin" download><span><strong>Lumia Stream plugin</strong><small>Version 1.2.0 for Lumia 9.4</small></span><span aria-hidden="true">↓</span></a>
+        <a class="fl-checksums" href="../downloads/0.9.0-chaos.3/SHA256SUMS.txt" download>SHA-256 checksums</a>
+      </div>
+    </section>
+
+    <nav class="fl-contents" aria-label="On this page">
+      <a href="#install">Install</a><a href="#integrations">Lumia and Streamer.bot</a>
+      <a href="#webhook">StreamElements webhook</a><a href="#variants">Variant numbers</a><a href="#presets">Preset list</a>
+    </nav>
+
+    <section class="fl-section" id="install">
+      <h2>Install and arm the bridge</h2>
+      <ol class="fl-steps">
+        <li><h3>Install the mod</h3><p>Use a SML 3.12 profile and a copy of your save. Close Satisfactory and extract the Windows mod ZIP into <code>FactoryGame\Mods\FactoryLive</code> in the game installation. The descriptor <code>FactoryLive.uplugin</code> should be directly inside that folder.</p></li>
+        <li><h3>Start the bridge</h3><p>Extract the bridge ZIP into its own folder. Run <code>node bridge.mjs serve</code> there. A fresh Chaos bridge uses port <strong>37129</strong> and writes its link under <code>%LOCALAPPDATA%\FactoryLiveChaos</code>. To carry over a custom setup, keep its port, link credentials, and mappings. Add <code>equipment-drop</code> from the new default config.</p></li>
+        <li><h3>Load the save and arm</h3><p>Launch your Satisfactory profile and load the save. Once the pioneer is ready, use a second PowerShell window in the bridge folder.</p>
+          <div class="fl-command"><pre><code id="arm-chaos">node bridge.mjs status
+node bridge.mjs arm</code></pre><button type="button" data-copy="arm-chaos" hidden>Copy</button></div>
+        </li>
+      </ol>
+      <p><code>node bridge.mjs disarm</code> clears queued work and cancels undetonated drops. The game still saves your living creatures and kill history. A respawn clears pending effects and holds new effects for five seconds after the game's respawn transition.</p>
+    </section>
+
+    <section class="fl-section" id="integrations">
+      <h2>Lumia Stream and Streamer.bot</h2>
+      <p>Install the Chaos Lumia plugin under <strong>Settings → Plugins → Installed → Install Manually</strong>. Add <strong>Factory Live Chaos → Trigger Preset</strong> to a chat command, alert or Twitch reward. Choose <strong>Chaos Mode</strong>, <strong>Nobelisk Chaos</strong>, or <strong>Drop Random Equipment</strong>. With an existing Factory Live plugin connected to the updated bridge, use <strong>Trigger Custom Preset</strong> and enter the preset ID.</p>
+      <p>In Streamer.bot, add the supplied <code>integrations/StreamerBotWebhook.cs</code> as an <strong>Execute C# Code</strong> sub-action. Set <code>Preset</code> to the ID in the table, then bind your event. Set any price or permissions on the alert or chat platform.</p>
+      <p><code>equipment-drop</code> puts one item from the pioneer's equipment slots on the ground as a normal pickup. It requires a living pioneer on foot on solid ground. The default cooldown is 60 seconds.</p>
+    </section>
+
+    <section class="fl-section" id="webhook">
+      <h2>StreamElements webhook</h2>
+      <p>On the game PC, connect StreamElements to Lumia Stream. In Lumia's StreamElements tip alert, add an outbound <strong>API → POST</strong> action. Set the URL to <code>http://127.0.0.1:37129/v1/trigger</code> using the port in your link file, and use the headers below. To use a named preset, you can add the Chaos plugin action to the same alert. <a href="https://forum.lumiastream.com/t/alerts-what-you-can-setup-in-your-alerts/729">Lumia alert guide</a> · <a href="https://dev.lumiastream.com/docs/rest/run-actions">Lumia outbound actions</a></p>
+      <p>StreamElements cloud chat commands use <code>$(customapi)</code> through a remote GET proxy that cannot set authorization headers. For chat triggers, configure a chat command in Lumia or Streamer.bot on the game PC. <a href="https://docs.streamelements.com/chatbot/variables/customapi">StreamElements request limits</a></p>
+      <h3>Request headers</h3>
+      <pre><code>Content-Type: application/json
+Authorization: Bearer YOUR_WEBHOOK_TOKEN</code></pre>
+      <p>Read the <code>webhookToken</code> in <code>%LOCALAPPDATA%\FactoryLiveChaos\link.json</code>. Keep the bridge on loopback and the token in the local action.</p>
+      <h3>Choose a variant and quantity</h3>
+      <div class="fl-command"><pre><code id="entity-json">{"entityId":"spitter","variant":7,"qty":24}</code></pre><button type="button" data-copy="entity-json" hidden>Copy</button></div>
+      <p>This requests 24 Aquatic Alpha Spitters. Use a numeric <code>variant</code> and a whole-number <code>qty</code>. Direct requests share the queues and limits with named presets.</p>
+      <h3>Or use a preset</h3>
+      <div class="fl-command"><pre><code id="preset-json">{"preset":"equipment-drop"}</code></pre><button type="button" data-copy="preset-json" hidden>Copy</button></div>
+      <p>Use one request format per event. Add an optional <code>eventId</code> and reuse it when retrying that event. HTTP 202 means the request entered the queue. HTTP 409 means the game or effect is unavailable, and HTTP 429 means a cooldown, queue limit, or busy lane applies.</p>
+      <p><code>GET /v1/presets</code> with the same authorization header returns the configured presets and variant list. <a href="../downloads/0.9.0-chaos.3/catalog.json" download>Download the default catalog</a></p>
+    </section>
+
+    <section class="fl-section" id="variants">
+      <h2>Variant numbers</h2>
+      <div class="fl-table"><table>
+        <caption class="fl-sr-only">Entity and variant numbers for the webhook</caption>
+        <thead><tr><th scope="col">Entity ID</th><th scope="col">Variant</th><th scope="col">Spawn</th><th scope="col">Max per request</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>hog</code></th><td>0</td><td>hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>1</td><td>alpha-hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>2</td><td>cliff-hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>3</td><td>nuclear-hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>4</td><td>jetpack-hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>0</td><td>spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>1</td><td>spitter-red</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>2</td><td>spitter-desert</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>3</td><td>spitter-aquatic</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>4</td><td>alpha-spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>5</td><td>alpha-spitter-red</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>6</td><td>alpha-spitter-desert</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>7</td><td>alpha-spitter-aquatic</td><td>300</td></tr>
+          <tr><th scope="row"><code>stinger</code></th><td>0</td><td>stinger</td><td>300</td></tr>
+          <tr><th scope="row"><code>stinger</code></th><td>1</td><td>big-stinger</td><td>300</td></tr>
+          <tr><th scope="row"><code>stinger</code></th><td>2</td><td>elite-stinger</td><td>300</td></tr>
+          <tr><th scope="row"><code>hatcher</code></th><td>0</td><td>crab-hatcher</td><td>300</td></tr>
+          <tr><th scope="row"><code>nobelisk</code></th><td>0</td><td>standard</td><td>32</td></tr>
+          <tr><th scope="row"><code>nobelisk</code></th><td>1</td><td>pulse</td><td>32</td></tr>
+          <tr><th scope="row"><code>nobelisk</code></th><td>2</td><td>gas</td><td>32</td></tr>
+          <tr><th scope="row"><code>nobelisk</code></th><td>3</td><td>cluster</td><td>32</td></tr>
+          <tr><th scope="row"><code>nobelisk</code></th><td>4</td><td>nuke</td><td>1</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="fl-section" id="presets">
+      <h2>Default presets</h2>
+      <p>Chaos Mode mixes available native variants within four waves. Nobelisk Chaos spaces launches and impacts based on frame time, with up to 16 primary drops airborne at a time.</p>
+      <div class="fl-table"><table>
+        <caption class="fl-sr-only">Default Factory Live Chaos preset IDs, quantities and cooldowns</caption>
+        <thead><tr><th scope="col">Preset ID</th><th scope="col">Effect</th><th scope="col">Quantity</th><th scope="col">Cooldown</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>hog-swarm</code></th><td>hog</td><td>80</td><td>30s</td></tr>
+          <tr><th scope="row"><code>alpha-hogs</code></th><td>alpha-hog</td><td>12</td><td>30s</td></tr>
+          <tr><th scope="row"><code>spitter-pack</code></th><td>spitter</td><td>24</td><td>25s</td></tr>
+          <tr><th scope="row"><code>stinger-pack</code></th><td>stinger</td><td>12</td><td>35s</td></tr>
+          <tr><th scope="row"><code>elite-stinger</code></th><td>elite-stinger</td><td>1</td><td>45s</td></tr>
+          <tr><th scope="row"><code>crab-hatcher</code></th><td>Crab Hatchers</td><td>10</td><td>60s</td></tr>
+          <tr><th scope="row"><code>chaos-mode</code></th><td>1,200 creatures in four mixed waves</td><td>1,200</td><td>60s</td></tr>
+          <tr><th scope="row"><code>hatcher-surge</code></th><td>Crab Hatchers</td><td>300</td><td>60s</td></tr>
+          <tr><th scope="row"><code>spitter-surge</code></th><td>spitter</td><td>300</td><td>30s</td></tr>
+          <tr><th scope="row"><code>alpha-spitter-surge</code></th><td>alpha-spitter</td><td>300</td><td>30s</td></tr>
+          <tr><th scope="row"><code>jetpack-hog-surge</code></th><td>jetpack-hog</td><td>300</td><td>30s</td></tr>
+          <tr><th scope="row"><code>nobelisk-rain</code></th><td>standard</td><td>12</td><td>5s</td></tr>
+          <tr><th scope="row"><code>pulse-rain</code></th><td>pulse</td><td>8</td><td>7s</td></tr>
+          <tr><th scope="row"><code>gas-rain</code></th><td>gas</td><td>6</td><td>8s</td></tr>
+          <tr><th scope="row"><code>cluster-rain</code></th><td>cluster</td><td>10</td><td>10s</td></tr>
+          <tr><th scope="row"><code>nuke-drop</code></th><td>nuke</td><td>1</td><td>20s</td></tr>
+          <tr><th scope="row"><code>nuke-carpet</code></th><td>Nuke Nobelisks spaced at least four seconds apart</td><td>5</td><td>45s</td></tr>
+          <tr><th scope="row"><code>nobelisk-chaos</code></th><td>250 drops in ten stars with a Nuke finale</td><td>250</td><td>60s</td></tr>
+          <tr><th scope="row"><code>turn-around</code></th><td>Turn the pioneer 180°</td><td>1</td><td>30s</td></tr>
+          <tr><th scope="row"><code>equipment-drop</code></th><td>One recoverable equipment pickup</td><td>1</td><td>60s</td></tr>
+          <tr><th scope="row"><code>creature-roulette</code></th><td>Random choice from <code>alpha-hogs</code>, <code>spitter-pack</code>, <code>stinger-pack</code>, <code>elite-stinger</code></td><td>1</td><td>60s</td></tr>
+          <tr><th scope="row"><code>surprise-me</code></th><td>Random choice from <code>turn-around</code>, <code>elite-stinger</code></td><td>1</td><td>60s</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <span class="fl-sr-only" id="copy-feedback" role="status" aria-live="polite"></span>
+  </main>
+  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.0-chaos.3</span></footer>
+</body>
+</html>

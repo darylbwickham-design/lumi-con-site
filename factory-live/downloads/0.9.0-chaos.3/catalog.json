@@ -1,0 +1,294 @@
+{
+  "presets": [
+    {
+      "id": "hog-swarm",
+      "effect": "creatures",
+      "count": 80,
+      "cooldownSeconds": 30,
+      "creature": "hog"
+    },
+    {
+      "id": "alpha-hogs",
+      "effect": "creatures",
+      "count": 12,
+      "cooldownSeconds": 30,
+      "creature": "alpha-hog"
+    },
+    {
+      "id": "spitter-pack",
+      "effect": "creatures",
+      "count": 24,
+      "cooldownSeconds": 25,
+      "creature": "spitter"
+    },
+    {
+      "id": "stinger-pack",
+      "effect": "creatures",
+      "count": 12,
+      "cooldownSeconds": 35,
+      "creature": "stinger"
+    },
+    {
+      "id": "elite-stinger",
+      "effect": "creatures",
+      "count": 1,
+      "cooldownSeconds": 45,
+      "creature": "elite-stinger"
+    },
+    {
+      "id": "crab-hatcher",
+      "effect": "hatcher-test",
+      "count": 10,
+      "cooldownSeconds": 60
+    },
+    {
+      "id": "chaos-mode",
+      "effect": "chaos-mode",
+      "count": 300,
+      "cooldownSeconds": 60
+    },
+    {
+      "id": "hatcher-surge",
+      "effect": "hatcher-test",
+      "count": 300,
+      "cooldownSeconds": 60
+    },
+    {
+      "id": "spitter-surge",
+      "effect": "creatures",
+      "count": 300,
+      "cooldownSeconds": 30,
+      "creature": "spitter"
+    },
+    {
+      "id": "alpha-spitter-surge",
+      "effect": "creatures",
+      "count": 300,
+      "cooldownSeconds": 30,
+      "creature": "alpha-spitter"
+    },
+    {
+      "id": "jetpack-hog-surge",
+      "effect": "creatures",
+      "count": 300,
+      "cooldownSeconds": 30,
+      "creature": "jetpack-hog"
+    },
+    {
+      "id": "nobelisk-rain",
+      "effect": "nobelisk",
+      "count": 12,
+      "cooldownSeconds": 5,
+      "nobelisk": "standard"
+    },
+    {
+      "id": "pulse-rain",
+      "effect": "nobelisk",
+      "count": 8,
+      "cooldownSeconds": 7,
+      "nobelisk": "pulse"
+    },
+    {
+      "id": "gas-rain",
+      "effect": "nobelisk",
+      "count": 6,
+      "cooldownSeconds": 8,
+      "nobelisk": "gas"
+    },
+    {
+      "id": "cluster-rain",
+      "effect": "nobelisk",
+      "count": 10,
+      "cooldownSeconds": 10,
+      "nobelisk": "cluster"
+    },
+    {
+      "id": "nuke-drop",
+      "effect": "nobelisk",
+      "count": 1,
+      "cooldownSeconds": 20,
+      "nobelisk": "nuke"
+    },
+    {
+      "id": "nuke-carpet",
+      "effect": "nuke-wave",
+      "count": 5,
+      "cooldownSeconds": 45
+    },
+    {
+      "id": "nobelisk-chaos",
+      "effect": "nobelisk-chaos",
+      "count": 250,
+      "cooldownSeconds": 60
+    },
+    {
+      "id": "turn-around",
+      "effect": "turn-around",
+      "count": 1,
+      "cooldownSeconds": 30
+    },
+    {
+      "id": "equipment-drop",
+      "effect": "equipment-drop",
+      "count": 1,
+      "cooldownSeconds": 60
+    },
+    {
+      "id": "creature-roulette",
+      "effect": "random",
+      "cooldownSeconds": 60,
+      "choices": [
+        "alpha-hogs",
+        "spitter-pack",
+        "stinger-pack",
+        "elite-stinger"
+      ]
+    },
+    {
+      "id": "surprise-me",
+      "effect": "random",
+      "cooldownSeconds": 60,
+      "choices": [
+        "turn-around",
+        "elite-stinger"
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "id": "hog",
+      "variants": [
+        {
+          "variant": 0,
+          "name": "hog",
+          "maxQty": 300
+        },
+        {
+          "variant": 1,
+          "name": "alpha-hog",
+          "maxQty": 300
+        },
+        {
+          "variant": 2,
+          "name": "cliff-hog",
+          "maxQty": 300
+        },
+        {
+          "variant": 3,
+          "name": "nuclear-hog",
+          "maxQty": 300
+        },
+        {
+          "variant": 4,
+          "name": "jetpack-hog",
+          "maxQty": 300
+        }
+      ]
+    },
+    {
+      "id": "spitter",
+      "variants": [
+        {
+          "variant": 0,
+          "name": "spitter",
+          "maxQty": 300
+        },
+        {
+          "variant": 1,
+          "name": "spitter-red",
+          "maxQty": 300
+        },
+        {
+          "variant": 2,
+          "name": "spitter-desert",
+          "maxQty": 300
+        },
+        {
+          "variant": 3,
+          "name": "spitter-aquatic",
+          "maxQty": 300
+        },
+        {
+          "variant": 4,
+          "name": "alpha-spitter",
+          "maxQty": 300
+        },
+        {
+          "variant": 5,
+          "name": "alpha-spitter-red",
+          "maxQty": 300
+        },
+        {
+          "variant": 6,
+          "name": "alpha-spitter-desert",
+          "maxQty": 300
+        },
+        {
+          "variant": 7,
+          "name": "alpha-spitter-aquatic",
+          "maxQty": 300
+        }
+      ]
+    },
+    {
+      "id": "stinger",
+      "variants": [
+        {
+          "variant": 0,
+          "name": "stinger",
+          "maxQty": 300
+        },
+        {
+          "variant": 1,
+          "name": "big-stinger",
+          "maxQty": 300
+        },
+        {
+          "variant": 2,
+          "name": "elite-stinger",
+          "maxQty": 300
+        }
+      ]
+    },
+    {
+      "id": "hatcher",
+      "variants": [
+        {
+          "variant": 0,
+          "name": "crab-hatcher",
+          "maxQty": 300
+        }
+      ]
+    },
+    {
+      "id": "nobelisk",
+      "variants": [
+        {
+          "variant": 0,
+          "name": "standard",
+          "maxQty": 32
+        },
+        {
+          "variant": 1,
+          "name": "pulse",
+          "maxQty": 32
+        },
+        {
+          "variant": 2,
+          "name": "gas",
+          "maxQty": 32
+        },
+        {
+          "variant": 3,
+          "name": "cluster",
+          "maxQty": 32
+        },
+        {
+          "variant": 4,
+          "name": "nuke",
+          "maxQty": 1
+        }
+      ]
+    }
+  ]
+}
