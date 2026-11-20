@@ -286,3 +286,5 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+.fl-warning { border-inline-start: 4px solid #ffad52; padding-inline-start: 1rem; }

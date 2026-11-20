@@ -32,9 +32,12 @@
           <a class="button primary" href="https://ficsit.app/mod/FactoryLive">Get the mod in SMM</a>
           <a class="button secondary" href="../lumia/">Set up Lumia Stream</a>
         </div>
-        <p class="fl-platform">0.9.0-chaos.6 · Windows Steam builds 517554 and 520140</p>
+        <p class="fl-platform">0.9.0-chaos.16 · Windows Steam builds 517554 and 520140</p>
       </div>
     </section>
+    <aside class="fl-section fl-warning" aria-label="Crash warning"><strong>Crash warning</strong>
+      <p>Repeated waves and high multipliers can freeze or crash Satisfactory, especially during respawn. Make a separate save before enabling chat. Keep <strong>Disarm Bridge</strong> on a private Lumia button. It clears queued effects; creatures already in the world stay there.</p></aside>
+
 
     <nav class="fl-contents" aria-label="On this page">
       <a href="#nukem-demo">Watch the demo</a><a href="#install">Install</a><a href="#integrations">Lumia and Streamer.bot</a>
@@ -53,7 +56,7 @@
 
     <section class="fl-section" id="install">
       <h2>Install and start</h2>
-      <p>Install <strong>0.9.0-chaos.6</strong> through <a href="../#install">Satisfactory Mod Manager</a>, then load a save as host. The bundled bridge starts and arms automatically. If you used the old standalone bridge, close it before launching Satisfactory.</p>
+      <p>Install <strong>0.9.0-chaos.16</strong> using the <a href="../#install">installation guide</a>, then load a save as host. The bundled bridge starts and arms automatically. If you used the old standalone bridge, close it before launching Satisfactory.</p>
     </section>
 
     <section class="fl-section" id="integrations">
@@ -67,8 +70,12 @@
       <ul>
         <li><code>GET /v1/connection</code> checks whether the game is connected, ready, and armed.</li>
         <li><code>GET /v1/presets</code> lists preset IDs and creature variants.</li>
+        <li><code>GET /v1/mobs</code> lists named endpoints and shows which creatures your world can spawn.</li>
         <li><code>POST /v1/trigger</code> queues an effect.</li>
       </ul>
+      <h3>Request a group</h3>
+      <p>Send <code>{"qty":1,"multiplier":5}</code> to <code>POST /v1/mobs/crab-hatcher</code> for five hatchers in one group. Quantity counts base placements; the multiplier counts creatures per successful placement, including the first. A blocked base keeps its multiplier while queued. For three groups of five, set <code>qty</code> to 3. Whole-number multipliers from 1 to 100 work on hostiles and the Chaos preset. Wildlife is available through individual endpoints.</p>
+      <p>Keep the token on the host PC. A cloud chatbot needs a local integration such as Streamer.bot or Lumia to reach this loopback address. HTTP 409 means the action is unavailable in the current state; check the response and host readiness. On 429, allow the cooldown or queue to clear.</p>
       <h3>Example trigger requests</h3>
       <div class="fl-command"><pre><code id="preset-json">{"preset":"nobelisk-chaos"}</code></pre><button type="button" data-copy="preset-json" hidden>Copy</button></div>
       <div class="fl-command"><pre><code id="entity-json">{"entityId":"stinger","variant":2,"qty":1}</code></pre><button type="button" data-copy="entity-json" hidden>Copy</button></div>
@@ -76,28 +83,35 @@
     </section>
 
     <section class="fl-section" id="variants">
-      <h2>Variant numbers</h2>
+      <h2>Variant numbers and endpoint names</h2><p>For a creature, append its name in code below to <code>/v1/mobs/</code>. The last column gives the maximum base quantity. Chaos draws only from hostile creatures.</p>
       <div class="fl-table"><table>
         <caption class="fl-sr-only">Entity and variant numbers for the webhook</caption>
         <thead><tr><th scope="col">Entity ID</th><th scope="col">Variant</th><th scope="col">Spawn</th><th scope="col">Max per request</th></tr></thead>
         <tbody>
-          <tr><th scope="row"><code>hog</code></th><td>0</td><td>hog</td><td>300</td></tr>
-          <tr><th scope="row"><code>hog</code></th><td>1</td><td>alpha-hog</td><td>300</td></tr>
-          <tr><th scope="row"><code>hog</code></th><td>2</td><td>cliff-hog</td><td>300</td></tr>
-          <tr><th scope="row"><code>hog</code></th><td>3</td><td>nuclear-hog</td><td>300</td></tr>
-          <tr><th scope="row"><code>hog</code></th><td>4</td><td>jetpack-hog</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>0</td><td>spitter</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>1</td><td>spitter-red</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>2</td><td>spitter-desert</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>3</td><td>spitter-aquatic</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>4</td><td>alpha-spitter</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>5</td><td>alpha-spitter-red</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>6</td><td>alpha-spitter-desert</td><td>300</td></tr>
-          <tr><th scope="row"><code>spitter</code></th><td>7</td><td>alpha-spitter-aquatic</td><td>300</td></tr>
-          <tr><th scope="row"><code>stinger</code></th><td>0</td><td>stinger</td><td>300</td></tr>
-          <tr><th scope="row"><code>stinger</code></th><td>1</td><td>big-stinger</td><td>300</td></tr>
-          <tr><th scope="row"><code>stinger</code></th><td>2</td><td>elite-stinger</td><td>300</td></tr>
-          <tr><th scope="row"><code>hatcher</code></th><td>0</td><td>crab-hatcher</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>0</td><td><code>hog</code> · Fluffy-tailed Hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>1</td><td><code>alpha-hog</code> · Alpha Hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>2</td><td><code>cliff-hog</code> · Cliff Hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>3</td><td><code>nuclear-hog</code> · Nuclear Hog</td><td>300</td></tr>
+          <tr><th scope="row"><code>hog</code></th><td>4</td><td><code>jetpack-hog</code> · Jetpack Hog (Johnny)</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>0</td><td><code>spitter</code> · Forest Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>1</td><td><code>spitter-red</code> · Red Forest Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>2</td><td><code>spitter-desert</code> · Desert Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>3</td><td><code>spitter-aquatic</code> · Aquatic Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>4</td><td><code>alpha-spitter</code> · Alpha Forest Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>5</td><td><code>alpha-spitter-red</code> · Alpha Red Forest Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>6</td><td><code>alpha-spitter-desert</code> · Alpha Desert Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>7</td><td><code>alpha-spitter-aquatic</code> · Alpha Aquatic Spitter</td><td>300</td></tr>
+          <tr><th scope="row"><code>stinger</code></th><td>0</td><td><code>stinger</code> · Small Stinger</td><td>300</td></tr>
+          <tr><th scope="row"><code>stinger</code></th><td>1</td><td><code>big-stinger</code> · Big Stinger</td><td>300</td></tr>
+          <tr><th scope="row"><code>stinger</code></th><td>2</td><td><code>elite-stinger</code> · Elite Stinger</td><td>300</td></tr>
+          <tr><th scope="row"><code>hatcher</code></th><td>0</td><td><code>crab-hatcher</code> · Flying Crab Hatcher</td><td>300</td></tr>
+          <tr><th scope="row"><code>hatcher</code></th><td>1</td><td><code>elite-hatcher</code> · Elite Flying Crab Hatcher</td><td>300</td></tr>
+          <tr><th scope="row"><code>crab</code></th><td>0</td><td><code>flying-crab</code> · Flying Crab</td><td>300</td></tr>
+          <tr><th scope="row"><code>wildlife</code></th><td>0</td><td><code>lizard-doggo</code> · Lizard Doggo</td><td>300</td></tr>
+          <tr><th scope="row"><code>wildlife</code></th><td>1</td><td><code>bean</code> · Space Giraffe-Tick-Penguin-Whale Thing (Bean)</td><td>300</td></tr>
+          <tr><th scope="row"><code>wildlife</code></th><td>2</td><td><code>flightless-bird</code> · Flightless Bird</td><td>300</td></tr>
+          <tr><th scope="row"><code>wildlife</code></th><td>3</td><td><code>beetle</code> · Beetle</td><td>300</td></tr>
+          <tr><th scope="row"><code>wildlife</code></th><td>4</td><td><code>manta</code> · Giant Flying Manta</td><td>1</td></tr>
           <tr><th scope="row"><code>nobelisk</code></th><td>0</td><td>standard</td><td>32</td></tr>
           <tr><th scope="row"><code>nobelisk</code></th><td>1</td><td>pulse</td><td>32</td></tr>
           <tr><th scope="row"><code>nobelisk</code></th><td>2</td><td>gas</td><td>32</td></tr>
@@ -141,6 +155,6 @@
     </section>
     <span class="fl-sr-only" id="copy-feedback" role="status" aria-live="polite"></span>
   </main>
-  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.0-chaos.6</span></footer>
+  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.0-chaos.16</span></footer>
 </body>
 </html>

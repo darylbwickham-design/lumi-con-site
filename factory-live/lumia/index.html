@@ -30,16 +30,19 @@
         <p class="lede">Set up Satisfactory Stream Integration with two chat commands and 16 Twitch reward templates.</p>
         <div class="hero-actions">
           <a class="button primary" href="https://ficsit.app/mod/FactoryLive">Get Factory Live in SMM</a>
-          <a class="button secondary" href="../downloads/lumia/FactoryLive_Lumia_1.5.0.lumiaplugin" download>Download the Lumia plugin</a>
+          <a class="button secondary" href="../downloads/lumia/FactoryLive_Lumia_1.6.0.lumiaplugin" download>Download the Lumia plugin</a>
         </div>
       </div>
     </section>
+    <aside class="fl-section fl-warning" aria-label="Crash warning"><strong>Crash warning</strong>
+      <p>Repeated waves and high multipliers can freeze or crash Satisfactory, especially during respawn. Make a separate save before enabling chat. Keep <strong>Disarm Bridge</strong> on a private Lumia button. It clears queued effects; creatures already in the world stay there.</p></aside>
+
 
     <section class="fl-section" id="plugin">
       <h2>Set up the game and plugin</h2>
       <ol class="fl-steps">
         <li><h3>Install the game mod</h3><p>Follow the <a href="../#install">Satisfactory Mod Manager steps</a>. Load a save as host so the bridge can start.</p></li>
-        <li><h3>Install the Lumia plugin</h3><p>In Lumia Stream 9.4, go to <strong>Settings → Plugins</strong>. Look for <strong>Satisfactory Stream Integration</strong> in Marketplace. To use the download above, go to <strong>Installed → Install Manually</strong> and select the file. Enable the plugin.</p></li>
+        <li><h3>Install the Lumia plugin</h3><p>In Lumia Stream 9.4, go to <strong>Settings → Plugins</strong>. Look for <strong>Satisfactory Stream Integration</strong> in Marketplace. Use plugin <strong>1.6.0</strong> for chat multipliers. If the marketplace shows an earlier version, use the download above. To use the download above, go to <strong>Installed → Install Manually</strong> and select the file. Enable the plugin.</p></li>
         <li><h3>Import the commands you want</h3><p>When Lumia asks to install bundled commands, choose <strong>Install</strong>. Select <strong>Chat Commands</strong> for <code>!chaos</code> and <code>!nukem</code>. For rewards, select <strong>Use file target (Twitch Points Commands)</strong>. Skip any duplicates.</p></li>
       </ol>
     </section>
@@ -55,12 +58,12 @@
 
     <section class="fl-section" id="chat-and-alerts">
       <h2>Use the chat commands</h2>
-      <p>The streamer and moderators can type <code>!nukem</code> for the 250-Nobelisk fireworks show or <code>!chaos</code> for a large creature event. Start with a small reward if you’re testing for the first time.</p>
+      <p>The streamer and moderators can type <code>!nukem</code> for the 250-Nobelisk fireworks show or <code>!chaos</code> for a large creature event. The default Chaos preset requests up to 1,200 hostile placements. <code>!chaos 10</code> requests ten mobs at each placement, up to 12,000 in total. Keep this command moderator-only.</p>
     </section>
 
     <section class="fl-section" id="direct-actions">
       <h2>Add your own effect</h2>
-      <p>Edit a command, reward, or alert and open <strong>Actions → Satisfactory Stream Integration</strong>. Try <strong>Spawn Hog</strong>, choose a tier, and set a quantity. Keep the multiplier at 1 to use that quantity.</p>
+      <p>Edit a command, reward, or alert and open <strong>Actions → Satisfactory Stream Integration</strong>. Try <strong>Spawn Hog</strong>, choose a tier, and set a quantity. For a first reward, use Quantity <strong>1</strong> and Multiplier <strong>1</strong>. To create a hatcher group, select <strong>Spawn Crab Hatcher</strong>, Quantity <strong>1</strong>, Multiplier <strong>5</strong>. Save the action. This requests one central hatcher and four around it, each about eight metres from the center. Mobile hostiles start together and can move apart.</p>
     </section>
 
     <section class="fl-section" id="bridge-controls">
@@ -69,8 +72,8 @@
     </section>
 
     <section class="fl-section" id="migrate">
-      <h2>Upgrading from Factory Live 1.3.1</h2>
-      <p>Install 1.5.0 over the existing <strong>Factory Live</strong> plugin to keep its action bindings. Close the standalone bridge before restarting the game.</p>
+      <h2>Update an existing !chaos command</h2>
+      <p>Install 1.6.0 over the existing <strong>Factory Live</strong> plugin to keep its action bindings. In <strong>Commands → Chat Commands</strong>, edit <code>!chaos</code>. Under <strong>Actions → Start of Command</strong>, replace the old Chaos preset action with <strong>Mob Chaos</strong>. Enter <code>{{message}}</code> under <strong>Mobs per placement</strong> and save. Keep your moderator permissions and cooldown. With no number, the command uses one mob per placement. Whole numbers from 1 to 100 are supported.</p>
     </section>
   </main>
 </body>

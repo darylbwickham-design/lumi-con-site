@@ -37,16 +37,23 @@
         <p class="fl-platform">Windows Steam · Builds 517554 and 520140 · SML 3.12.0</p>
       </div>
     </section>
+    <aside class="fl-section fl-warning" aria-label="Crash warning"><strong>Crash warning</strong>
+      <p>Repeated waves and high multipliers can freeze or crash Satisfactory, especially during respawn. Make a separate save before enabling chat. Keep <strong>Disarm Bridge</strong> on a private Lumia button. It clears queued effects; creatures already in the world stay there.</p></aside>
+
 
     <section class="fl-section" id="install">
       <h2>Install Factory Live</h2>
       <ol class="fl-steps">
         <li><h3>Get the Mod Manager</h3><p>Install <a href="https://smm.ficsit.app/">Satisfactory Mod Manager (SMM)</a> and select your Steam installation.</p></li>
-        <li><h3>Add the mod</h3><p>Search for <strong>FactoryLive Stream Integrations</strong>. Choose <strong>Change version → 0.9.0-chaos.6</strong>. SMM handles the Satisfactory Mod Loader dependency.</p></li>
+        <li><h3>Add the mod</h3><p>Search for <strong>FactoryLive Stream Integrations</strong>. Select your play profile, switch <strong>Mods on</strong>, and install the compatible version SMM offers. Check <strong>Installed version</strong> before using the multiplier examples below. SMM handles the Satisfactory Mod Loader dependency.</p></li>
         <li><h3>Load a save</h3><p>Start Satisfactory and load a save as host. The bridge starts and arms automatically when the world is ready.</p></li>
       </ol>
     </section>
 
+    <section class="fl-section"><h2>Get the chaos.16 build</h2>
+      <p>If SMM offers an earlier version, you can <a href="downloads/0.9.0-chaos.16/FactoryLive_0.9.0-chaos.16_Windows_Steam.zip" download>download chaos.16 for Windows Steam</a>. First install SML in the intended profile through SMM, then close the game. In Steam, open Satisfactory’s <strong>Manage → Browse local files</strong>. Back up any existing <code>FactoryGame/Mods/FactoryLive</code> folder outside the Mods folder. Extract the ZIP’s <code>FactoryLive</code> folder into <code>FactoryGame/Mods</code>. Check that <code>FactoryLive/FactoryLive.uplugin</code> is directly inside Mods under that path. A profile change in SMM can replace a manual installation.</p>
+      <p>Launch the game, load a save as host, then follow the guide for your streaming app. Try Turn Around first. If the Pioneer turns, your chat integration is reaching this world.</p>
+    </section>
     <section class="fl-section" id="integrations">
       <h2>Connect your stream</h2>
       <ul>
@@ -63,10 +70,10 @@
 
     <section class="fl-section" id="troubleshooting">
       <h2>If effects don’t start</h2>
-      <p>Check that SMM has <strong>Mods on</strong> and shows Factory Live <strong>0.9.0-chaos.6</strong> as installed. Close any older standalone Factory Live bridge before restarting the game.</p>
+      <p>Check that SMM has <strong>Mods on</strong> and that the game’s Mods screen shows <strong>0.9.0-chaos.16</strong>. Close any older standalone Factory Live bridge before restarting the game.</p>
     </section>
   </main>
   <p class="fl-sr-only" id="copy-feedback" role="status"></p>
-  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.9.0-chaos.6</span></footer>
+  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.9.0-chaos.16</span></footer>
 </body>
 </html>

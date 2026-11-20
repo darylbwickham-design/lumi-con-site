@@ -30,20 +30,25 @@
         <p class="lede">Run Factory Live effects from Twitch rewards, chat commands, or alerts.</p>
         <div class="hero-actions">
           <a class="button primary" href="../#install">Install the game mod</a>
-          <a class="button secondary" href="https://github.com/darylbwickham-design/FactoryLive/blob/main/integrations/StreamerBotWebhook.cs">Get the C# action</a>
+          <a class="button secondary" href="../downloads/0.9.0-chaos.16/StreamerBotWebhook.cs">Get the C# action</a>
         </div>
       </div>
     </section>
+    <aside class="fl-section fl-warning" aria-label="Crash warning"><strong>Crash warning</strong>
+      <p>Repeated waves and high multipliers can freeze or crash Satisfactory, especially during respawn. Make a separate save before enabling chat. Keep <strong>Disarm Bridge</strong> on a private Lumia button. It clears queued effects; creatures already in the world stay there.</p></aside>
+
 
     <section class="fl-section" id="action">
       <h2>Create an action</h2>
       <ol class="fl-steps">
         <li><h3>Load a save</h3><p>Run Satisfactory and Streamer.bot on the same Windows PC. The Factory Live bridge starts when the host save is ready.</p></li>
         <li><h3>Add the script</h3><p>In Streamer.bot, make an action. Add <strong>Execute C# Code</strong>, then paste the Factory Live script from the link above.</p></li>
-        <li><h3>Pick a preset</h3><p>Set <code>Preset</code> to <code>turn-around</code> for a small first test or <code>nobelisk-chaos</code> for the fireworks show. Save the action.</p></li>
+        <li><h3>Pick a preset</h3><p>In the constants near the top of the script, set <code>Preset</code> to <code>turn-around</code> for a small first test or <code>nobelisk-chaos</code> for the fireworks show. Save the action.</p></li>
       </ol>
     </section>
 
+    <section class="fl-section"><h2>Make a five-hatcher reward</h2>
+      <p>Duplicate the working action and name it <strong>Five Hatchers</strong>. In its C# sub-action, set <code>Mob = "crab-hatcher"</code>, <code>Quantity = 1</code>, and <code>Multiplier = 5</code>. Compile and save. Link the reward below. A nonempty Mob selects that creature; an empty Mob runs the named preset. Set Multiplier back to 1 for wildlife and Nobelisks.</p></section>
     <section class="fl-section" id="rewards">
       <h2>Connect a Twitch reward</h2>
       <p>Add a <strong>Twitch → Channel Reward → Reward Redemption</strong> trigger to the action, then choose your reward.</p>
