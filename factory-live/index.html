@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Factory Live for Satisfactory | LumiCon</title>
-  <meta name="description" content="Download Factory Live for Satisfactory and follow dedicated Lumia Stream and Streamer.bot setup guides. Pick creature waves, viewer pranks, or random rewards.">
+  <meta name="description" content="Install Factory Live for Satisfactory through Satisfactory Mod Manager. Connect Lumia Stream or Streamer.bot to trigger viewer effects.">
   <link rel="canonical" href="https://lumi-con.com/factory-live/">
   <link rel="stylesheet" href="../assets/site.css">
   <link rel="stylesheet" href="guide.css">
@@ -26,202 +26,47 @@
   </header>
 
   <main class="fl-guide" id="factory-live">
-    <section class="fl-hero" aria-labelledby="title">
+    <section class="fl-hero fl-hero-single" aria-labelledby="title">
       <div>
-        <p class="eyebrow">Satisfactory 1.2 mod · Version 0.8.5</p>
         <h1 id="title">Factory Live</h1>
-        <p class="lede">Let viewers send creature waves, drop Nobelisks, turn the pioneer around, or roll a surprise. Use native Lumia actions or connect Streamer.bot.</p>
+        <p class="lede">Let Twitch chat spawn creatures, launch Nobelisk fireworks, or turn the Pioneer around in Satisfactory.</p>
         <div class="hero-actions">
-          <a class="button primary" href="downloads/0.8.5/FactoryLive_0.8.5_Share.zip" download>Download everything <small>ZIP</small></a>
-          <a class="button secondary" href="#install">Setup guide</a>
-          <a class="button secondary" href="chaos/">Chaos share kit and setup</a>
+          <a class="button primary" href="https://ficsit.app/mod/FactoryLive">Get the Satisfactory mod</a>
+          <a class="button secondary" href="chaos/#nukem-demo">Watch the demo</a>
         </div>
-        <p class="fl-platform">Windows · Steam · Satisfactory Mod Loader 3.12 · Node.js 22+</p>
-      </div>
-      <div class="fl-downloads" id="downloads">
-        <h2>Release downloads</h2>
-        <a href="downloads/0.8.5/FactoryLive_0.8.5_Windows.zip" download>
-          <span><strong>Windows mod</strong><small>Version 0.8.5 · Steam game plugin</small></span><span aria-hidden="true">↓</span>
-        </a>
-        <a href="downloads/0.8.5/FactoryLive_0.8.5_Bridge.zip" download>
-          <span><strong>Bridge and integrations</strong><small>Version 0.8.5 · Node.js, presets and integrations</small></span><span aria-hidden="true">↓</span>
-        </a>
-        <a href="downloads/lumia/FactoryLive_Lumia_1.3.1.lumiaplugin" download>
-          <span><strong>Lumia Stream plugin</strong><small>Version 1.3.1 · Regular edition</small></span><span aria-hidden="true">↓</span>
-        </a>
-        <a class="fl-checksums" href="downloads/0.8.5/SHA256SUMS.txt" download>SHA-256 checksums</a>
+        <p class="fl-platform">Windows Steam · Builds 517554 and 520140 · SML 3.12.0</p>
       </div>
     </section>
-
-    <nav class="fl-contents" aria-label="On this page">
-      <a href="#install">Install</a>
-      <a href="#presets">Presets</a>
-      <a href="#inventory">Inventory</a>
-      <a href="lumia/">Lumia setup</a>
-      <a href="streamerbot/">Streamer.bot setup</a>
-      <a href="#troubleshooting">Troubleshooting</a>
-    </nav>
 
     <section class="fl-section" id="install">
-      <h2>Install and start</h2>
-      <p class="fl-note"><strong>Windows preview.</strong> Start in a test save. Explosions can damage the pioneer and remove destructible scenery.</p>
-      <p>Upgrading from an older release? Close Satisfactory and replace the Windows mod. Stop the old bridge and start the new one from a fresh folder. Use the new config as the base for custom mappings and update your Lumia plugin in place. The local connection credentials carry over.</p>
+      <h2>Install Factory Live</h2>
       <ol class="fl-steps">
-        <li>
-          <h3>Install the Windows mod</h3>
-          <p>With Satisfactory closed, turn on <strong>Mods</strong> in <a href="https://smm.ficsit.app/">Satisfactory Mod Manager</a> and enable <strong>Satisfactory Mod Loader 3.12</strong> in the profile you’ll launch. In Steam, right-click Satisfactory and choose <strong>Manage → Browse local files</strong>. Extract the Windows mod ZIP into <code>FactoryGame\Mods\FactoryLive</code> in that folder. Check that the descriptor is directly inside <code>FactoryLive</code>.</p>
-          <pre class="fl-path"><code>FactoryGame\Mods\FactoryLive\FactoryLive.uplugin</code></pre>
-        </li>
-        <li>
-          <h3>Start the bridge</h3>
-          <p>Extract the bridge ZIP to a separate folder. Install <a href="https://nodejs.org/en/download">Node.js 22 or later</a>. Open the folder that contains <code>bridge.mjs</code>, type <code>powershell</code> into File Explorer’s address bar, and press Enter. Run the command below and leave that window open.</p>
-          <div class="fl-command">
-            <pre><code id="serve-command">node bridge.mjs serve</code></pre>
-            <button type="button" data-copy="serve-command" aria-label="Copy bridge start command" hidden>Copy</button>
-          </div>
-        </li>
-        <li>
-          <h3>Load your save and arm</h3>
-          <p>Launch Satisfactory through SMM and load your save. In a second PowerShell window in the bridge folder, check for <code>connected: true</code> and <code>game.ready: true</code>. Then run <code>arm</code> and choose a <a href="#presets">preset</a> below.</p>
-          <div class="fl-command">
-            <pre><code id="session-commands">node bridge.mjs status
-node bridge.mjs arm</code></pre>
-            <button type="button" data-copy="session-commands" aria-label="Copy status and arm commands" hidden>Copy</button>
-          </div>
-          <p>Once armed, you can try <code>node bridge.mjs trigger turn-around</code> while on foot in a test save. A bridge receipt confirms the request was queued.</p>
-        </li>
-        <li>
-          <h3>Stop events when you’re done</h3>
-          <p>Disarm to clear the queue and cancel undetonated drops. Living creatures and kill history are saved with the world.</p>
-          <div class="fl-command">
-            <pre><code id="disarm-command">node bridge.mjs disarm</code></pre>
-            <button type="button" data-copy="disarm-command" aria-label="Copy disarm command" hidden>Copy</button>
-          </div>
-        </li>
-      </ol>
-    </section>
-
-    <section class="fl-section" id="presets">
-      <h2>Pick an event</h2>
-      <p>Choose the effect in Lumia or use the preset name in Streamer.bot or PowerShell. Large requests run in paced waves as the game has room.</p>
-      <div class="fl-picker">
-        <label for="preset">Preset</label>
-        <select id="preset">
-          <option value="hog-swarm">Hog swarm</option>
-          <option value="alpha-hogs">Alpha hogs</option>
-          <option value="spitter-pack">Forest spitters</option>
-          <option value="stinger-pack">Small Stingers</option>
-          <option value="elite-stinger">Elite Stinger</option>
-          <option value="nobelisk-rain">Standard Nobelisks</option>
-          <option value="pulse-rain">Pulse Nobelisks</option>
-          <option value="gas-rain">Gas Nobelisks</option>
-          <option value="cluster-rain" selected>Cluster Nobelisks</option>
-          <option value="nuke-drop">Nuke Nobelisk</option>
-          <option value="nuke-carpet">Nuclear Carpet Bomb</option>
-          <option value="turn-around">Turn around</option>
-          <option value="creature-roulette">Creature Roulette</option>
-          <option value="surprise-me">Surprise Me</option>
-        </select>
-      </div>
-      <div class="fl-command">
-        <pre><code id="trigger-command">node bridge.mjs trigger cluster-rain</code></pre>
-        <button type="button" data-copy="trigger-command" aria-label="Copy selected preset command" hidden>Copy</button>
-      </div>
-      <div class="fl-table">
-        <table>
-          <caption class="fl-sr-only">Factory Live default presets, quantities and chat mappings</caption>
-          <thead><tr><th scope="col">Preset</th><th scope="col">Default event</th><th scope="col">Chat mapping</th></tr></thead>
-          <tbody>
-            <tr><th scope="row"><code>hog-swarm</code></th><td>80 hogs</td><td><code>!hogs</code></td></tr>
-            <tr><th scope="row"><code>alpha-hogs</code></th><td>12 alpha hogs</td><td><code>!alphas</code></td></tr>
-            <tr><th scope="row"><code>spitter-pack</code></th><td>24 forest spitters</td><td><code>!spitters</code></td></tr>
-            <tr><th scope="row"><code>stinger-pack</code></th><td>12 small Stingers</td><td><code>!stingers</code></td></tr>
-            <tr><th scope="row"><code>elite-stinger</code></th><td>1 Elite Stinger</td><td><code>!elitestinger</code></td></tr>
-            <tr><th scope="row"><code>nobelisk-rain</code></th><td>12 standard Nobelisks</td><td><code>!nobelisk</code></td></tr>
-            <tr><th scope="row"><code>pulse-rain</code></th><td>8 Pulse Nobelisks</td><td><code>!pulse</code></td></tr>
-            <tr><th scope="row"><code>gas-rain</code></th><td>6 Gas Nobelisks</td><td><code>!gas</code></td></tr>
-            <tr><th scope="row"><code>cluster-rain</code></th><td>10 Cluster Nobelisks</td><td><code>!cluster</code></td></tr>
-            <tr><th scope="row"><code>nuke-drop</code></th><td>1 Nuke Nobelisk</td><td><code>!nuke</code></td></tr>
-            <tr><th scope="row"><code>nuke-carpet</code></th><td>5 Nuke Nobelisks launched at least 4 seconds apart</td><td><code>!nukewave</code></td></tr>
-            <tr><th scope="row"><code>turn-around</code></th><td>Turn the host’s view 180° on foot</td><td><code>!turn</code></td></tr>
-            <tr><th scope="row"><code>creature-roulette</code></th><td>One random wave of alpha hogs, spitters, small Stingers, or an Elite Stinger</td><td><code>!roulette</code></td></tr>
-            <tr><th scope="row"><code>surprise-me</code></th><td>Turn Around or an Elite Stinger</td><td><code>!surprise</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>Living creature waves share a 224-point budget. Hogs count as one point, and tougher creatures count for more. The game spaces out new spawns and pauses them when frame times rise.</p>
-      <p>Each random preset has a 60-second default cooldown. It picks one available effect and shares that effect’s cooldown and queue limits with direct triggers. You can edit the choices and cooldowns in your local bridge config.</p>
-    </section>
-
-    <section class="fl-section" id="inventory">
-      <h2>Back up and restore your backpack</h2>
-      <p>From the bridge folder, run these host commands while your save is loaded and unpaused. They also work with the bridge disarmed. Each save has its own snapshot and recovery copy for the host’s main backpack.</p>
-      <ol class="fl-steps">
-        <li>
-          <h3>Take a snapshot</h3>
-          <p>Capture backpack slots, quantities, and item state. Taking a new snapshot replaces the previous one. Save the game to keep it across reloads.</p>
-          <div class="fl-command">
-            <pre><code id="inventory-snapshot">node bridge.mjs inventory snapshot</code></pre>
-            <button type="button" data-copy="inventory-snapshot" aria-label="Copy inventory snapshot command" hidden>Copy</button>
-          </div>
-        </li>
-        <li>
-          <h3>Check your backup</h3>
-          <p>See whether the host has a snapshot or recovery copy in the loaded save and check the result of the last operation.</p>
-          <div class="fl-command">
-            <pre><code id="inventory-status">node bridge.mjs inventory status</code></pre>
-            <button type="button" data-copy="inventory-status" aria-label="Copy inventory status command" hidden>Copy</button>
-          </div>
-        </li>
-        <li>
-          <h3>Restore the snapshot</h3>
-          <p>Clear the backpack and recreate the saved contents. Restore keeps a recovery copy of the contents it replaces, including items added after the snapshot.</p>
-          <div class="fl-command">
-            <pre><code id="inventory-restore">node bridge.mjs inventory restore</code></pre>
-            <button type="button" data-copy="inventory-restore" aria-label="Copy inventory restore command" hidden>Copy</button>
-          </div>
-        </li>
-        <li>
-          <h3>Undo a restore</h3>
-          <p>Use the recovery copy to get back the backpack contents from just before the restore. Save the game to keep your new inventory state.</p>
-          <div class="fl-command">
-            <pre><code id="inventory-undo">node bridge.mjs inventory undo</code></pre>
-            <button type="button" data-copy="inventory-undo" aria-label="Copy inventory undo command" hidden>Copy</button>
-          </div>
-        </li>
+        <li><h3>Get the Mod Manager</h3><p>Install <a href="https://smm.ficsit.app/">Satisfactory Mod Manager (SMM)</a> and select your Steam installation.</p></li>
+        <li><h3>Add the mod</h3><p>Search for <strong>FactoryLive Stream Integrations</strong>. Choose <strong>Change version → 0.9.0-chaos.6</strong>. SMM handles the Satisfactory Mod Loader dependency.</p></li>
+        <li><h3>Load a save</h3><p>Start Satisfactory and load a save as host. The bridge starts and arms automatically when the world is ready.</p></li>
       </ol>
     </section>
 
     <section class="fl-section" id="integrations">
       <h2>Connect your stream</h2>
-      <p>Run the bridge and your stream tool on the PC hosting Satisfactory. Bind each reward or chat command in one place when both tools are running.</p>
-      <div class="fl-integrations">
-        <article>
-          <h3>Lumia Stream</h3>
-          <p>Install the plugin, pick a Factory Live action, and attach it to Twitch Points, a chat command, or an alert. Includes a bridge check you can run with the game closed.</p>
-          <a href="lumia/">Lumia Stream setup guide →</a>
-        </article>
-        <article>
-          <h3>Streamer.bot</h3>
-          <p>Set up a C# action for a reward, command, or hotkey. Use the optional WebSocket guide to map many chat commands and rewards at once.</p>
-          <a href="streamerbot/">Streamer.bot setup guide →</a>
-        </article>
-      </div>
+      <ul>
+        <li><a href="lumia/">Lumia Stream</a> for ready-made chat commands and Twitch rewards.</li>
+        <li><a href="streamerbot/">Streamer.bot</a> for your own commands, alerts, and rewards.</li>
+        <li><a href="chaos/#webhook">HTTP webhooks</a> for other local tools.</li>
+      </ul>
+    </section>
+
+    <section class="fl-section" id="presets">
+      <h2>Choose an effect</h2>
+      <p>Spawn a single creature or a wave, drop Nobelisks, turn the Pioneer around, or make them drop equipment. <a href="chaos/#presets">See preset IDs</a>.</p>
     </section>
 
     <section class="fl-section" id="troubleshooting">
-      <h2>Troubleshooting</h2>
-      <div class="fl-faq">
-        <details><summary>Satisfactory reports a missing SML plugin</summary><p>Enable Mods and Satisfactory Mod Loader 3.12 in the same SMM profile. Check that the Factory Live folder is named <code>FactoryLive</code> and the <code>.uplugin</code> file is directly inside it. <a href="https://docs.ficsit.app/satisfactory-modding/latest/ManualInstallDirections.html">Satisfactory manual install guide</a></p></details>
-        <details><summary>The bridge says the game is disconnected or unready</summary><p>Load a save as the host, unpause and regain control of your pioneer. Run <code>node bridge.mjs status</code> from the bridge folder. Arm the bridge again after a world change or lost heartbeat.</p></details>
-        <details><summary>A webhook returns 401, 409 or 429</summary><p><code>401</code> means the bridge rejected the token. <code>409</code> means the effect is unavailable or the game needs to be ready and armed. <code>429</code> means a cooldown, rate limit, queue cap or frame-time pause is active. Wait for capacity before retrying.</p></details>
-        <details><summary>How can I check which mobs or drops appeared?</summary><p><code>status</code> reports the save’s mob counters and the session’s Nobelisk launches, impacts, expirations and cancellations. In the game console, use <code>FactoryLive.Mobs</code> to see individual records. The game logs are in <code>%LOCALAPPDATA%\FactoryGame\Saved\Logs</code>.</p></details>
-        <details><summary>Restore says the snapshot is unavailable or incompatible</summary><p>Use the same save and host account that made the snapshot. Check <code>node bridge.mjs inventory status</code>. A restore requires compatible slots for the saved stacks.</p></details>
-      </div>
-      <p class="fl-guide-link"><a href="downloads/0.8.5/README.txt" download>Download the full README</a></p>
+      <h2>If effects don’t start</h2>
+      <p>Check that SMM has <strong>Mods on</strong> and shows Factory Live <strong>0.9.0-chaos.6</strong> as installed. Close any older standalone Factory Live bridge before restarting the game.</p>
     </section>
   </main>
   <p class="fl-sr-only" id="copy-feedback" role="status"></p>
-  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.8.5</span></footer>
+  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.9.0-chaos.6</span></footer>
 </body>
 </html>
