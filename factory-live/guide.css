@@ -126,6 +126,14 @@
 .fl-section a { color: var(--cyan); text-underline-offset: .22em; }
 .fl-section a:hover { color: var(--text); }
 
+.fl-demo-video {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  border-radius: 12px;
+}
+
 .fl-note {
   padding: 11px 16px;
   border-left: 3px solid var(--fl-accent);
