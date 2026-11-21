@@ -13,8 +13,10 @@ public class CPHInline
     // Leave Mob empty to use Preset.
     private const string Mob = "";
     private const int Quantity = 1;
+    // Set false for !nukem or wildlife, which should use a fixed multiplier of 1.
+    private static readonly bool UseStreamMultiplier = true;
     // For a moderator !chaos action only: use the number in chat instead of the reward multiplier.
-    private const bool UseChatMultiplier = false;
+    private static readonly bool UseChatMultiplier = false;
     private static readonly HttpClient Client = new HttpClient(new HttpClientHandler { UseProxy = false })
         { Timeout = TimeSpan.FromSeconds(3) };
 
@@ -22,7 +24,7 @@ public class CPHInline
     {
         try
         {
-            int multiplier = CPH.GetGlobalVar<int?>("FactoryLiveMultiplier", true) ?? 1;
+            int multiplier = UseStreamMultiplier ? (CPH.GetGlobalVar<int?>("FactoryLiveMultiplier", true) ?? 1) : 1;
             if (UseChatMultiplier)
             {
                 CPH.TryGetArg("rawInput", out string raw);

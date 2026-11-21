@@ -48,6 +48,33 @@
       </ol>
       <p>A response of accepted means queued, not necessarily spawned. The action reads the bridge token automatically; keep it private.</p>
     </section>
+    <section class="fl-section" id="reward-defaults">
+      <h2>Bundled Lumia reward defaults</h2>
+      <p>Use these settings to recreate the rewards included with the Lumia plugin. These are template defaults, not a streamer's current live prices. You can change the cost and cooldown to suit your channel. Bridge cooldowns also apply.</p>
+      <div class="fl-table"><table>
+        <thead><tr><th scope="col">Factory Live reward</th><th scope="col">Preset or action</th><th scope="col">Points</th><th scope="col">Cooldown</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Alpha Hog Wave</th><td><code>alpha-hogs</code></td><td>500</td><td>30 sec</td></tr>
+          <tr><th scope="row">Hog Wave</th><td><code>hog-swarm</code></td><td>750</td><td>30 sec</td></tr>
+          <tr><th scope="row">Forest Spitter Wave</th><td><code>spitter-pack</code></td><td>500</td><td>25 sec</td></tr>
+          <tr><th scope="row">Stinger Pack</th><td><code>stinger-pack</code></td><td>750</td><td>35 sec</td></tr>
+          <tr><th scope="row">Elite Stinger</th><td><code>elite-stinger</code></td><td>250</td><td>45 sec</td></tr>
+          <tr><th scope="row">Hatcher Trial</th><td><code>crab-hatcher</code></td><td>750</td><td>60 sec</td></tr>
+          <tr><th scope="row">Standard Nobelisks</th><td><code>nobelisk-rain</code></td><td>500</td><td>5 sec</td></tr>
+          <tr><th scope="row">Pulse Nobelisks</th><td><code>pulse-rain</code></td><td>500</td><td>7 sec</td></tr>
+          <tr><th scope="row">Gas Nobelisks</th><td><code>gas-rain</code></td><td>750</td><td>8 sec</td></tr>
+          <tr><th scope="row">Carpet Bomb</th><td><code>cluster-rain</code></td><td>750</td><td>10 sec</td></tr>
+          <tr><th scope="row">Nuke Drop</th><td><code>nuke-drop</code></td><td>750</td><td>20 sec</td></tr>
+          <tr><th scope="row">Nuclear Carpet Bomb</th><td><code>nuke-carpet</code></td><td>1,000</td><td>45 sec</td></tr>
+          <tr><th scope="row">Turn Around</th><td><code>turn-around</code></td><td>100</td><td>60 sec</td></tr>
+          <tr><th scope="row">Drop Equipment</th><td><code>equipment-drop</code></td><td>500</td><td>60 sec</td></tr>
+          <tr><th scope="row">Creature Roulette</th><td><code>creature-roulette</code></td><td>250</td><td>60 sec</td></tr>
+          <tr><th scope="row">Surprise Me</th><td><code>surprise-me</code></td><td>250</td><td>60 sec</td></tr>
+          <tr><th scope="row">Multiplier +1</th><td>Multiplier action</td><td>50</td><td>0 sec</td></tr>
+        </tbody>
+      </table></div>
+      <p>Each full reward name begins with “Factory Live”. The <a href="../downloads/streamerbot/README.md">complete setup guide</a> also lists every preset and chat command.</p>
+    </section>
     <section class="fl-section" id="multiplier">
       <h2>Match the +1 multiplier reward</h2>
       <p>Create a Twitch reward costing <strong>50 points</strong> with a maximum of <strong>15 redemptions per stream</strong>. Attach an action containing <a href="../downloads/streamerbot/IncreaseMultiplier.cs">IncreaseMultiplier.cs</a>, and use a non-concurrent action queue so simultaneous redemptions are counted. It starts at 1× and reaches 16× after fifteen uses, announcing each increase in chat.</p>
@@ -55,7 +82,7 @@
     </section>
     <section class="fl-section" id="chat">
       <h2>Moderator chat commands</h2>
-      <p>For <code>!chaos</code>, make a moderator-only command and attach a copy of Trigger.cs with <code>Preset = "chaos-mode"</code> and <code>UseChatMultiplier = true</code>. <code>!chaos 10</code> uses 10 per placement; no valid number uses 1. For <code>!nukem</code>, use <code>Preset = "nobelisk-chaos"</code>. The <a href="../downloads/streamerbot/README.md">guide</a> explains its multiplier setting.</p>
+      <p>For <code>!chaos</code>, make a moderator-only command and attach a copy of Trigger.cs with <code>Preset = "chaos-mode"</code> and <code>UseChatMultiplier = true</code>. <code>!chaos 10</code> uses 10 per placement; no valid number uses 1. For <code>!nukem</code>, use <code>Preset = "nobelisk-chaos"</code>, <code>UseChatMultiplier = false</code> and <code>UseStreamMultiplier = false</code>, matching Lumia's fixed 1× command.</p>
     </section>
     <section class="fl-section" id="death-counter">
       <h2>Death alert</h2>
