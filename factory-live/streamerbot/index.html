@@ -41,10 +41,10 @@
     <section class="fl-section" id="action">
       <h2>Create a Twitch reward action</h2>
       <ol class="fl-steps">
-        <li>Connect Twitch in Streamer.bot. Run the game and Streamer.bot on the same Windows PC, then load a save as host.</li>
-        <li>Create or select a Twitch channel-point reward, create an action, then add a <strong>Twitch → Channel Point Reward Redemption</strong> trigger for that reward.</li>
-        <li>Add a <strong>Core → C# → Execute C# Code</strong> sub-action. Paste <a href="../downloads/streamerbot/Trigger.cs">Trigger.cs</a>, set <code>Preset</code> near the top to the desired ID from the <a href="../chaos/#presets">preset table</a>, leave <code>Mob</code> empty, compile and save.</li>
-        <li>Repeat for each reward, choosing its own preset, cost and cooldown. The <a href="../downloads/streamerbot/README.md">complete mapping and setup guide</a> covers every preset and creature endpoints. These are copy-and-paste scripts, not an import.</li>
+        <li><p>Connect Twitch in Streamer.bot. Run the game and Streamer.bot on the same Windows PC, then load a save as host.</p></li>
+        <li><p>Create or select a Twitch channel-point reward, create an action, then add a <strong>Twitch → Channel Point Reward Redemption</strong> trigger for that reward.</p></li>
+        <li><p>Add a <strong>Core → C# → Execute C# Code</strong> sub-action. Paste <a href="../downloads/streamerbot/Trigger.cs">Trigger.cs</a>, set <code>Preset</code> near the top to the desired ID from the <a href="../chaos/#presets">preset table</a>, leave <code>Mob</code> empty, compile and save.</p></li>
+        <li><p>Repeat for each reward, choosing its own preset, cost and cooldown. The <a href="../downloads/streamerbot/README.md">complete mapping and setup guide</a> covers every preset and creature endpoints. These are copy-and-paste scripts, not an import.</p></li>
       </ol>
       <p>A response of accepted means queued, not necessarily spawned. The action reads the bridge token automatically; keep it private.</p>
     </section>

@@ -65,9 +65,9 @@
       <h2>Set up the stream multiplier</h2>
       <p>The multiplier starts at <strong>1×</strong>. Each use of the <strong>+1 multiplier</strong> reward increases it by one, and creature rewards use the current multiplier in addition to their own settings. A base quantity of 5 at 3× requests 15 creatures. Fifteen increases reach <strong>16×</strong>.</p>
       <ol class="fl-steps">
-        <li>Import the bundled multiplier reward. Connect it to a Twitch channel-point reward, set its price to <strong>50 points</strong>, and set Twitch’s <strong>maximum redemptions per stream</strong> to <strong>15</strong>. Sync the reward with Twitch.</li>
-        <li>Add the plugin’s <strong>Reset Stream Multiplier</strong> action to Lumia’s Twitch <strong>Stream Live</strong> alert so a new stream starts at 1×. The bundled reward also tracks the session when its session-start variable is available.</li>
-        <li>The action sends <code>the current multiplier is now X</code> to Twitch chat. Connect the Lumia chatbot to Twitch so it can post. For overlays, the variable is <code>{{factory_live_stream_multiplier}}</code>.</li>
+        <li><p>Import the bundled multiplier reward. Connect it to a Twitch channel-point reward, set its price to <strong>50 points</strong>, and set Twitch’s <strong>maximum redemptions per stream</strong> to <strong>15</strong>. Sync the reward with Twitch.</p></li>
+        <li><p>Add the plugin’s <strong>Reset Stream Multiplier</strong> action to Lumia’s Twitch <strong>Stream Live</strong> alert so a new stream starts at 1×. The bundled reward also tracks the session when its session-start variable is available.</p></li>
+        <li><p>The action sends <code>the current multiplier is now X</code> to Twitch chat. Connect the Lumia chatbot to Twitch so it can post. For overlays, the variable is <code>{{factory_live_stream_multiplier}}</code>.</p></li>
       </ol>
       <p>The multiplier does not make every effect a creature spawn. Large numbers and repeated redeems can overwhelm the game.</p>
     </section>
