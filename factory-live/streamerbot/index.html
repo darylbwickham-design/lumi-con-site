@@ -30,7 +30,7 @@
         <p class="lede">Run Factory Live effects from Twitch rewards, chat commands, or alerts.</p>
         <div class="hero-actions">
           <a class="button primary" href="../#install">Install the game mod</a>
-          <a class="button secondary" href="../downloads/0.9.0-chaos.17/StreamerBotWebhook.cs">Get the C# action</a>
+          <a class="button secondary" href="../downloads/streamerbot/Trigger.cs">Get the C# action</a>
         </div>
       </div>
     </section>
@@ -39,29 +39,31 @@
 
 
     <section class="fl-section" id="action">
-      <h2>Create an action</h2>
+      <h2>Create a Twitch reward action</h2>
       <ol class="fl-steps">
-        <li><h3>Load a save</h3><p>Run Satisfactory and Streamer.bot on the same Windows PC. The Factory Live bridge starts when the host save is ready.</p></li>
-        <li><h3>Add the script</h3><p>In Streamer.bot, create an action. Add an <strong>Execute C# Code</strong> sub-action, open its editor, then paste the Factory Live script from the link above.</p></li>
-        <li><h3>Pick a preset</h3><p>In the constants near the top of the script, set <code>Preset</code> to <code>turn-around</code> for a small first test or <code>nobelisk-chaos</code> for the fireworks show. Compile and save the action, then run it from Streamer.bot.</p></li>
+        <li>Connect Twitch in Streamer.bot. Run the game and Streamer.bot on the same Windows PC, then load a save as host.</li>
+        <li>Create or select a Twitch channel-point reward, create an action, then add a <strong>Twitch → Channel Point Reward Redemption</strong> trigger for that reward.</li>
+        <li>Add a <strong>Core → C# → Execute C# Code</strong> sub-action. Paste <a href="../downloads/streamerbot/Trigger.cs">Trigger.cs</a>, set <code>Preset</code> near the top to the desired ID from the <a href="../chaos/#presets">preset table</a>, leave <code>Mob</code> empty, compile and save.</li>
+        <li>Repeat for each reward, choosing its own preset, cost and cooldown. The <a href="../downloads/streamerbot/README.md">complete mapping and setup guide</a> covers every preset and creature endpoints. These are copy-and-paste scripts, not an import.</li>
       </ol>
+      <p>A response of accepted means queued, not necessarily spawned. The action reads the bridge token automatically; keep it private.</p>
     </section>
-
-    <section class="fl-section"><h2>Make a five-hatcher reward</h2>
-      <p>Duplicate the working action and name it <strong>Five Hatchers</strong>. In its C# sub-action, set <code>Mob = "crab-hatcher"</code>, <code>Quantity = 1</code>, and <code>Multiplier = 5</code>. Compile and save. Link the reward below. A nonempty Mob selects that creature; an empty Mob runs the named preset. Set Multiplier back to 1 for wildlife and Nobelisks.</p></section>
-    <section class="fl-section" id="rewards">
-      <h2>Connect a Twitch reward</h2>
-      <p>Add a <strong>Twitch → Channel Reward → Reward Redemption</strong> trigger to the action, then choose your reward.</p>
+    <section class="fl-section" id="multiplier">
+      <h2>Match the +1 multiplier reward</h2>
+      <p>Create a Twitch reward costing <strong>50 points</strong> with a maximum of <strong>15 redemptions per stream</strong>. Attach an action containing <a href="../downloads/streamerbot/IncreaseMultiplier.cs">IncreaseMultiplier.cs</a>, and use a non-concurrent action queue so simultaneous redemptions are counted. It starts at 1× and reaches 16× after fifteen uses, announcing each increase in chat.</p>
+      <p>Attach <a href="../downloads/streamerbot/ResetMultiplier.cs">ResetMultiplier.cs</a> to Twitch <strong>Stream Online</strong> to reset to 1× at the start of each stream. The other example reward scripts use this value. Lumia and Streamer.bot keep separate multiplier and death counts: connect each reward to one app only or it will fire twice.</p>
     </section>
-
     <section class="fl-section" id="chat">
-      <h2>Connect a chat command</h2>
-      <p>Create a command in Streamer.bot and add its <strong>Command Triggered</strong> trigger to the action. For <code>!nukem</code> or <code>!chaos</code>, limit access to the broadcaster and moderators.</p>
+      <h2>Moderator chat commands</h2>
+      <p>For <code>!chaos</code>, make a moderator-only command and attach a copy of Trigger.cs with <code>Preset = "chaos-mode"</code> and <code>UseChatMultiplier = true</code>. <code>!chaos 10</code> uses 10 per placement; no valid number uses 1. For <code>!nukem</code>, use <code>Preset = "nobelisk-chaos"</code>. The <a href="../downloads/streamerbot/README.md">guide</a> explains its multiplier setting.</p>
     </section>
-
+    <section class="fl-section" id="death-counter">
+      <h2>Death alert</h2>
+      <p>Run <a href="../downloads/streamerbot/DeathCounter.cs">DeathCounter.cs</a> from a recurring two-second timer to count observed deaths and send <code>the pioneer has died X times</code>. Put <a href="../downloads/streamerbot/ResetDeaths.cs">ResetDeaths.cs</a> on a private reset command. Polling is best effort: deaths while offline or multiple deaths between polls can be missed, and a recent death may be counted on first connection.</p>
+    </section>
     <section class="fl-section" id="troubleshooting">
-      <h2>If the action fails</h2>
-      <p>Load a save as host, then check the <code>factoryLiveResult</code> argument. For custom HTTP calls, see the <a href="../chaos/#webhook">webhook endpoints and examples</a>.</p>
+      <h2>If an action fails</h2>
+      <p>Load a save as host and check the Streamer.bot log for compilation or bridge errors. Check Twitch connectivity if chat messages do not appear. For direct HTTP calls, see the <a href="../chaos/#webhook">webhook endpoints and examples</a>.</p>
     </section>
   </main>
 </body>
