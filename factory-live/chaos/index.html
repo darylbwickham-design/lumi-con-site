@@ -83,7 +83,7 @@
     </section>
 
     <section class="fl-section" id="variants">
-      <h2>Variant numbers and endpoint names</h2><p>For a creature, append its name in code below to <code>/v1/mobs/</code>. The last column gives the maximum base quantity. Chaos draws only from hostile creatures.</p>
+      <h2>Variant numbers and endpoint names</h2><p>For a creature, append its name in code below to <code>/v1/mobs/</code>. For Nobelisks, use <code>POST /v1/trigger</code> with <code>entityId</code>, <code>variant</code>, and <code>qty</code>. The last column gives the maximum base quantity. Chaos draws only from hostile creatures.</p>
       <div class="fl-table"><table>
         <caption class="fl-sr-only">Entity and variant numbers for the webhook</caption>
         <thead><tr><th scope="col">Entity ID</th><th scope="col">Variant</th><th scope="col">Spawn</th><th scope="col">Max per request</th></tr></thead>
