@@ -45,13 +45,17 @@
       <h2>Install Factory Live</h2>
       <ol class="fl-steps">
         <li><h3>Get the Mod Manager</h3><p>Install <a href="https://smm.ficsit.app/">Satisfactory Mod Manager (SMM)</a> and select your Steam installation.</p></li>
-        <li><h3>Add the mod</h3><p>Search for <strong>FactoryLive Stream Integrations</strong>. Select your play profile, switch <strong>Mods on</strong>, and install the compatible version SMM offers. For build 520140, use chaos.22 with SML 3.12.1 when it is available in SMM; until then use the manual download below. On build 517554 use chaos.16. SMM handles the Satisfactory Mod Loader dependency.</p></li>
+        <li><h3>Install or update the mod</h3><p>Close Satisfactory. In SMM, select your play profile, switch <strong>Mods on</strong>, and search for <strong>FactoryLive Stream Integrations</strong>. For Steam build 520140, install <strong>0.9.0-chaos.23</strong> with SML 3.12.1. If you already have Factory Live, click <strong>Check for updates</strong>. For the older build 517554, choose chaos.16.</p></li>
         <li><h3>Load a save</h3><p>Start Satisfactory and load a save as host. The bridge starts and arms automatically when the world is ready.</p></li>
       </ol>
     </section>
 
     <section class="fl-section"><h2>Manual downloads</h2>
-      <p>Choose the archive for your Steam game build. Download <a href="downloads/0.9.0-chaos.22/FactoryLive_0.9.0-chaos.22_Windows_Steam.zip" download>chaos.22 for build 520140</a>, or <a href="downloads/0.9.0-chaos.16/FactoryLive_0.9.0-chaos.16_Windows_Steam.zip" download>chaos.16 for build 517554</a>. Install a compatible SML through SMM in the intended profile, then close the game. In Steam, open Satisfactory’s <strong>Manage → Browse local files</strong>. Back up any existing <code>FactoryGame/Mods/FactoryLive</code> folder outside the Mods folder. Extract the ZIP’s <code>FactoryLive</code> folder into <code>FactoryGame/Mods</code>. Check that <code>FactoryLive/FactoryLive.uplugin</code> is directly inside Mods under that path. A profile change in SMM can replace a manual installation.</p>
+      <ul>
+        <li><a href="downloads/0.9.0-chaos.23/FactoryLive_0.9.0-chaos.23_Windows_Steam.zip" download>Chaos.23 for Steam build 520140</a> · Includes the <a href="chaos/#respawn">crowded-save respawn fix</a>.</li>
+        <li><a href="downloads/0.9.0-chaos.16/FactoryLive_0.9.0-chaos.16_Windows_Steam.zip" download>Chaos.16 for Steam build 517554</a></li>
+      </ul>
+      <p>Install a compatible SML through SMM in your play profile, then close the game. In Steam, open Satisfactory’s <strong>Manage → Browse local files</strong>. Back up any existing <code>FactoryGame/Mods/FactoryLive</code> folder outside the Mods folder. Extract the ZIP’s <code>FactoryLive</code> folder into <code>FactoryGame/Mods</code>. You should see <code>FactoryGame/Mods/FactoryLive/FactoryLive.uplugin</code>. Switching SMM profiles can replace a manual installation.</p>
       <p>Launch the game, load a save as host, then follow the guide for your streaming app. Try Turn Around first. If the Pioneer turns, your chat integration is reaching this world.</p>
     </section>
     <section class="fl-section" id="integrations">
@@ -74,6 +78,6 @@
     </section>
   </main>
   <p class="fl-sr-only" id="copy-feedback" role="status"></p>
-  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.9.0-chaos.22</span></footer>
+  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.9.0-chaos.23</span></footer>
 </body>
 </html>
