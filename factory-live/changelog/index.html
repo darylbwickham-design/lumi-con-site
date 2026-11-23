@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Factory Live changelog | LumiCon</title>
+  <meta name="description" content="Factory Live changes since Chaos.22, including mob recovery, spawn queue fixes, and Pioneer Pop strengths.">
+  <link rel="canonical" href="https://lumi-con.com/factory-live/changelog/">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="../guide.css">
+</head>
+<body>
+  <a class="fl-skip" href="#changelog">Skip to changelog</a>
+  <header class="site-header">
+    <a class="brand" href="../../" aria-label="LumiCon home">
+      <img src="../../assets/lumicon-logo.png" alt="" width="42" height="42">
+      <span><strong>LumiCon</strong><small>Stream controller platform</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Factory Live navigation">
+      <a href="../">Factory Live</a>
+      <a href="../lumia/">Lumia Stream</a>
+      <a href="../streamerbot/">Streamer.bot</a>
+      <a href="./" aria-current="page">Changelog</a>
+    </nav>
+  </header>
+  <main class="fl-guide fl-platform-guide" id="changelog">
+    <article class="fl-section" aria-labelledby="title">
+      <h1 id="title">Factory Live changelog</h1>
+<p>Factory Live 0.9.8 targets the Windows Steam client, build 520140, with SML 3.12.1 or a compatible 3.x release. These changes cover the builds after 0.9.0-chaos.22.</p>
+<h2 id="section">0.9.8</h2>
+<ul>
+<li>Added <code>5x</code> and <code>20x</code> to Pioneer Pop. They launch at 7,250 and 29,000 cm/s respectively, up from 1,450 cm/s at Standard. A 20× landing can be fatal.</li>
+<li>The game log records the upward speed when a bounce fires.</li>
+</ul>
+<h2 id="section-1">0.9.7</h2>
+<ul>
+<li>Give Factory Live mobs persistent actor identities and reconcile their alive or dead state before saving. If a previously killed actor with a matching identity appears on reload, retire it instead of letting it come back.</li>
+<li>Read Crab Hatcher health directly to detect deaths that the regular creature death event misses. Older saves without stable actor identities may still have mobs that cannot be matched reliably.</li>
+</ul>
+<h2 id="section-2">0.9.6</h2>
+<ul>
+<li>Retry a blocked creature placement after five seconds or once the Pioneer moves ten metres. Keep the requested multiplier with the queued placement.</li>
+</ul>
+<h2 id="section-3">0.9.5</h2>
+<ul>
+<li>Added Pioneer Pop in Small, Standard, and High. It keeps horizontal momentum and sets upward velocity when the Pioneer is ready and grounded. The bridge enforces a 12-second cooldown.</li>
+</ul>
+<h2 id="section-4">0.9.4</h2>
+<ul>
+<li>In solo play, give full AI to up to 48 Factory Live hostile ground creatures by default. Prioritize the current 25-metre chunk, then nearby creatures within 70 metres. The others stay visible and damageable, with less frequent ticks and suspended pursuit and perception.</li>
+<li>Restore normal AI when another player joins. Hatchers, fliers, and peaceful wildlife use their normal AI handling.</li>
+<li>Log HUD OS show, close, and respawn timing. Release the queue hold three seconds after native respawn readiness if the HUD close callback never arrives.</li>
+</ul>
+<h2 id="section-5">0.9.3</h2>
+<ul>
+<li>Give Nobelisks the first available spawn slot when mob work is also waiting. Keep each launched charge tracked until it detonates.</li>
+<li>Double the mob recovery budget from four to eight actor removals per pass, within a two-millisecond time slice.</li>
+</ul>
+<h2 id="section-6">0.9.2</h2>
+<ul>
+<li>Mob recovery clears earlier queued effects and holds new redeems while cleanup runs. It keeps the bridge's armed setting and honors a manual disarm during cleanup.</li>
+</ul>
+<h2 id="chaos.24-previews">0.9.1 · Chaos.24 previews</h2>
+<ul>
+<li>Added <code>FactoryLive.RecoverMobs confirm</code> and authenticated <code>POST /v1/recover-mobs</code>. Recovery removes Factory Live's spawned mobs, corpses, and hatchlings in batches. It can continue after a save reload and leaves native wildlife alone.</li>
+<li>Keep pending effects through respawn and temporary game holds. Retry work the game has yet to acknowledge, retain blocked creature, Nobelisk, and player effects, and let an eligible lane proceed while another lane waits.</li>
+<li>Coalesce duplicate AI sense-filter changes during normal solo play as well as during respawn.</li>
+</ul>
+<h2 id="chaos.23-proximity-previews">0.9.0-chaos.23 · Proximity previews</h2>
+<ul>
+<li>Pause tracked hostile brains and ticks in batches during solo respawn. Release targets on the dead Pioneer, pause distant brains, and stagger their return. Defer duplicate sight rebuilds and run at most one native rebuild per frame during respawn.</li>
+<li>Preserve the armed preference when game heartbeats pause. Split oversized Nobelisk requests into batches that fit the available game capacity.</li>
+<li>Log native possession and respawn timings. Skip unneeded controller audio work in known keyboard-only solo sessions.</li>
+</ul>
+      <p><a href="https://ficsit.app/mod/FactoryLive">Open Factory Live on ficsit.app</a> · <a href="CHANGELOG.md" download>Download the changelog</a></p>
+    </article>
+  </main>
+  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.8</span></footer>
+</body>
+</html>

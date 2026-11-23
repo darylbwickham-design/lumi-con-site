@@ -30,7 +30,7 @@
         <p class="lede">Set up Satisfactory Stream Integration with ready-made chat commands and Twitch reward templates.</p>
         <div class="hero-actions">
           <a class="button primary" href="https://ficsit.app/mod/FactoryLive">Get Factory Live in SMM</a>
-          <a class="button secondary" href="../downloads/lumia/FactoryLive_Lumia_1.7.2.lumiaplugin" download>Download the Lumia plugin</a>
+          <a class="button secondary" href="../downloads/lumia/FactoryLive_Lumia_1.7.5.lumiaplugin" download>Download Lumia plugin 1.7.5</a>
         </div>
       </div>
     </section>
@@ -42,8 +42,8 @@
       <h2>Set up the game and plugin</h2>
       <ol class="fl-steps">
         <li><h3>Install the game mod</h3><p>Follow the <a href="../#install">Satisfactory Mod Manager steps</a>. Load a save as host so the bridge can start.</p></li>
-        <li><h3>Install the Lumia plugin</h3><p>In Lumia Stream 9.4, go to <strong>Settings → Plugins</strong> and search Marketplace for <strong>Satisfactory Stream Integration</strong>. Enable the plugin. Version <strong>1.7.2</strong> adds the stream multiplier and death counter. If Marketplace offers an earlier version, download the plugin above, then go to <strong>Installed → Install Manually</strong> and select the downloaded file.</p></li>
-        <li><h3>Import the commands you want</h3><p>When Lumia asks to install bundled commands, choose <strong>Install</strong>. Select <strong>Chat Commands</strong> for <code>!chaos</code> and <code>!nukem</code>. For rewards, select <strong>Use file target (Twitch Points Commands)</strong>. Skip any duplicates.</p></li>
+        <li><h3>Install the Lumia plugin</h3><p>In Lumia Stream 9.4 or later, open <strong>Settings → Plugins</strong> and find <strong>Satisfactory Stream Integration</strong>. To install the download above, go to <strong>Installed → Install Manually</strong>, open the <code>.lumiaplugin</code> file, and enable the plugin. Use Factory Live 0.9.8 for both new bounce strengths.</p></li>
+        <li><h3>Import the commands you want</h3><p>Version 1.7.5 includes two chat commands and 19 Twitch reward templates. When Lumia asks to install bundled commands, choose <strong>Install</strong>. Select <strong>Chat Commands</strong> for <code>!chaos</code> and <code>!nukem</code>. Use <strong>Use file target (Twitch Points Commands)</strong> for rewards. Skip any you already have.</p></li>
       </ol>
     </section>
 
@@ -54,6 +54,11 @@
         <li>Open <strong>Commands → Twitch Points</strong>, then click <strong>Sync with Twitch</strong>. Create or link the rewards you want.</li>
         <li>Check prices and permissions before enabling rewards. Prices and cooldowns are yours to change.</li>
       </ol>
+      <ul>
+        <li><strong>Boing Voyage (5x Bounce)</strong> launches the Pioneer at 5× force. The template costs 25 points and has a 15-second shared cooldown.</li>
+        <li><strong>Fall Damage Express (20x Bounce)</strong> launches the Pioneer at 20× force. The landing can be fatal. The template costs 100 points and has a 30-second shared cooldown.</li>
+      </ul>
+      <p>The two bounce strengths are fixed. See the <a href="../chaos/#smaller-waves">smaller creature wave setup</a> if you use the stream multiplier with your mob rewards.</p>
     </section>
 
     <section class="fl-section" id="chat-and-alerts">
@@ -82,12 +87,12 @@
 
     <section class="fl-section" id="bridge-controls">
       <h2>Check or pause the bridge</h2>
-      <p>Use <strong>Check Bridge</strong> to see whether the game is ready. Keep <strong>Disarm Bridge</strong> on a private button to stop new effects and clear the queue. Use <strong>Arm Bridge</strong> to resume.</p>
+      <p>Use <strong>Check Bridge</strong> to see whether the world is ready. <strong>Disarm Bridge</strong> clears queued effects. Use <strong>Arm Bridge</strong> to resume. Keep the <a href="../chaos/#recovery">mob recovery command</a> private for clearing creatures already spawned by Factory Live.</p>
     </section>
 
     <section class="fl-section" id="migrate">
       <h2>Update an existing !chaos command</h2>
-      <p>Install <strong>Satisfactory Stream Integration</strong> version 1.7.2 over your existing plugin to keep its action bindings. In <strong>Commands → Chat Commands</strong>, edit <code>!chaos</code>. Under <strong>Actions → Start of Command</strong>, replace the old Chaos preset action with <strong>Mob Chaos</strong>. Enter <code>{{message}}</code> under <strong>Mobs per placement</strong> and save. Keep your moderator permissions and cooldown. With no number, the command uses one mob per placement. Whole numbers from 1 to 100 are supported.</p>
+      <p>Install version 1.7.5 over your existing <strong>Satisfactory Stream Integration</strong> plugin to keep its action bindings. In <strong>Commands → Chat Commands</strong>, edit <code>!chaos</code>. Under <strong>Actions → Start of Command</strong>, select <strong>Mob Chaos</strong>. Enter <code>{{message}}</code> under <strong>Mobs per placement</strong> and save. Keep your moderator permissions and cooldown. With no number, the command uses one mob per placement. Whole numbers from 1 to 100 are supported.</p>
     </section>
   </main>
 </body>

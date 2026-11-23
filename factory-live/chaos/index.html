@@ -32,7 +32,7 @@
           <a class="button primary" href="https://ficsit.app/mod/FactoryLive">Get the mod in SMM</a>
           <a class="button secondary" href="../lumia/">Set up Lumia Stream</a>
         </div>
-        <p class="fl-platform">0.9.0-chaos.23 · Windows Steam build 520140 · SML 3.12.1</p>
+        <p class="fl-platform">0.9.8 · Windows Steam build 520140 · SML 3.12.1</p>
       </div>
     </section>
     <aside class="fl-section fl-warning" aria-label="Crash warning"><strong>Crash warning</strong>
@@ -41,7 +41,8 @@
 
     <nav class="fl-contents" aria-label="On this page">
       <a href="#nukem-demo">Watch the demo</a><a href="#install">Install</a><a href="#integrations">Lumia and Streamer.bot</a>
-      <a href="#webhook">StreamElements webhook</a><a href="#variants">Variant numbers</a><a href="#presets">Preset list</a>
+      <a href="#webhook">HTTP webhooks</a><a href="#variants">Variant numbers</a><a href="#presets">Preset list</a>
+      <a href="#smaller-waves">Smaller waves</a><a href="#recovery">Recover spawned mobs</a><a href="../changelog/">Changelog</a>
     </nav>
 
     <section class="fl-section" id="nukem-demo" aria-labelledby="nukem-demo-title">
@@ -59,12 +60,12 @@
       <p>Install the version for your game build using the <a href="../#install">installation guide</a>, then load a save as host. The bundled bridge starts and arms automatically. If you used the old standalone bridge, close it before launching Satisfactory.</p>
       <h3 id="respawn">Faster respawns in crowded saves</h3>
       <p>When you right-click to respawn, Factory Live spreads creature sight updates across frames. With 1,763 tracked mobs alive, the longest pauses in two single-player tests were 1.06 seconds and 0.53 seconds. On the previous preview, each test had a pause over 50 seconds.</p>
-      <p>Your existing Lumia Stream and Streamer.bot redeems work with this update.</p>
+      <p>Factory Live 0.9.8 keeps the same preset IDs and named mob endpoints. Use the <a href="../changelog/">changelog</a> for fixes and compatibility details.</p>
     </section>
 
     <section class="fl-section" id="integrations">
       <h2>Connect your stream</h2>
-      <p>Use the <a href="../lumia/">Lumia Stream guide</a> for the bundled commands and Twitch rewards, or the <a href="../streamerbot/">Streamer.bot guide</a> for a C# action.</p>
+      <p>Use the <a href="../lumia/">Lumia Stream guide</a> for bundled commands and Twitch rewards, or the <a href="../streamerbot/">Streamer.bot guide</a> for preset, variant, bounce, and operator actions.</p>
     </section>
 
     <section class="fl-section" id="webhook">
@@ -75,6 +76,7 @@
         <li><code>GET /v1/presets</code> lists preset IDs and creature variants.</li>
         <li><code>GET /v1/mobs</code> lists named endpoints and shows which creatures your world can spawn.</li>
         <li><code>POST /v1/trigger</code> queues an effect.</li>
+        <li><code>POST /v1/hooks/pioneer-pop</code> queues a bounce. Choose <code>small</code>, <code>standard</code>, <code>high</code>, <code>5x</code>, or <code>20x</code>.</li>
       </ul>
       <h3>Request a group</h3>
       <p>Send <code>{"qty":1,"multiplier":5}</code> to <code>POST /v1/mobs/crab-hatcher</code> for five hatchers in one group. Quantity counts base placements; the multiplier counts creatures per successful placement, including the first. A blocked base keeps its multiplier while queued. For three groups of five, set <code>qty</code> to 3. Whole-number multipliers from 1 to 100 work on hostiles and the Chaos preset. Wildlife is available through individual endpoints.</p>
@@ -82,7 +84,8 @@
       <h3>Example trigger requests</h3>
       <div class="fl-command"><pre><code id="preset-json">{"preset":"nobelisk-chaos"}</code></pre><button type="button" data-copy="preset-json" hidden>Copy</button></div>
       <div class="fl-command"><pre><code id="entity-json">{"entityId":"stinger","variant":2,"qty":1}</code></pre><button type="button" data-copy="entity-json" hidden>Copy</button></div>
-      <p>The first request triggers <code>!nukem</code>. The second requests one Elite Gas Stinger. HTTP 202 confirms that the bridge queued it. If you retry the same redeem, reuse its <code>eventId</code>.</p>
+      <div class="fl-command"><pre><code id="bounce-json">{"strength":"20x"}</code></pre><button type="button" data-copy="bounce-json" hidden>Copy</button></div>
+      <p>Send the first two bodies to <code>/v1/trigger</code> for <code>!nukem</code> or one Elite Gas Stinger. Send the third to <code>/v1/hooks/pioneer-pop</code> for the Fall Damage Express bounce. HTTP 202 confirms that the bridge queued it. If you retry the same redeem, reuse its <code>eventId</code>.</p>
     </section>
 
     <section class="fl-section" id="variants">
@@ -156,8 +159,31 @@
         </tbody>
       </table></div>
     </section>
+    <section class="fl-section" id="smaller-waves">
+      <h2>Keep viewer waves small</h2>
+      <p>For a gentler Twitch reward, use a direct spawn action with one of these base quantities. The stream multiplier then scales each successful placement. For example, a base quantity of 3 at 8× requests 24 creatures.</p>
+      <div class="fl-table"><table>
+        <thead><tr><th scope="col">Creature</th><th scope="col">Preset ID</th><th scope="col">Suggested base</th><th scope="col">At 8×</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Fluffy-tailed Hog</th><td><code>hog-swarm</code></td><td>3</td><td>24</td></tr>
+          <tr><th scope="row">Alpha Hog</th><td><code>alpha-hogs</code></td><td>2</td><td>16</td></tr>
+          <tr><th scope="row">Forest Spitter</th><td><code>spitter-pack</code></td><td>2</td><td>16</td></tr>
+          <tr><th scope="row">Small Stinger</th><td><code>stinger-pack</code></td><td>2</td><td>16</td></tr>
+          <tr><th scope="row">Elite Gas Stinger</th><td><code>elite-stinger</code></td><td>1</td><td>8</td></tr>
+          <tr><th scope="row">Flying Crab Hatcher</th><td><code>crab-hatcher</code></td><td>1</td><td>8</td></tr>
+        </tbody>
+      </table></div>
+      <p>In Lumia, pick a <strong>Spawn</strong> action for the creature and set <strong>Quantity</strong> to the suggested base and <strong>Multiplier</strong> to 1. In Streamer.bot, use the small-wave examples from the <a href="../streamerbot/">action pack</a>.</p>
+      <p>If you want <strong>every call to the preset</strong> to use the smaller quantity, copy <code>FactoryGame/Mods/FactoryLive/Bridge/bridge.config.json</code> to <code>%LOCALAPPDATA%\FactoryLiveChaos\bridge.local.json</code> while the game is closed. Keep the existing local override if you already have one. In the local copy, set the <code>port</code> to the port in the neighboring <code>link.json</code> and edit the six preset <code>count</code> values. The bridge reads the file when the next world loads.</p>
+    </section>
+    <section class="fl-section" id="recovery">
+      <h2>Recover spawned mobs</h2>
+      <p>Mob recovery removes Factory Live’s tracked creatures, corpses, and hatchlings in batches. It clears pending effects and holds new redeems until cleanup finishes. The bridge keeps its current armed state. Native wildlife stays in the world.</p>
+      <div class="fl-command"><pre><code id="recover-command">FactoryLive.RecoverMobs confirm</code></pre><button type="button" data-copy="recover-command" hidden>Copy</button></div>
+      <p>Run the command from the host’s game console, or send <code>POST /v1/recover-mobs</code> with <code>Authorization: Bearer &lt;gameToken&gt;</code> from the host PC. Use the <a href="../streamerbot/#control">Streamer.bot operator examples</a> to put recovery on a private hotkey.</p>
+    </section>
     <span class="fl-sr-only" id="copy-feedback" role="status" aria-live="polite"></span>
   </main>
-  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.0-chaos.23</span></footer>
+  <footer class="site-footer"><a href="../">Factory Live</a><span>0.9.8</span></footer>
 </body>
 </html>

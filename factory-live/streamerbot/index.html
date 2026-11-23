@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Streamer.bot setup | Factory Live</title>
-  <meta name="description" content="Connect Streamer.bot to Factory Live’s bundled Satisfactory bridge.">
+  <meta name="description" content="Copy and paste Streamer.bot actions for Factory Live Twitch rewards, chat commands and bridge controls.">
   <link rel="canonical" href="https://lumi-con.com/factory-live/streamerbot/">
   <link rel="stylesheet" href="../../assets/site.css">
   <link rel="stylesheet" href="../guide.css">
@@ -27,71 +27,177 @@
     <section class="fl-hero fl-hero-single" aria-labelledby="title">
       <div>
         <h1 id="title">Streamer.bot setup</h1>
-        <p class="lede">Run Factory Live effects from Twitch rewards, chat commands, or alerts.</p>
+        <p class="lede">Copy ready-made actions for Satisfactory creature waves, Nobelisks, bounce rewards and moderator controls.</p>
         <div class="hero-actions">
-          <a class="button primary" href="../#install">Install the game mod</a>
-          <a class="button secondary" href="../downloads/streamerbot/Trigger.cs">Get the C# action</a>
+          <a class="button primary" href="../downloads/streamerbot/FactoryLive_StreamerBot_0.9.8.zip">Download all C# actions</a>
+          <a class="button secondary" href="../#install">Install Factory Live</a>
         </div>
       </div>
     </section>
-    <aside class="fl-section fl-warning" aria-label="Crash warning"><strong>Crash warning</strong>
-      <p>Repeated waves and high multipliers can freeze or crash Satisfactory, especially during respawn. Make a separate save before enabling chat. You can use <strong>Disarm Bridge</strong> in the Lumia plugin to stop new effects and clear the queue. Creatures already in the world stay there.</p></aside>
-
-
+    <aside class="fl-section fl-warning" aria-label="Crash warning">
+      <strong>High multipliers can crash Satisfactory</strong>
+      <p>Make a separate test save. Start at 1× and try a small wave before enabling Chaos, Nukem or repeated bursts. Disarm Bridge clears queued effects. Clear Mobs removes Factory Live creatures already in your world.</p>
+    </aside>
     <section class="fl-section" id="action">
-      <h2>Create a Twitch reward action</h2>
+      <h2>Set up your first reward</h2>
       <ol class="fl-steps">
-        <li><p>Connect Twitch in Streamer.bot. Run the game and Streamer.bot on the same Windows PC, then load a save as host.</p></li>
-        <li><p>Create or select a Twitch channel-point reward, create an action, then add a <strong>Twitch → Channel Point Reward Redemption</strong> trigger for that reward.</p></li>
-        <li><p>Add a <strong>Core → C# → Execute C# Code</strong> sub-action. Paste <a href="../downloads/streamerbot/Trigger.cs">Trigger.cs</a>, set <code>Preset</code> near the top to the desired ID from the <a href="../chaos/#presets">preset table</a>, leave <code>Mob</code> empty, compile and save.</p></li>
-        <li><p>Repeat for each reward, choosing its own preset, cost and cooldown. The <a href="../downloads/streamerbot/README.md">complete mapping and setup guide</a> covers every preset and creature endpoints. These are copy-and-paste scripts, not an import.</p></li>
+        <li><p>Install Factory Live through Satisfactory Mod Manager. Run Streamer.bot as the same Windows user, connect your Twitch broadcaster account, then load a save as host. The bridge starts and arms as the world becomes ready.</p></li>
+        <li><p>In <strong>Platforms → Twitch → Channel Point Rewards</strong>, create a reward, or pick an existing one. In <strong>Actions</strong>, create an action and add a Twitch <strong>Reward Redemption</strong> trigger for that specific reward. Connect each reward in one app so it fires once.</p></li>
+        <li><p>Extract the ZIP and open a matching <code>.cs</code> file in a text editor. Paste the entire file into <strong>Core → C# → Execute C# Code</strong>. Click <strong>Find Refs</strong> if needed, then <strong>Compile</strong> and <strong>Save and Compile</strong>.</p></li>
+        <li><p>For a small first test, paste <code>gentle/hog-wild.cs</code>. It queues three basic hogs at 1×. Check <strong>Action Queues → Action History</strong> for <code>factoryLiveStatus</code> and <code>factoryLiveResult</code>. A 202 response means the bridge accepted the request for processing.</p></li>
       </ol>
-      <p>A response of accepted means queued, not necessarily spawned. The action reads the bridge token automatically; keep it private.</p>
+      <p>The scripts read the port and token from <code>link.json</code>. Keep this file private. You can download <a href="../downloads/streamerbot/Trigger.cs">Trigger.cs</a> separately and edit the four settings at the top to create a new action.</p>
+      <p><a href="https://docs.streamer.bot/api/triggers/twitch/channel-reward/reward-redemption">Reward Redemption reference</a> · <a href="https://docs.streamer.bot/api/csharp/guide/intro">Execute C# Code reference</a></p>
     </section>
     <section class="fl-section" id="reward-defaults">
-      <h2>Bundled Lumia reward defaults</h2>
-      <p>Use these settings to recreate the rewards included with the Lumia plugin. These are template defaults, not a streamer's current live prices. You can change the cost and cooldown to suit your channel. Bridge cooldowns also apply.</p>
+      <h2>Recreate the bundled Lumia rewards</h2>
+      <p>These are template prices and cooldowns. In Streamer.bot, set them when creating each Twitch reward. Bridge cooldowns also apply.</p>
       <div class="fl-table"><table>
-        <thead><tr><th scope="col">Factory Live reward</th><th scope="col">Preset or action</th><th scope="col">Points</th><th scope="col">Cooldown</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Alpha Hog Wave</th><td><code>alpha-hogs</code></td><td>500</td><td>30 sec</td></tr>
-          <tr><th scope="row">Hog Wave</th><td><code>hog-swarm</code></td><td>750</td><td>30 sec</td></tr>
-          <tr><th scope="row">Forest Spitter Wave</th><td><code>spitter-pack</code></td><td>500</td><td>25 sec</td></tr>
-          <tr><th scope="row">Stinger Pack</th><td><code>stinger-pack</code></td><td>750</td><td>35 sec</td></tr>
-          <tr><th scope="row">Elite Stinger</th><td><code>elite-stinger</code></td><td>250</td><td>45 sec</td></tr>
-          <tr><th scope="row">Hatcher Trial</th><td><code>crab-hatcher</code></td><td>750</td><td>60 sec</td></tr>
-          <tr><th scope="row">Standard Nobelisks</th><td><code>nobelisk-rain</code></td><td>500</td><td>5 sec</td></tr>
-          <tr><th scope="row">Pulse Nobelisks</th><td><code>pulse-rain</code></td><td>500</td><td>7 sec</td></tr>
-          <tr><th scope="row">Gas Nobelisks</th><td><code>gas-rain</code></td><td>750</td><td>8 sec</td></tr>
-          <tr><th scope="row">Carpet Bomb</th><td><code>cluster-rain</code></td><td>750</td><td>10 sec</td></tr>
-          <tr><th scope="row">Nuke Drop</th><td><code>nuke-drop</code></td><td>750</td><td>20 sec</td></tr>
-          <tr><th scope="row">Nuclear Carpet Bomb</th><td><code>nuke-carpet</code></td><td>1,000</td><td>45 sec</td></tr>
-          <tr><th scope="row">Turn Around</th><td><code>turn-around</code></td><td>100</td><td>60 sec</td></tr>
-          <tr><th scope="row">Drop Equipment</th><td><code>equipment-drop</code></td><td>500</td><td>60 sec</td></tr>
-          <tr><th scope="row">Creature Roulette</th><td><code>creature-roulette</code></td><td>250</td><td>60 sec</td></tr>
-          <tr><th scope="row">Surprise Me</th><td><code>surprise-me</code></td><td>250</td><td>60 sec</td></tr>
-          <tr><th scope="row">Multiplier +1</th><td>Multiplier action</td><td>50</td><td>0 sec</td></tr>
-        </tbody>
+        <thead><tr><th scope="col">Reward</th><th scope="col">File in ZIP</th><th scope="col">Points</th><th scope="col">Cooldown</th></tr></thead>
+        <tbody>          <tr><th scope="row">Factory Live Alpha Hog Wave</th><td><code>presets/alpha-hogs.cs</code></td><td>500</td><td>30 sec</td></tr>
+          <tr><th scope="row">Factory Live Hog Wave</th><td><code>presets/hog-swarm.cs</code></td><td>750</td><td>30 sec</td></tr>
+          <tr><th scope="row">Factory Live Forest Spitter Wave</th><td><code>presets/spitter-pack.cs</code></td><td>500</td><td>25 sec</td></tr>
+          <tr><th scope="row">Factory Live Stinger Pack</th><td><code>presets/stinger-pack.cs</code></td><td>750</td><td>35 sec</td></tr>
+          <tr><th scope="row">Factory Live Elite Stinger</th><td><code>presets/elite-stinger.cs</code></td><td>250</td><td>45 sec</td></tr>
+          <tr><th scope="row">Factory Live Hatcher Trial</th><td><code>presets/crab-hatcher.cs</code></td><td>750</td><td>60 sec</td></tr>
+          <tr><th scope="row">Factory Live Standard Nobelisks</th><td><code>presets/nobelisk-rain.cs</code></td><td>500</td><td>5 sec</td></tr>
+          <tr><th scope="row">Factory Live Pulse Nobelisks</th><td><code>presets/pulse-rain.cs</code></td><td>500</td><td>7 sec</td></tr>
+          <tr><th scope="row">Factory Live Gas Nobelisks</th><td><code>presets/gas-rain.cs</code></td><td>750</td><td>8 sec</td></tr>
+          <tr><th scope="row">Factory Live Carpet Bomb</th><td><code>presets/cluster-rain.cs</code></td><td>750</td><td>10 sec</td></tr>
+          <tr><th scope="row">Factory Live Nuke Drop</th><td><code>presets/nuke-drop.cs</code></td><td>750</td><td>20 sec</td></tr>
+          <tr><th scope="row">Factory Live Nuclear Carpet Bomb</th><td><code>presets/nuke-carpet.cs</code></td><td>1,000</td><td>45 sec</td></tr>
+          <tr><th scope="row">Factory Live Turn Around</th><td><code>presets/turn-around.cs</code></td><td>100</td><td>60 sec</td></tr>
+          <tr><th scope="row">Factory Live Drop Equipment</th><td><code>presets/equipment-drop.cs</code></td><td>500</td><td>60 sec</td></tr>
+          <tr><th scope="row">Factory Live Creature Roulette</th><td><code>presets/creature-roulette.cs</code></td><td>250</td><td>60 sec</td></tr>
+          <tr><th scope="row">Factory Live Surprise Me</th><td><code>presets/surprise-me.cs</code></td><td>250</td><td>60 sec</td></tr>
+          <tr><th scope="row">Factory Live Multiplier +1</th><td><code>IncreaseMultiplier.cs</code></td><td>50</td><td>0 sec</td></tr>
+          <tr><th scope="row">Boing Voyage (5x Bounce)</th><td><code>examples/boing-voyage.cs</code></td><td>25</td><td>15 sec</td></tr>
+          <tr><th scope="row">Fall Damage Express (20x Bounce)</th><td><code>examples/fall-damage-express.cs</code></td><td>100</td><td>30 sec</td></tr></tbody>
       </table></div>
-      <p>Each full reward name begins with “Factory Live”. The <a href="../downloads/streamerbot/README.md">complete setup guide</a> also lists every preset and chat command.</p>
+      <p>Boing Voyage launches at 5× the standard force. Fall Damage Express launches at 20× and can be fatal on landing. Both use a fixed strength and share the bridge’s 12-second Bounce cooldown.</p>
+    </section>
+    <section class="fl-section" id="presets">
+      <h2>Every shipped preset</h2>
+      <p>Open any of the files under <code>presets/</code> in the ZIP and paste it into a new C# action. Counts below are the 0.9.8 defaults at 1×. The bot uses the stream multiplier unless the file fixes it at 1×. Use the optional <code>gentle/</code> scripts for smaller waves.</p>
+      <div class="fl-table"><table>
+        <thead><tr><th scope="col">Preset and file name</th><th scope="col">Effect at 1×</th><th scope="col">Bridge cooldown</th><th scope="col">Optional chat command</th></tr></thead>
+        <tbody>          <tr><th scope="row"><code>hog-swarm.cs</code></th><td>80 basic hogs</td><td>30 sec</td><td><code>!hogs</code></td></tr>
+          <tr><th scope="row"><code>alpha-hogs.cs</code></th><td>12 alpha hogs</td><td>30 sec</td><td><code>!alphas</code></td></tr>
+          <tr><th scope="row"><code>spitter-pack.cs</code></th><td>24 forest spitters</td><td>25 sec</td><td><code>!spitters</code></td></tr>
+          <tr><th scope="row"><code>stinger-pack.cs</code></th><td>12 small stingers</td><td>35 sec</td><td><code>!stingers</code></td></tr>
+          <tr><th scope="row"><code>elite-stinger.cs</code></th><td>1 elite stinger</td><td>45 sec</td><td><code>!elitestinger</code></td></tr>
+          <tr><th scope="row"><code>crab-hatcher.cs</code></th><td>10 normal hatchers</td><td>60 sec</td><td>—</td></tr>
+          <tr><th scope="row"><code>chaos-mode.cs</code></th><td>4 groups of 300 hostile creatures</td><td>60 sec</td><td><code>!chaos 10</code></td></tr>
+          <tr><th scope="row"><code>hatcher-surge.cs</code></th><td>300 normal hatchers</td><td>60 sec</td><td>—</td></tr>
+          <tr><th scope="row"><code>spitter-surge.cs</code></th><td>300 forest spitters</td><td>30 sec</td><td>—</td></tr>
+          <tr><th scope="row"><code>alpha-spitter-surge.cs</code></th><td>300 alpha forest spitters</td><td>30 sec</td><td>—</td></tr>
+          <tr><th scope="row"><code>jetpack-hog-surge.cs</code></th><td>300 jetpack hogs</td><td>30 sec</td><td>—</td></tr>
+          <tr><th scope="row"><code>nobelisk-rain.cs</code></th><td>12 standard Nobelisks</td><td>5 sec</td><td><code>!nobelisk</code></td></tr>
+          <tr><th scope="row"><code>pulse-rain.cs</code></th><td>8 pulse Nobelisks</td><td>7 sec</td><td><code>!pulse</code></td></tr>
+          <tr><th scope="row"><code>gas-rain.cs</code></th><td>6 gas Nobelisks</td><td>8 sec</td><td><code>!gas</code></td></tr>
+          <tr><th scope="row"><code>cluster-rain.cs</code></th><td>10 cluster Nobelisks</td><td>10 sec</td><td><code>!cluster</code></td></tr>
+          <tr><th scope="row"><code>nuke-drop.cs</code></th><td>1 nuclear Nobelisk</td><td>20 sec</td><td><code>!nuke</code></td></tr>
+          <tr><th scope="row"><code>nuke-carpet.cs</code></th><td>5 nuclear Nobelisks</td><td>45 sec</td><td><code>!nukewave</code></td></tr>
+          <tr><th scope="row"><code>nobelisk-chaos.cs</code></th><td>250 mixed Nobelisks</td><td>60 sec</td><td><code>!nukem</code></td></tr>
+          <tr><th scope="row"><code>turn-around.cs</code></th><td>Turn the Pioneer 180°</td><td>30 sec</td><td><code>!turn</code></td></tr>
+          <tr><th scope="row"><code>equipment-drop.cs</code></th><td>Drop 1 random piece of equipped gear</td><td>60 sec</td><td>—</td></tr>
+          <tr><th scope="row"><code>creature-roulette.cs</code></th><td>Choose alpha hogs, forest spitters, small stingers, or elite stingers</td><td>60 sec</td><td><code>!roulette</code></td></tr>
+          <tr><th scope="row"><code>surprise-me.cs</code></th><td>Choose a turn or elite stingers</td><td>60 sec</td><td><code>!surprise</code></td></tr></tbody>
+      </table></div>
+    </section>
+    <section class="fl-section" id="examples">
+      <h2>Copy settings for custom actions</h2>
+      <p>In <a href="../downloads/streamerbot/Trigger.cs">Trigger.cs</a>, replace the four settings at the top with one block below. <code>stream</code> reads the +1 reward total. <code>chat</code> reads a moderator’s command input. <code>fixed</code> uses <code>FixedMultiplier</code>.</p>
+      <h3>Hog Wild — 3 basic hogs per multiplier level</h3><div class="fl-command"><pre><code id="sample-0">    private static readonly string Route = &quot;/v1/mobs/hog&quot;;
+    private const string Body = &quot;{\&quot;qty\&quot;:3}&quot;;
+    private static readonly string Multiplier = &quot;stream&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-0" hidden>Copy</button></div>
+      <h3>One elite hatcher at a fixed size</h3><div class="fl-command"><pre><code id="sample-1">    private static readonly string Route = &quot;/v1/mobs/elite-hatcher&quot;;
+    private const string Body = &quot;{\&quot;qty\&quot;:1}&quot;;
+    private static readonly string Multiplier = &quot;fixed&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-1" hidden>Copy</button></div>
+      <h3>Three Lizard Doggos at a fixed size</h3><div class="fl-command"><pre><code id="sample-2">    private static readonly string Route = &quot;/v1/mobs/lizard-doggo&quot;;
+    private const string Body = &quot;{\&quot;qty\&quot;:3}&quot;;
+    private static readonly string Multiplier = &quot;fixed&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-2" hidden>Copy</button></div>
+      <h3>Six gas Nobelisks from a numeric variant</h3><div class="fl-command"><pre><code id="sample-3">    private static readonly string Route = &quot;/v1/trigger&quot;;
+    private const string Body = &quot;{\&quot;entityId\&quot;:\&quot;nobelisk\&quot;,\&quot;variant\&quot;:2,\&quot;qty\&quot;:6}&quot;;
+    private static readonly string Multiplier = &quot;fixed&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-3" hidden>Copy</button></div>
+      <h3>Boing Voyage — 5× bounce force</h3><div class="fl-command"><pre><code id="sample-4">    private static readonly string Route = &quot;/v1/hooks/pioneer-pop&quot;;
+    private const string Body = &quot;{\&quot;strength\&quot;:\&quot;5x\&quot;}&quot;;
+    private static readonly string Multiplier = &quot;fixed&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-4" hidden>Copy</button></div>
+      <h3>Fall Damage Express — 20× bounce force</h3><div class="fl-command"><pre><code id="sample-5">    private static readonly string Route = &quot;/v1/hooks/pioneer-pop&quot;;
+    private const string Body = &quot;{\&quot;strength\&quot;:\&quot;20x\&quot;}&quot;;
+    private static readonly string Multiplier = &quot;fixed&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-5" hidden>Copy</button></div>
+      <h3>Moderator !chaos 10 — read the number from chat</h3><div class="fl-command"><pre><code id="sample-6">    private static readonly string Route = &quot;/v1/trigger&quot;;
+    private const string Body = &quot;{\&quot;preset\&quot;:\&quot;chaos-mode\&quot;}&quot;;
+    private static readonly string Multiplier = &quot;chat&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-6" hidden>Copy</button></div>
+      <h3>300 Bits Chaos — fixed multiplier of 1×</h3><div class="fl-command"><pre><code id="sample-7">    private static readonly string Route = &quot;/v1/trigger&quot;;
+    private const string Body = &quot;{\&quot;preset\&quot;:\&quot;chaos-mode\&quot;}&quot;;
+    private static readonly string Multiplier = &quot;fixed&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-7" hidden>Copy</button></div>
+      <h3>Moderator !nukem or 100 Bits — fixed multiplier of 1×</h3><div class="fl-command"><pre><code id="sample-8">    private static readonly string Route = &quot;/v1/trigger&quot;;
+    private const string Body = &quot;{\&quot;preset\&quot;:\&quot;nobelisk-chaos\&quot;}&quot;;
+    private static readonly string Multiplier = &quot;fixed&quot;;
+    private const int FixedMultiplier = 1;</code></pre><button type="button" data-copy="sample-8" hidden>Copy</button></div>
+      <p><strong>Smaller viewer waves.</strong> The ready-made <code>gentle/</code> actions queue 3 basic hogs, 2 alpha hogs, 2 forest spitters, 2 small stingers, 1 elite stinger or 1 normal hatcher per multiplier level. At 8×, that is 24, 16, 16, 16, 8 or 8. Attach these actions in place of large stock creature presets.</p>
+    </section>
+    <section class="fl-section" id="variants">
+      <h2>Target a creature or Nobelisk variant</h2>
+      <p>For a creature, use <code>/v1/mobs/NAME</code> with a <code>qty</code> field, or post <code>entityId</code>, a zero-based <code>variant</code> and <code>qty</code> to <code>/v1/trigger</code>. Nobelisk variants use the second form. Wildlife always uses a fixed multiplier of 1×. Manta requests accept a quantity of one.</p>
+      <div class="fl-table"><table>
+        <thead><tr><th scope="col">Entity ID</th><th scope="col">Variant numbers and exact names</th></tr></thead>
+        <tbody>          <tr><th scope="row"><code>hog</code></th><td>0 <code>hog</code>, 1 <code>alpha-hog</code>, 2 <code>cliff-hog</code>, 3 <code>nuclear-hog</code>, 4 <code>jetpack-hog</code></td></tr>
+          <tr><th scope="row"><code>spitter</code></th><td>0 <code>spitter</code>, 1 <code>spitter-red</code>, 2 <code>spitter-desert</code>, 3 <code>spitter-aquatic</code>, 4 <code>alpha-spitter</code>, 5 <code>alpha-spitter-red</code>, 6 <code>alpha-spitter-desert</code>, 7 <code>alpha-spitter-aquatic</code></td></tr>
+          <tr><th scope="row"><code>stinger</code></th><td>0 <code>stinger</code>, 1 <code>big-stinger</code>, 2 <code>elite-stinger</code></td></tr>
+          <tr><th scope="row"><code>hatcher</code></th><td>0 <code>crab-hatcher</code>, 1 <code>elite-hatcher</code></td></tr>
+          <tr><th scope="row"><code>crab</code></th><td>0 <code>flying-crab</code></td></tr>
+          <tr><th scope="row"><code>wildlife</code></th><td>0 <code>lizard-doggo</code>, 1 <code>bean</code>, 2 <code>flightless-bird</code>, 3 <code>beetle</code>, 4 <code>manta</code></td></tr>
+          <tr><th scope="row"><code>nobelisk</code></th><td>0 <code>standard</code>, 1 <code>pulse</code>, 2 <code>gas</code>, 3 <code>cluster</code>, 4 <code>nuke</code></td></tr></tbody>
+      </table></div>
+      <p>The ZIP includes a preset-independent C# action for each variant under <code>variants/</code>. The game reports which creatures it can currently spawn at <code>GET /v1/mobs</code>. <code>GET /v1/presets</code> lists the active preset configuration.</p>
     </section>
     <section class="fl-section" id="multiplier">
       <h2>Match the +1 multiplier reward</h2>
-      <p>Create a Twitch reward costing <strong>50 points</strong> with a maximum of <strong>15 redemptions per stream</strong>. Attach an action containing <a href="../downloads/streamerbot/IncreaseMultiplier.cs">IncreaseMultiplier.cs</a>, and use a non-concurrent action queue so simultaneous redemptions are counted. It starts at 1× and reaches 16× after fifteen uses, announcing each increase in chat.</p>
-      <p>Attach <a href="../downloads/streamerbot/ResetMultiplier.cs">ResetMultiplier.cs</a> to Twitch <strong>Stream Online</strong> to reset to 1× at the start of each stream. The other example reward scripts use this value. Lumia and Streamer.bot keep separate multiplier and death counts: connect each reward to one app only or it will fire twice.</p>
+      <p>Create a 50-point Twitch reward with a maximum of 15 redemptions per stream. Paste <a href="../downloads/streamerbot/IncreaseMultiplier.cs">IncreaseMultiplier.cs</a> into its action and use a non-concurrent action queue. It starts at 1×, increases to 16×, and posts <code>the current multiplier is now X</code>.</p>
+      <p>Put <a href="../downloads/streamerbot/ResetMultiplier.cs">ResetMultiplier.cs</a> on Twitch <strong>Stream Online</strong>, or on a broadcaster-only <code>!resetmulti</code> command for manual resets. Lumia keeps its own multiplier and death count.</p>
     </section>
     <section class="fl-section" id="chat">
-      <h2>Moderator chat commands</h2>
-      <p>For <code>!chaos</code>, make a moderator-only command and attach a copy of Trigger.cs with <code>Preset = "chaos-mode"</code> and <code>UseChatMultiplier = true</code>. <code>!chaos 10</code> uses 10 per placement; no valid number uses 1. For <code>!nukem</code>, use <code>Preset = "nobelisk-chaos"</code>, <code>UseChatMultiplier = false</code> and <code>UseStreamMultiplier = false</code>, matching Lumia's fixed 1× command.</p>
+      <h2>Moderator commands and Bits</h2>
+      <p>In <strong>Commands</strong>, create <code>!chaos</code> in <strong>Starts With</strong> mode and limit it to the broadcaster and moderators. Attach a <strong>Command Triggered</strong> trigger to an action using <code>examples/chaos-chat.cs</code>. <code>!chaos 10</code> stacks 10 creatures per placement. Missing or invalid input uses 1×, and the script caps typed values at 100×.</p>
+      <p>For <code>!nukem</code>, use an exact-match command with <code>presets/nobelisk-chaos.cs</code>, which runs the 250-Nobelisk sequence at 1×. For other chat commands, use the matching preset file in the table.</p>
+      <p>To mirror the Bits effects, add a Twitch <strong>Cheer</strong> trigger to an action using <code>presets/nobelisk-chaos.cs</code> or <code>examples/chaos-fixed.cs</code>. Set only <strong>Max</strong> to <strong>100</strong> for Nukem and <strong>300</strong> for Chaos. Streamer.bot uses an exact match when only Max is set. These react to cheers in chat. <a href="https://docs.streamer.bot/api/triggers/twitch/chat/cheer">Cheer trigger reference</a></p>
     </section>
-    <section class="fl-section" id="death-counter">
-      <h2>Death alert</h2>
-      <p>Run <a href="../downloads/streamerbot/DeathCounter.cs">DeathCounter.cs</a> from a recurring two-second timer to count observed deaths and send <code>the pioneer has died X times</code>. Put <a href="../downloads/streamerbot/ResetDeaths.cs">ResetDeaths.cs</a> on a private reset command. Polling is best effort: deaths while offline or multiple deaths between polls can be missed, and a recent death may be counted on first connection.</p>
+    <section class="fl-section" id="control">
+      <h2>Bridge controls and death alerts</h2>
+      <div class="fl-table"><table>
+        <thead><tr><th scope="col">File in ZIP</th><th scope="col">Method and path</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>controls/status.cs</code></th><td><code>GET /v1/status</code></td><td>Read bridge readiness, armed state and queue in the Streamer.bot log.</td></tr>
+          <tr><th scope="row"><code>controls/arm.cs</code></th><td><code>POST /v1/arm</code></td><td>Enable new requests once a host world is ready.</td></tr>
+          <tr><th scope="row"><code>controls/disarm.cs</code></th><td><code>POST /v1/disarm</code></td><td>Stop accepting effects and clear pending requests.</td></tr>
+          <tr><th scope="row"><code>controls/recover-mobs.cs</code></th><td><code>POST /v1/recover-mobs</code></td><td>Clear pending requests and remove tracked Factory Live mobs. On 0.9.8 it preserves the bridge’s armed state.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Keep those actions broadcaster-only. You can also download <a href="../downloads/streamerbot/BridgeControl.cs">BridgeControl.cs</a> and change <code>Operation</code>. The operator scripts use <code>gameToken</code>. Viewer actions use <code>webhookToken</code>.</p>
+      <p>In Streamer.bot, create a repeating two-second timer with no line minimum, then add a <strong>Timed Action</strong> trigger to <a href="../downloads/streamerbot/DeathCounter.cs">DeathCounter.cs</a>. It posts <code>the pioneer has died X times</code> when it sees a new death ID. Paste <a href="../downloads/streamerbot/ResetDeaths.cs">ResetDeaths.cs</a> into a separate broadcaster-only reset action. The timer can miss deaths while it is offline or between polls.</p>
+      <p><a href="https://docs.streamer.bot/guide/core/timers">Timer setup</a> · <a href="https://docs.streamer.bot/guide/core/commands">Chat command setup</a></p>
     </section>
     <section class="fl-section" id="troubleshooting">
       <h2>If an action fails</h2>
-      <p>Load a save as host and check the Streamer.bot log for compilation or bridge errors. Check Twitch connectivity if chat messages do not appear. For direct HTTP calls, see the <a href="../chaos/#webhook">webhook endpoints and examples</a>.</p>
+      <ul>
+        <li><code>401 unauthorized</code> means the request used the wrong token or copied an old link file. Run Streamer.bot under the same Windows user as the game.</li>
+        <li><code>409 game_not_armed_or_ready</code> means you need to load a save as host and check the bridge status. Use the Arm action if you disarmed it.</li>
+        <li><code>429 cooldown</code> or <code>queue_full</code> means the bridge is pacing effects or its queue is full. Let it catch up before testing again.</li>
+        <li><code>400 stack_hostiles_only</code> means a wildlife action tried to use a multiplier above 1×.</li>
+      </ul>
+      <p><a href="../downloads/streamerbot/README.md">Download the text setup guide</a> · <a href="../chaos/#webhook">Read the webhook reference</a></p>
     </section>
+    <span class="fl-sr-only" id="copy-feedback" role="status" aria-live="polite"></span>
   </main>
 </body>
 </html>

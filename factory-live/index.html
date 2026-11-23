@@ -29,10 +29,11 @@
     <section class="fl-hero fl-hero-single" aria-labelledby="title">
       <div>
         <h1 id="title">Factory Live</h1>
-        <p class="lede">Let Twitch chat spawn creatures, launch Nobelisk fireworks, or turn the Pioneer around in Satisfactory.</p>
+        <p class="lede">Let Twitch chat spawn creatures, launch Nobelisk fireworks, or bounce the Pioneer into the air in Satisfactory.</p>
         <div class="hero-actions">
           <a class="button primary" href="https://ficsit.app/mod/FactoryLive">Get the Satisfactory mod</a>
           <a class="button secondary" href="chaos/#nukem-demo">Watch the demo</a>
+          <a class="button secondary" href="changelog/">Read the changelog</a>
         </div>
         <p class="fl-platform">Windows Steam · Build 520140 with SML 3.12.1 · Build 517554 with chaos.16</p>
       </div>
@@ -45,39 +46,40 @@
       <h2>Install Factory Live</h2>
       <ol class="fl-steps">
         <li><h3>Get the Mod Manager</h3><p>Install <a href="https://smm.ficsit.app/">Satisfactory Mod Manager (SMM)</a> and select your Steam installation.</p></li>
-        <li><h3>Install or update the mod</h3><p>Close Satisfactory. In SMM, select your play profile, switch <strong>Mods on</strong>, and search for <strong>FactoryLive Stream Integrations</strong>. For Steam build 520140, install <strong>0.9.0-chaos.23</strong> with SML 3.12.1. If you already have Factory Live, click <strong>Check for updates</strong>. For the older build 517554, choose chaos.16.</p></li>
+        <li><h3>Install or update the mod</h3><p>Close Satisfactory. In SMM, select your play profile, switch <strong>Mods on</strong>, and search for <strong>FactoryLive Stream Integrations</strong>. Use <strong>0.9.8</strong> for Windows Steam build <strong>520140</strong>. SMM installs the required SML dependency. If SMM offers an earlier version for build 520140, use the manual download below. Use <strong>0.9.0-chaos.16</strong> for build 517554.</p></li>
         <li><h3>Load a save</h3><p>Start Satisfactory and load a save as host. The bridge starts and arms automatically when the world is ready.</p></li>
       </ol>
     </section>
 
     <section class="fl-section"><h2>Manual downloads</h2>
       <ul>
-        <li><a href="downloads/0.9.0-chaos.23/FactoryLive_0.9.0-chaos.23_Windows_Steam.zip" download>Chaos.23 for Steam build 520140</a> · Includes the <a href="chaos/#respawn">crowded-save respawn fix</a>.</li>
+        <li><a href="downloads/0.9.8/FactoryLive_0.9.8_Windows_Steam.zip" download>Factory Live 0.9.8 for Steam build 520140</a></li>
+        <li><a href="downloads/0.9.0-chaos.23/FactoryLive_0.9.0-chaos.23_Windows_Steam.zip" download>Chaos.23 archive for Steam build 520140</a></li>
         <li><a href="downloads/0.9.0-chaos.16/FactoryLive_0.9.0-chaos.16_Windows_Steam.zip" download>Chaos.16 for Steam build 517554</a></li>
       </ul>
       <p>Install a compatible SML through SMM in your play profile, then close the game. In Steam, open Satisfactory’s <strong>Manage → Browse local files</strong>. Back up any existing <code>FactoryGame/Mods/FactoryLive</code> folder outside the Mods folder. Extract the ZIP’s <code>FactoryLive</code> folder into <code>FactoryGame/Mods</code>. You should see <code>FactoryGame/Mods/FactoryLive/FactoryLive.uplugin</code>. Switching SMM profiles can replace a manual installation.</p>
-      <p>Launch the game, load a save as host, then follow the guide for your streaming app. Try Turn Around first. If the Pioneer turns, your chat integration is reaching this world.</p>
     </section>
     <section class="fl-section" id="integrations">
       <h2>Connect your stream</h2>
       <ul>
-        <li><a href="lumia/">Lumia Stream</a> for ready-made chat commands and Twitch rewards.</li>
-        <li><a href="streamerbot/">Streamer.bot</a> for your own commands, alerts, and rewards.</li>
+        <li><a href="lumia/">Lumia Stream</a> for <strong>Satisfactory Stream Integration</strong> and its bundled chat commands and Twitch rewards.</li>
+        <li><a href="streamerbot/">Streamer.bot</a> for ready-to-paste actions for commands, alerts, and rewards.</li>
         <li><a href="chaos/#webhook">HTTP webhooks</a> for other local tools.</li>
       </ul>
     </section>
 
     <section class="fl-section" id="presets">
       <h2>Choose an effect</h2>
-      <p>Spawn a single creature or a wave, drop Nobelisks, turn the Pioneer around, or make them drop equipment. <a href="chaos/#presets">See preset IDs</a>.</p>
+      <p>Spawn creatures, drop Nobelisks, turn the Pioneer around, bounce them, or make them drop equipment. <a href="chaos/#presets">See the preset IDs and default quantities.</a></p>
     </section>
 
     <section class="fl-section" id="troubleshooting">
       <h2>If effects don’t start</h2>
       <p>Check that SMM has <strong>Mods on</strong> and the game’s Mods screen shows the version for your game build. Close any older standalone Factory Live bridge before restarting the game.</p>
+      <p>Use <strong>Check Bridge</strong> after loading a save. If spawned mobs are overwhelming the game, use <a href="chaos/#recovery">Recover Spawned Mobs</a> on a private operator action.</p>
     </section>
   </main>
   <p class="fl-sr-only" id="copy-feedback" role="status"></p>
-  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.9.0-chaos.23</span></footer>
+  <footer class="site-footer"><a href="../">LumiCon home</a><span>Factory Live 0.9.8</span></footer>
 </body>
 </html>
